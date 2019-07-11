@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import HeaderIconButton from './HeaderIconButton'
-import HeaderTitle from './HeaderTitle'
+import HeaderContent from './HeaderContent'
+import Pagination, { Icon, Dot } from 'react-native-pagination'
 
 const Header = ({
   categories,
@@ -48,29 +49,30 @@ const Header = ({
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          /* borderBottomWidth: categoryIndex !== null ? 1 : null */
-        },
-      ]}>
+    <View style={[styles.container]}>
       <HeaderIconButton
         color={null}
         name="home"
         handlePress={handlePressHome}
         size={24}
         visible={category}
-        // visible={true}
+        // visible={false}
       />
-      <HeaderTitle title={title} />
+
+      <HeaderContent
+        title={title}
+        category={category}
+        categories={categories}
+        categoryIndex={categoryIndex}
+      />
+
       <HeaderIconButton
         color={null}
         name="plus"
         handlePress={handlePressPlus}
         size={24}
         visible={!category || !shopping}
-        // visible={true}
+        // visible={false}
       />
     </View>
   )
@@ -79,7 +81,6 @@ const Header = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    // borderBottomWidth: 1,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
