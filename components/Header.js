@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import HeaderIconButton from './HeaderIconButton'
-import HeaderContent from './HeaderContent'
-import Pagination, { Icon, Dot } from 'react-native-pagination'
+import HeaderTitle from './HeaderTitle'
+// import HeaderContent from './HeaderContent'
+// import Pagination, { Icon, Dot } from 'react-native-pagination'
 
 const Header = ({
   categories,
@@ -59,12 +60,7 @@ const Header = ({
         // visible={false}
       />
 
-      <HeaderContent
-        title={title}
-        category={category}
-        categories={categories}
-        categoryIndex={categoryIndex}
-      />
+      <HeaderTitle title={title} />
 
       <HeaderIconButton
         color={null}

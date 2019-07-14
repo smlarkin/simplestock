@@ -7,7 +7,7 @@ const Footer = ({
   categories,
   categoryIndex,
   colors,
-  edit,
+  // edit,
   resetCategories,
   setCategories,
   setCategoryIndex,
@@ -15,18 +15,17 @@ const Footer = ({
   setShopping,
   shopping,
 }) => {
-  const offsetIndex =
-    categoryIndex !== 0 ? categoryIndex - 1 : categoryIndex + 1
+  // const offsetIndex =
+  //   categoryIndex !== 0 ? categoryIndex - 1 : categoryIndex + 1
   return (
     <View
       style={[
         styles.container,
-        {
-          flex: categoryIndex !== null ? 2 : 1,
-          // borderTopWidth: categoryIndex !== null ? 1 : null,
-        },
+        // {
+        //   flex: categoryIndex !== null ? 2 : 1,
+        // },
       ]}>
-      {categoryIndex !== null && (
+      {/* {categoryIndex !== null && (
         <FooterCategoriesNav
           categories={categories}
           categoryIndex={categoryIndex}
@@ -34,7 +33,7 @@ const Footer = ({
           // offsetIndex={offsetIndex}
           setCategoryIndex={setCategoryIndex}
         />
-      )}
+      )} */}
       <FooterViewsNav
         /* WARNING */ resetCategories={resetCategories} /* <-- */
         /* WARNING */ setEdit={setEdit} /* <-- */
@@ -50,6 +49,7 @@ const Footer = ({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: '100%',
   },
 })

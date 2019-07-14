@@ -6,7 +6,7 @@ import StyledText from './StyledText'
 const { width } = layout
 const withExtra = width / 30
 const flatListWidth = (width * 5) / 7
-const viewOffset = flatListWidth / 2 - withExtra
+// const viewOffset = flatListWidth / 2 - withExtra
 const itemWidthTotal = flatListWidth / 7
 const itemWidthTotalRounded = Math.round(itemWidthTotal)
 const itemWidth = itemWidthTotal / 3

@@ -4,12 +4,16 @@ import HeaderPaginator from './HeaderPaginator'
 // import HeaderPaginatorOLD from './HeaderPaginatorClassOLD'
 import HeaderTitle from './HeaderTitle'
 
-const HeaderContent = ({ categories, categoryIndex }) => (
+const HeaderContent = ({ categories, categoryIndex, setCategoryIndex }) => (
   <View style={styles.container}>
     {categoryIndex === null ? (
       <HeaderTitle />
     ) : (
-      <HeaderPaginator categories={categories} categoryIndex={categoryIndex} />
+      <HeaderPaginator
+        categories={categories}
+        categoryIndex={categoryIndex}
+        setCategoryIndex={setCategoryIndex}
+      />
     )}
   </View>
 )
