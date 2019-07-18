@@ -67,6 +67,7 @@ export function validateAndUpdateSubcategory({
 
 export function validateAndUpdateCategory({
   categories,
+  color,
   deleteCategory,
   edit,
   key,
@@ -76,14 +77,17 @@ export function validateAndUpdateCategory({
   updateCategory,
 }) {
   if (title) {
-    if (edit.item.title && edit.item.title === title) {
+    if (
+      edit.item.title === title &&
+      edit.item.color.primary === color.primary
+    ) {
       setEdit(null)
     } else if (itemTitleIsDuplicate(title, categories)) {
       alert('This category already exists!')
     } else {
       updateCategory({
         categoryKey: edit.item.key,
-        category: { key, subcategories, title },
+        category: { color, key, title, subcategories },
       })
       setEdit(null)
     }

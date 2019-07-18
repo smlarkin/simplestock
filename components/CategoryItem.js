@@ -1,12 +1,15 @@
+/* eslint-disable complexity */
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
+import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions'
 import StyledText from './StyledText'
 
 const CategoryItem = ({ item }) => {
+  const { color, title } = item
   return (
-    <View style={styles.container}>
-      <StyledText bold style={styles.title}>
-        {item.title}
+    <View style={[styles.container, { backgroundColor: color.primary }]}>
+      <StyledText bold style={styles.text}>
+        {title}
       </StyledText>
     </View>
   )
@@ -15,14 +18,14 @@ const CategoryItem = ({ item }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    aspectRatio: 7 / 1,
     flexDirection: 'row',
-    width: '100%',
-    aspectRatio: 8 / 1,
     justifyContent: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
+    marginBottom: '0.25%',
+    marginTop: '0.25%',
+    width: '100%',
   },
-  title: {
+  text: {
     fontSize: 19,
   },
 })

@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux'
 import StatusBarSpacer from './StatusBarSpacer'
 import Header from './Header'
+import HeaderPaginator from './HeaderPaginator'
 import Body from './Body'
 import Footer from './Footer'
 import { mapCategoriesToColors } from '../util'
@@ -27,6 +28,7 @@ import {
   updateCategory,
   updateSubcategory,
 } from '../redux/actions'
+
 const { backgrounds } = colors
 
 const AppScreen = props => {
@@ -46,6 +48,7 @@ const AppScreen = props => {
       {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
       {Platform.OS === 'ios' && <StatusBarSpacer />}
       <Header {...props} />
+      {props.categoryIndex !== null && <HeaderPaginator {...props} />}
       <Body {...props} colors={colors} />
       <Footer {...props} colors={colors} />
     </KeyboardAvoidingView>

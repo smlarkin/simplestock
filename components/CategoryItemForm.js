@@ -1,21 +1,68 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, TextInput, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { connect } from 'react-redux'
+import { colors } from '../constants'
+import { deleteCategory, setEdit, updateCategory } from '../redux/actions'
+import { itemTitleIsDuplicate } from '../util'
 
-const CategoryItemForm = ({ handleUpdate, item }) => {
+const CategoryItemForm = ({
+  categories,
+  deleteCategory,
+  edit,
+  // index,
+  // isActive,
+  item,
+  // move,
+  // moveEnd,
+  setEdit,
+  updateCategory,
+}) => {
+  const { backgrounds } = colors
   const { key, subcategories } = item
   const [title, setTitle] = useState(item.title)
-  const textInput = useRef(null)
+  const [color, setColor] = useState(item.color)
+  let inputs = {}
 
   function cleanup() {
     setTitle('')
+    inputs = {}
   }
 
-  function handleOnBlur() {
-    textInput.current.focus()
+  function handleOnBlur(previousFocus) {
+    const currentFocus =
+      inputs.title.isFocused() ||
+      backgrounds.find(({ primary }) => inputs[primary].isFocused())
+
+    if (!currentFocus) {
+      inputs[previousFocus].focus()
+    } else if (typeof currentFocus === 'object') {
+      setColor(currentFocus)
+    }
   }
 
   function handleOnSubmitEditing() {
-    handleUpdate({ key, title, subcategories })
+    if (title) {
+      if (
+        edit.item.title === title &&
+        edit.item.color.primary === color.primary
+      ) {
+        setEdit(null)
+      } else if (
+        edit.item.title !== title &&
+        itemTitleIsDuplicate(title, categories)
+      ) {
+        alert('This category already exists!')
+      } else {
+        updateCategory({
+          categoryKey: edit.item.key,
+          category: { color, key, title, subcategories },
+        })
+        setEdit(null)
+      }
+    } else {
+      setEdit(null)
+      deleteCategory(edit.item.key)
+    }
   }
 
   useEffect(() => {
@@ -24,20 +71,48 @@ const CategoryItemForm = ({ handleUpdate, item }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        autoFocus={true}
-        blurOnSubmit={false}
-        maxLength={26}
-        onBlur={handleOnBlur}
-        onChangeText={e => setTitle(e)}
-        onSubmitEditing={handleOnSubmitEditing}
-        placeholder="Category Title"
-        ref={textInput}
-        returnKeyType="done"
-        selectionColor="black"
-        style={styles.title}
-        value={title}
-      />
+      <View style={[styles.titleContainer, { backgroundColor: color.primary }]}>
+        <TextInput
+          autoFocus={true}
+          blurOnSubmit={true}
+          maxLength={26}
+          onBlur={() => handleOnBlur('title')}
+          onChangeText={e => setTitle(e)}
+          onSubmitEditing={handleOnSubmitEditing}
+          placeholder="Category Title"
+          ref={ref => (inputs.title = ref)}
+          returnKeyType="done"
+          selectionColor="black"
+          style={styles.title}
+          value={title}
+        />
+      </View>
+
+      <View style={styles.colorTilesContainer}>
+        {backgrounds.map(colorTile => (
+          <TouchableOpacity
+            key={colorTile.primary}
+            style={[
+              styles.colorTile,
+              { backgroundColor: colorTile.primary },
+              {
+                borderWidth: color.primary === colorTile.primary ? 1 : null,
+              },
+            ]}>
+            <TextInput
+              maxLength={0}
+              onBlur={() => handleOnBlur(colorTile.primary)}
+              onSubmitEditing={handleOnSubmitEditing}
+              ref={ref => (inputs[colorTile.primary] = ref)}
+              returnKeyType="done"
+              secureTextEntry={true}
+              selectionColor={colorTile.primary}
+              style={styles.colorTileInput}
+              value={null}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   )
 }
@@ -45,18 +120,56 @@ const CategoryItemForm = ({ handleUpdate, item }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderWidth: 1,
+    flex: 1,
+    justifyContent: 'space-evenly',
     width: '100%',
-    flexDirection: 'row',
-    height: 50,
-    justifyContent: 'flex-start',
-    paddingLeft: 15,
-    paddingRight: 15,
+    marginBottom: '0.25%',
+    marginTop: '0.25%',
   },
-
+  titleContainer: {
+    alignItems: 'center',
+    aspectRatio: 7 / 1,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    width: '100%',
+  },
   title: {
+    flex: 5,
     fontSize: 19,
+  },
+  colorTilesContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  colorTile: {
+    aspectRatio: 1 / 1,
+    borderRadius: 2.5,
+    flex: 1,
+    margin: '1%',
+  },
+  colorTileInput: {
+    flex: 1,
+    fontSize: 1,
   },
 })
 
-export default CategoryItemForm
+const mapStateToProps = state => ({
+  categories: state.categories,
+  edit: state.edit,
+})
+
+const mapDispatchToProps = dispatch => ({
+  deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
+  setEdit: item => dispatch(setEdit(item)),
+  updateCategory: category => dispatch(updateCategory(category)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CategoryItemForm)

@@ -1,21 +1,18 @@
 import React from 'react'
-import BodyRenderItemContent from './BodyRenderItemContent'
-import Swiper from './Swiper'
-import { colors } from '../constants'
-import { mapIndexToColors } from '../util'
+import CategoryItem from './CategoryItem'
+import CategoryItemForm from './CategoryItemForm'
+import CategoryItemSwiper from './CategoryItemSwiper'
 import {
   validateAndUpdateCategory,
   validateAndUpdateSubcategory,
 } from '../validation'
-
-const { primary } = colors
 
 const BodyRenderItem = props => ({ item, index, move, moveEnd, isActive }) => {
   const {
     categories,
     category,
     categoryIndex,
-    colors,
+    // colors,
     deleteCategory,
     deleteSubcategory,
     edit,
@@ -25,12 +22,6 @@ const BodyRenderItem = props => ({ item, index, move, moveEnd, isActive }) => {
     updateSubcategory,
     shopping,
   } = props
-
-  const color = !category
-    ? mapIndexToColors(index, primary)
-    : index % 2 === 0
-    ? colors[categoryIndex].primary
-    : colors[categoryIndex].secondary
 
   function handleEdit() {
     setEdit(item)
@@ -77,34 +68,30 @@ const BodyRenderItem = props => ({ item, index, move, moveEnd, isActive }) => {
     }
   }
 
-  const content = (
-    <BodyRenderItemContent
-      category={category}
-      color={color}
-      edit={edit}
-      item={item}
-      handleUpdate={handleUpdate}
-      setEdit={setEdit}
-      shopping={shopping}
-    />
-  )
-
-  if (category && shopping) {
-    return content
-  } else {
+  if (categoryIndex === null && !edit) {
     return (
-      <Swiper
-        category={category}
-        color={color}
-        handleDelete={handleDelete}
-        handleEdit={handleEdit}
-        handleSelect={handleSelect}
-        isActive={isActive}
+      <CategoryItemSwiper
+        index={index}
+        item={item}
         move={move}
-        moveEnd={moveEnd}>
-        {content}
-      </Swiper>
+        moveEnd={moveEnd}
+        isActive={isActive}
+      />
     )
+  } else if (categoryIndex === null && edit) {
+    if (item.key === edit.item.key) {
+      return (
+        <CategoryItemForm
+          index={index}
+          item={item}
+          move={move}
+          moveEnd={moveEnd}
+          isActive={isActive}
+        />
+      )
+    } else {
+      return <CategoryItem item={item} />
+    }
   }
 }
 

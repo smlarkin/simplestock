@@ -52,8 +52,9 @@ const SubcategoryItem = ({ setEdit, item }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    aspectRatio: 7 / 1,
     flexDirection: 'row',
-    // height: 60,
+    width: '100%',
     padding: 5,
   },
   titleContainer: {

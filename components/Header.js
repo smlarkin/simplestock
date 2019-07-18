@@ -2,8 +2,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import HeaderIconButton from './HeaderIconButton'
 import HeaderTitle from './HeaderTitle'
-// import HeaderContent from './HeaderContent'
-// import Pagination, { Icon, Dot } from 'react-native-pagination'
+import { colors } from '../constants'
 
 const Header = ({
   categories,
@@ -39,6 +38,7 @@ const Header = ({
         setEdit(subcategory, 'new')
       } else {
         const category = {
+          color: colors.backgrounds[0],
           key: String(Math.random()),
           title: '',
           subcategories: [],
@@ -50,7 +50,7 @@ const Header = ({
   }
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <HeaderIconButton
         color={null}
         name="home"
@@ -77,6 +77,7 @@ const Header = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    // borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

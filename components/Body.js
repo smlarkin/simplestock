@@ -3,9 +3,6 @@ import React from 'react'
 import { FlatList, KeyboardAvoidingView, StyleSheet, View } from 'react-native'
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import BodyRenderItem from './BodyRenderItem'
-import BodyCategoriesNav from './BodyCategoriesNav'
-import BodyPaginator from './BodyPaginator'
-import { layout } from '../constants'
 
 const Body = props => {
   const {
@@ -14,9 +11,12 @@ const Body = props => {
     edit,
     setCategories,
     setCategoryIndex,
+    setEdit,
     setSubcategories,
     shopping,
   } = props
+
+  // setEdit(null)
 
   const category = categoryIndex !== null ? categories[categoryIndex] : null
 
@@ -51,31 +51,8 @@ const Body = props => {
   return (
     <View
       /* behavior="padding" */
-      style={[styles.container /* , { flex: category ? 7 : 8 } */]}>
-      {category && (
-        <View
-          style={[
-            styles.bodyItem,
-            {
-              marginTop: -layout.width / 18,
-            },
-          ]}>
-          <BodyPaginator
-            categories={categories}
-            categoryIndex={categoryIndex}
-          />
-        </View>
-      )}
-      <View style={{ flex: category ? 7 : null }}>{content}</View>
-      {category && (
-        <View style={styles.bodyItem}>
-          <BodyCategoriesNav
-            categories={categories}
-            categoryIndex={categoryIndex}
-            setCategoryIndex={setCategoryIndex}
-          />
-        </View>
-      )}
+      style={styles.container}>
+      {content}
     </View>
   )
 }
@@ -85,10 +62,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 8,
     width: '100%',
-  },
-  bodyItem: {
-    flex: 1,
-    // borderWidth: 1,
   },
 })
 
