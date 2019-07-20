@@ -1,30 +1,56 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import DoubleClick from 'react-native-double-click'
+import { connect } from 'react-redux'
 import StyledText from './StyledText'
+import { setEdit } from '../redux/actions'
 
-const SubcategoryItem = ({ setEdit, item }) => {
+const SubcategoryItem = ({
+  categoryIndex,
+  categories,
+  edit,
+  index,
+  isActive,
+  item,
+  move,
+  moveEnd,
+  setEdit,
+}) => {
+  const { color } = categories[categoryIndex]
+  const backgroundColor = isActive
+    ? 'white'
+    : index % 2 === 0
+    ? color.primary
+    : color.secondary
   const { title, current, base, type } = item
 
-  function handleDoubleClick(type) {
+  function handleOnClick(type) {
     setEdit(item, type)
   }
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={[styles.container, { backgroundColor }]}
+      onLongPress={edit ? null : move}
+      onPressOut={edit ? null : moveEnd}>
       <View style={styles.titleContainer}>
-        <StyledText medium style={styles.title}>
-          {title}
-        </StyledText>
+        <TouchableOpacity
+          onMagicTap={() => handleOnClick('title')}
+          onLongPress={edit ? null : move}
+          onPressOut={edit ? null : moveEnd}>
+          <StyledText medium style={styles.title}>
+            {title}
+          </StyledText>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.currentAmountContainer}>
-        <DoubleClick onClick={() => handleDoubleClick('current')}>
-          <StyledText bold style={styles.currentAmount}>
-            {current}
-          </StyledText>
-        </DoubleClick>
-      </View>
+      {/* <View style={styles.currentContainer}> */}
+      <DoubleClick onClick={() => handleOnClick('current')}>
+        <StyledText bold style={styles.current}>
+          {current}
+        </StyledText>
+      </DoubleClick>
+      {/* </View> */}
 
       <View style={styles.dividerContainer}>
         <StyledText light style={styles.divider}>
@@ -32,68 +58,82 @@ const SubcategoryItem = ({ setEdit, item }) => {
         </StyledText>
       </View>
 
-      <View style={styles.baseAmountContainer}>
-        <DoubleClick onClick={() => handleDoubleClick('base')}>
-          <StyledText bold style={styles.baseAmount}>
-            {base}
+      {/* <View style={styles.baseContainer}> */}
+      <DoubleClick onClick={() => handleOnClick('base')}>
+        <StyledText bold style={styles.base}>
+          {base}
+        </StyledText>
+      </DoubleClick>
+      {/* </View> */}
+
+      <View style={styles.typeContainer}>
+        <DoubleClick onClick={() => handleOnClick('type')}>
+          <StyledText demi style={styles.type}>
+            {type}
           </StyledText>
         </DoubleClick>
       </View>
-
-      <View style={styles.amountTypeContainer}>
-        <StyledText demi style={styles.amountType}>
-          {type}
-        </StyledText>
-      </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    aspectRatio: 7 / 1,
     flexDirection: 'row',
+    justifyContent: 'center',
     width: '100%',
-    padding: 5,
+    aspectRatio: 7 / 1,
   },
   titleContainer: {
     alignItems: 'center',
     flex: 4,
     flexDirection: 'row',
-    height: 60,
     justifyContent: 'flex-start',
   },
   title: {
     flexWrap: 'wrap',
     fontSize: 18,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
+    paddingLeft: '5%',
+    paddingRight: '5%',
   },
-  currentAmount: {
+  current: {
     fontSize: 20,
-    padding: 5,
+    padding: '1%',
   },
   dividerContainer: {
-    marginLeft: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '0.5%',
+    marginTop: '2%',
   },
   divider: {
     fontSize: 40,
   },
-  baseAmount: {
+  base: {
     fontSize: 20,
-    padding: 5,
+    padding: '1%',
   },
-  amountTypeContainer: {
+  typeContainer: {
     alignItems: 'center',
     flex: 1,
   },
-  amountType: {
+  type: {
     fontSize: 10,
-    padding: 5,
   },
 })
 
-export default SubcategoryItem
+const mapStateToProps = state => ({
+  categoryIndex: state.categoryIndex,
+  categories: state.categories,
+  edit: state.edit,
+})
+
+const mapDispatchToProps = dispatch => ({
+  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SubcategoryItem)

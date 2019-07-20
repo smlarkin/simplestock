@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
+import { connect } from 'react-redux'
 import { layout } from '../constants'
 import StyledText from './StyledText'
 
@@ -204,4 +205,9 @@ const styles = StyleSheet.create({
   },
 })
 
-export default BodyPaginator
+const mapStateToProps = state => ({
+  categoryIndex: state.categoryIndex,
+  categories: state.categories,
+})
+
+export default connect(mapStateToProps)(BodyPaginator)

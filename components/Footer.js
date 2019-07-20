@@ -1,29 +1,59 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import FooterViewsNav from './FooterViewsNav'
+import { StyleSheet, View } from 'react-native'
+import { connect } from 'react-redux'
+import FooterIconButton from './FooterIconButton'
+import { updateDifferenceAndShopping } from '../util'
+import { setCategories, setShopping } from '../redux/actions'
 
-const Footer = ({
+const FooterViewsNav = ({
   categories,
   categoryIndex,
-  colors,
-  edit,
-  resetCategories,
   setCategories,
-  setCategoryIndex,
-  setEdit,
   setShopping,
   shopping,
 }) => {
+  function handlePressShopping(toShop) {
+    if (toShop) {
+      setShopping(true)
+    } else {
+      updateDifferenceAndShopping(categories, setCategories)
+      setShopping(false)
+    }
+  }
+
+  function handlePressShare() {
+    if (categoryIndex !== null && shopping) {
+      console.log('share category shopping list')
+    } else if (categoryIndex !== null) {
+      console.log('share category inventory list')
+    } else if (shopping) {
+      console.log('share entire shopping list')
+    } else {
+      console.log('share entire inventory list')
+    }
+  }
   return (
     <View style={styles.container}>
-      <FooterViewsNav
-        /* WARNING */ resetCategories={resetCategories} /* <-- */
-        /* WARNING */ setEdit={setEdit} /* <-- */
-        categories={categories}
-        categoryIndex={categoryIndex}
-        setCategories={setCategories}
-        setShopping={setShopping}
-        shopping={shopping}
+      <FooterIconButton
+        color={null}
+        name="list"
+        handlePress={() => handlePressShopping(false)}
+        size={24}
+        visible={true}
+      />
+      <FooterIconButton
+        color={null}
+        name="check-square"
+        handlePress={() => handlePressShopping(true)}
+        size={24}
+        visible={true}
+      />
+      <FooterIconButton
+        color={null}
+        name="send"
+        handlePress={handlePressShare}
+        size={24}
+        visible={true}
       />
     </View>
   )
@@ -31,9 +61,31 @@ const Footer = ({
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
+    flexDirection: 'row',
     flex: 1,
+    justifyContent: 'space-between',
     width: '100%',
+  },
+  iconContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
 })
 
-export default Footer
+const mapStateToProps = state => ({
+  categories: state.categories,
+  categoryIndex: state.categoryIndex,
+  shopping: state.shopping,
+})
+
+const mapDispatchToProps = dispatch => ({
+  setCategories: categories => dispatch(setCategories(categories)),
+  setShopping: boolean => dispatch(setShopping(boolean)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FooterViewsNav)

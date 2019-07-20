@@ -1,18 +1,33 @@
+/* eslint-disable complexity */
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import Picker from 'react-native-picker-select'
+import { Keyboard, StyleSheet, TextInput, View } from 'react-native'
+import Modal from 'react-native-modal'
+import { connect } from 'react-redux'
 import StyledText from './StyledText'
-import { units } from '../constants'
-import { amountIsValid } from '../validation'
+import SubcategoryItemUnitPicker from './SubcategoryItemUnitPicker'
+import { layout } from '../constants'
+import { amountIsValid, validateAndUpdateSubcategory } from '../validation'
+import { deleteSubcategory, setEdit, updateSubcategory } from '../redux/actions'
 
-const SubcategoryItemForm = ({ edit, handleUpdate, item }) => {
+const SubcategoryItemForm = ({
+  categories,
+  categoryIndex,
+  deleteSubcategory,
+  edit,
+  index,
+  item,
+  setEdit,
+  updateSubcategory,
+}) => {
+  const category = categories[categoryIndex]
+  const { color } = category
+  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
   const [title, setTitle] = useState(item.title)
   const [current, setCurrent] = useState(item.current)
   const [base, setBase] = useState(item.base)
   const [type, setType] = useState(item.type)
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const { key } = item
+  const [modalIsVisible, setModalIsVisible] = useState(false)
+  const { difference, key, shop } = item
   let inputs = {}
 
   function cleanup() {
@@ -20,39 +35,12 @@ const SubcategoryItemForm = ({ edit, handleUpdate, item }) => {
     setCurrent('')
     setBase('')
     setType('')
-    // KEEP THIS EXACTLY AS IS :)
-    // if (key === '_') {
-    //   handleUpdate({ title, current, base, type })
-    // }
-    setModalVisible(false)
-    setModalIsOpen(false)
+    setModalIsVisible(false)
     inputs = {}
   }
 
   function focusInput(name) {
     inputs[name].focus()
-  }
-
-  function handleOnBlur() {
-    if (
-      ((!inputs.type && !modalIsOpen) ||
-        (inputs.type && !inputs.type.isFocused())) &&
-      !inputs.title.isFocused() &&
-      !inputs.current.isFocused() &&
-      !inputs.base.isFocused()
-    ) {
-      handleUpdate({ key, title, current, base, type })
-    }
-  }
-
-  function handleToggleModal() {
-    if (!modalIsOpen) {
-      setModalVisible(true)
-      setModalIsOpen(true)
-    } else {
-      setModalVisible(false)
-      setModalIsOpen(false)
-    }
   }
 
   function handleChangeText(amount, callback) {
@@ -61,8 +49,41 @@ const SubcategoryItemForm = ({ edit, handleUpdate, item }) => {
     }
   }
 
+  function handleOnBlur() {
+    if (
+      !inputs.title.isFocused() &&
+      !inputs.current.isFocused() &&
+      !inputs.base.isFocused() &&
+      !inputs.type.isFocused()
+    ) {
+      validateAndUpdate()
+    }
+  }
+
+  function handleSubmit() {
+    setModalIsVisible(false)
+    validateAndUpdate()
+  }
+
   function setRef(ref, name) {
     inputs[name] = ref
+  }
+
+  function validateAndUpdate() {
+    validateAndUpdateSubcategory({
+      category,
+      base,
+      edit,
+      current,
+      difference,
+      deleteSubcategory,
+      key,
+      setEdit,
+      shop,
+      title,
+      type,
+      updateSubcategory,
+    })
   }
 
   useEffect(() => {
@@ -70,15 +91,17 @@ const SubcategoryItemForm = ({ edit, handleUpdate, item }) => {
   }, [])
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor }]}>
       <View style={styles.titleContainer}>
         <TextInput
-          autoFocus={true}
+          autoFocus={edit.type === 'new' || edit.type === 'title'}
           maxLength={42}
-          onBlur={() => handleOnBlur('title')}
+          onBlur={handleOnBlur}
           onChangeText={e => setTitle(e)}
-          onFocus={() => setModalVisible(false)}
-          onSubmitEditing={() => focusInput('current')}
+          onFocus={() => setModalIsVisible(false)}
+          onSubmitEditing={() => {
+            edit.type === 'new' ? focusInput('current') : Keyboard.dismiss()
+          }}
           placeholder="Title & Description"
           ref={ref => setRef(ref, 'title')}
           returnKeyType="done"
@@ -88,21 +111,22 @@ const SubcategoryItemForm = ({ edit, handleUpdate, item }) => {
         />
       </View>
 
-      <View style={styles.currentAmountContainer}>
-        <TextInput
-          keyboardType="numeric"
-          maxLength={3}
-          onBlur={() => handleOnBlur('current')}
-          onChangeText={e => handleChangeText(e, setCurrent)}
-          onSubmitEditing={() => focusInput('base')}
-          placeholder="0"
-          ref={ref => setRef(ref, 'current')}
-          returnKeyType="done"
-          selectionColor="black"
-          style={styles.currentAmount}
-          value={current}
-        />
-      </View>
+      <TextInput
+        autoFocus={edit.type === 'current'}
+        keyboardType="numeric"
+        maxLength={3}
+        onBlur={handleOnBlur}
+        onChangeText={e => handleChangeText(e, setCurrent)}
+        onSubmitEditing={() => {
+          edit.type === 'new' ? focusInput('base') : Keyboard.dismiss()
+        }}
+        placeholder="0"
+        ref={ref => setRef(ref, 'current')}
+        returnKeyType="done"
+        selectionColor="black"
+        style={styles.current}
+        value={current}
+      />
 
       <View style={styles.dividerContainer}>
         <StyledText light style={styles.divider}>
@@ -110,136 +134,129 @@ const SubcategoryItemForm = ({ edit, handleUpdate, item }) => {
         </StyledText>
       </View>
 
-      <View style={styles.baseAmountContainer}>
+      <TextInput
+        autoFocus={edit.type === 'base'}
+        keyboardType="numeric"
+        maxLength={3}
+        onBlur={handleOnBlur}
+        onChangeText={e => handleChangeText(e, setBase)}
+        onSubmitEditing={() => {
+          edit.type === 'new' ? focusInput('type') : Keyboard.dismiss()
+        }}
+        placeholder="0"
+        ref={ref => setRef(ref, 'base')}
+        returnKeyType="done"
+        selectionColor="black"
+        style={styles.base}
+        value={base}
+      />
+
+      <View style={styles.typeContainer}>
         <TextInput
-          keyboardType="numeric"
-          maxLength={3}
-          onBlur={() => handleOnBlur('base')}
-          onChangeText={e => handleChangeText(e, setBase)}
-          onSubmitEditing={() => {
-            if (!inputs.amountType) {
-              handleToggleModal()
-            } else {
-              focusInput('type')
+          autoFocus={edit.type === 'type'}
+          maxLength={10}
+          onBlur={() => edit.type !== 'new' && handleOnBlur()}
+          onChangeText={e => setType(e)}
+          onFocus={() => {
+            if (edit.type === 'new') {
+              Keyboard.dismiss()
+              setModalIsVisible(true)
             }
           }}
-          placeholder="0"
-          ref={ref => setRef(ref, 'base')}
+          onSubmitEditing={validateAndUpdate}
+          placeholder=" UNIT-TYPE"
+          ref={ref => setRef(ref, 'type')}
           returnKeyType="done"
-          selectionColor="black"
-          style={styles.baseAmount}
-          value={base}
+          selectionColor={edit.type === 'new' ? backgroundColor : 'black'}
+          style={styles.type}
+          value={type}
         />
-      </View>
 
-      <View style={styles.amountTypeContainer}>
-        {edit.type === 'new' ? (
-          <TouchableOpacity onPress={handleToggleModal}>
-            <StyledText
-              demi
-              style={[
-                styles.amountType,
-                {
-                  color:
-                    type === 'UNIT-TYPE' || !type
-                      ? 'rgba(0,0,0,0.2)'
-                      : '#4A4A4A',
-                },
-              ]}>
-              {type ? type : 'UNIT-TYPE'}
-            </StyledText>
-            <Picker
-              items={units}
-              doneText="Submit"
-              onDonePress={() => {
-                setModalIsOpen(false)
-                handleUpdate({ title, current, base, type })
-              }}
-              onOpen={() => setModalVisible(false)}
-              onValueChange={e => setType(e)}
-              placeholder={{}}
-              style={amountTypeStyles}
-              useNativeAndroidPickerStyle={false}
-              value={type}
-              modalProps={{ visible: modalVisible }}
-            />
-          </TouchableOpacity>
-        ) : (
-          <TextInput
-            maxLength={10}
-            onBlur={() => handleOnBlur('type')}
-            onChangeText={e => setType(e)}
-            onSubmitEditing={() => {
-              handleUpdate({ key, title, current, base, type })
-            }}
-            placeholder="UNIT-TYPE"
-            ref={ref => setRef(ref, 'type')}
-            returnKeyType="done"
-            selectionColor="black"
-            style={styles.amountType}
-            value={type}
+        <Modal
+          hasBackdrop={true}
+          isVisible={modalIsVisible}
+          onBackButtonPress={() => setModalIsVisible(false)}
+          onBackdropPress={() => setModalIsVisible(false)}
+          style={{
+            alignItems: 'center',
+            deviceHeight: layout.height,
+            deviceWidth: layout.width,
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}>
+          <SubcategoryItemUnitPicker
+            handleSubmit={handleSubmit}
+            setType={setType}
+            type={type}
           />
-        )}
+        </Modal>
       </View>
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     borderWidth: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
     width: '100%',
     aspectRatio: 7 / 1,
-    // height: 60,
-    padding: 5,
   },
   titleContainer: {
     alignItems: 'center',
     flex: 4,
     flexDirection: 'row',
-    // height: 60,
     justifyContent: 'flex-start',
   },
   title: {
     flexWrap: 'wrap',
     fontSize: 18,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
+    paddingLeft: '5%',
+    paddingRight: '5%',
   },
-  currentAmount: {
+  current: {
     fontSize: 20,
-    padding: 5,
+    padding: '1%',
   },
   dividerContainer: {
-    marginLeft: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '0.5%',
+    marginTop: '2%',
   },
   divider: {
     fontSize: 40,
   },
-  baseAmount: {
+  base: {
     fontSize: 20,
-    padding: 5,
+    padding: '1%',
   },
-  amountTypeContainer: {
+  typeContainer: {
     alignItems: 'center',
     flex: 1,
   },
-  amountType: {
+  type: {
     fontSize: 10,
-    padding: 5,
   },
 })
 
-const amountTypeStyles = StyleSheet.create({
-  inputIOS: {
-    display: 'none',
-  },
-  inputAndroid: {
-    display: 'none',
-  },
+const mapStateToProps = state => ({
+  categoryIndex: state.categoryIndex,
+  categories: state.categories,
+  edit: state.edit,
 })
 
-export default SubcategoryItemForm
+const mapDispatchToProps = dispatch => ({
+  deleteSubcategory: ({ categoryKey, subcategoryKey }) =>
+    dispatch(deleteSubcategory({ categoryKey, subcategoryKey })),
+  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
+    dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SubcategoryItemForm)

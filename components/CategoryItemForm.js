@@ -28,13 +28,14 @@ const CategoryItemForm = ({
     inputs = {}
   }
 
-  function handleOnBlur(previousFocus) {
+  function handleOnBlur(/* previousFocus */) {
     const currentFocus =
       inputs.title.isFocused() ||
       backgrounds.find(({ primary }) => inputs[primary].isFocused())
 
     if (!currentFocus) {
-      inputs[previousFocus].focus()
+      // inputs[previousFocus].focus()
+      handleOnSubmitEditing()
     } else if (typeof currentFocus === 'object') {
       setColor(currentFocus)
     }
@@ -76,7 +77,7 @@ const CategoryItemForm = ({
           autoFocus={true}
           blurOnSubmit={true}
           maxLength={26}
-          onBlur={() => handleOnBlur('title')}
+          onBlur={handleOnBlur}
           onChangeText={e => setTitle(e)}
           onSubmitEditing={handleOnSubmitEditing}
           placeholder="Category Title"
@@ -105,7 +106,6 @@ const CategoryItemForm = ({
               onSubmitEditing={handleOnSubmitEditing}
               ref={ref => (inputs[colorTile.primary] = ref)}
               returnKeyType="done"
-              secureTextEntry={true}
               selectionColor={colorTile.primary}
               style={styles.colorTileInput}
               value={null}

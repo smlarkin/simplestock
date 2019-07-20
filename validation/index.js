@@ -1,6 +1,15 @@
+/* eslint-disable complexity */
 import { createShop, createDifference, itemTitleIsDuplicate } from '../util'
 
-/* eslint-disable complexity */
+export function amountIsValid(amount) {
+  const amountNumber = Number(amount)
+  if (isNaN(amountNumber) || amountNumber < 0) {
+    alert('A number between 0 and 999')
+  } else {
+    return true
+  }
+}
+
 export function validateAndUpdateSubcategory({
   category,
   base,
@@ -15,13 +24,12 @@ export function validateAndUpdateSubcategory({
   type,
   updateSubcategory,
 }) {
-  console.log(key, title, current, base, type, difference, shop)
   if (!title && !current && !base && !type) {
     deleteSubcategory({
       categoryKey: category.key,
       subcategoryKey: edit.item.key,
     })
-    setEdit(null)
+    return setEdit(null)
   } else if (title && current && base && type) {
     const currentDifference = !difference
       ? createDifference(current, base)
@@ -35,7 +43,7 @@ export function validateAndUpdateSubcategory({
       edit.item.difference === currentDifference &&
       edit.item.shop === currentShop
     ) {
-      setEdit(null)
+      return setEdit(null)
     } else if (
       edit.item.title !== title &&
       itemTitleIsDuplicate(title, category.subcategories)
@@ -43,7 +51,7 @@ export function validateAndUpdateSubcategory({
       alert('Title already exists!')
     } else {
       const subcategory = {
-        key: edit.item.key,
+        key,
         title,
         current,
         base,
@@ -51,57 +59,14 @@ export function validateAndUpdateSubcategory({
         difference: currentDifference,
         shop: currentShop,
       }
-      console.log('updated subcategory ', subcategory)
       updateSubcategory({
         categoryKey: category.key,
         subcategoryKey: edit.item.key,
         subcategory,
       })
-      setEdit(null)
-      return true
+      return setEdit(null)
     }
   } else {
     alert('All fields must be completed')
-  }
-}
-
-export function validateAndUpdateCategory({
-  categories,
-  color,
-  deleteCategory,
-  edit,
-  key,
-  setEdit,
-  subcategories,
-  title,
-  updateCategory,
-}) {
-  if (title) {
-    if (
-      edit.item.title === title &&
-      edit.item.color.primary === color.primary
-    ) {
-      setEdit(null)
-    } else if (itemTitleIsDuplicate(title, categories)) {
-      alert('This category already exists!')
-    } else {
-      updateCategory({
-        categoryKey: edit.item.key,
-        category: { color, key, title, subcategories },
-      })
-      setEdit(null)
-    }
-  } else {
-    setEdit(null)
-    deleteCategory(key)
-  }
-}
-
-export function amountIsValid(amount) {
-  const amountNumber = Number(amount)
-  if (isNaN(amountNumber) || amountNumber < 0) {
-    alert('A number between 0 and 999')
-  } else {
-    return true
   }
 }

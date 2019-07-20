@@ -9,10 +9,11 @@ import StyledText from './StyledText'
 const CategoryItemSwiper = ({
   deleteCategory,
   index,
+  isActive,
   item,
   move,
   moveEnd,
-  isActive,
+  setCategoryIndex,
   setEdit,
 }) => {
   const { color, title } = item
@@ -41,7 +42,7 @@ const CategoryItemSwiper = ({
             backgroundColor: isActive ? 'white' : color.primary,
           },
         ]}
-        // onPress={() => setCategoryIndex(index)}
+        onPress={() => setCategoryIndex(index)}
         onLongPress={move}
         onPressOut={moveEnd}>
         <StyledText bold style={styles.text}>
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToState = dispatch => ({
   deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
+  setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setEdit: category => dispatch(setEdit(category)),
 })
 

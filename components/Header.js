@@ -1,7 +1,14 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
+import { connect } from 'react-redux'
 import HeaderIconButton from './HeaderIconButton'
 import HeaderTitle from './HeaderTitle'
+import {
+  createCategory,
+  createSubcategory,
+  setCategoryIndex,
+  setEdit,
+} from '../redux/actions'
 import { colors } from '../constants'
 
 const Header = ({
@@ -85,4 +92,22 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Header
+const mapStateToProps = state => ({
+  categories: state.categories,
+  categoryIndex: state.categoryIndex,
+  edit: state.edit,
+  shopping: state.shopping,
+})
+
+const mapDispatchToProps = dispatch => ({
+  createCategory: category => dispatch(createCategory(category)),
+  createSubcategory: ({ categoryKey, subcategory }) =>
+    dispatch(createSubcategory({ categoryKey, subcategory })),
+  setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
+  setEdit: (item, type) => dispatch(setEdit(item, type)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header)

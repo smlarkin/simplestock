@@ -1,23 +1,19 @@
 /* eslint-disable complexity */
 import React from 'react'
-import { FlatList, KeyboardAvoidingView, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { connect } from 'react-redux'
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import BodyRenderItem from './BodyRenderItem'
+import { setCategories, setSubcategories } from '../redux/actions'
 
-const Body = props => {
-  const {
-    categories,
-    categoryIndex,
-    edit,
-    setCategories,
-    setCategoryIndex,
-    setEdit,
-    setSubcategories,
-    shopping,
-  } = props
-
-  // setEdit(null)
-
+const Body = ({
+  categories,
+  categoryIndex,
+  edit,
+  setCategories,
+  setSubcategories,
+  shopping,
+}) => {
   const category = categoryIndex !== null ? categories[categoryIndex] : null
 
   const data = !category
@@ -26,7 +22,7 @@ const Body = props => {
     ? category.subcategories.filter(subcategory => subcategory.shop === true)
     : category.subcategories
 
-  const renderItem = BodyRenderItem({ ...props, category })
+  const renderItem = BodyRenderItem({ categoryIndex, edit, shopping })
 
   function onMoveEnd(data) {
     if (category) {
@@ -36,25 +32,18 @@ const Body = props => {
     }
   }
 
-  const content =
-    category && shopping ? (
-      <FlatList data={data} renderItem={renderItem} />
-    ) : (
+  const content = (
+    <View style={styles.container}>
       <DraggableFlatList
         data={data}
         renderItem={renderItem}
         scrollPercent={5}
         onMoveEnd={({ data }) => onMoveEnd(data)}
       />
-    )
-
-  return (
-    <View
-      /* behavior="padding" */
-      style={styles.container}>
-      {content}
     </View>
   )
+
+  return content
 }
 
 const styles = StyleSheet.create({
@@ -65,4 +54,20 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Body
+const mapStateToProps = state => ({
+  categories: state.categories,
+  categoryIndex: state.categoryIndex,
+  edit: state.edit,
+  shopping: state.shopping,
+})
+
+const mapDispatchToProps = dispatch => ({
+  setCategories: categories => dispatch(setCategories(categories)),
+  setSubcategories: ({ categoryKey, subcategories }) =>
+    dispatch(setSubcategories({ categoryKey, subcategories })),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Body)
