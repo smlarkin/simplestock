@@ -14,7 +14,6 @@
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
-    "react-native-double-click": "^1.0.5",
     "react-native-draggable-flatlist": "^1.1.7",
     "react-native-modal": "^11.1.0",
     "react-native-modest-checkbox": "^3.3.0",

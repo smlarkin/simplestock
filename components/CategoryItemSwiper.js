@@ -2,9 +2,10 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
-import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions'
 import Swipeout from 'rc-swipeout'
 import StyledText from './StyledText'
+import { layout } from '../constants'
+import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions'
 
 const CategoryItemSwiper = ({
   deleteCategory,
@@ -44,7 +45,7 @@ const CategoryItemSwiper = ({
         ]}
         onPress={() => setCategoryIndex(index)}
         onLongPress={move}
-        onPressOut={moveEnd}>
+        onPressOut={isActive ? moveEnd : null}>
         <StyledText bold style={styles.text}>
           {title}
         </StyledText>
@@ -61,12 +62,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginBottom: '0.25%',
     marginTop: '0.25%',
-    width: '100%',
+    width: layout.width,
   },
   touchableOpacity: {
     alignItems: 'center',
     aspectRatio: 7 / 1,
     justifyContent: 'center',
+    width: layout.width,
   },
   text: {
     fontSize: 19,

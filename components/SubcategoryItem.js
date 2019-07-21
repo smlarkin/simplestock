@@ -1,6 +1,6 @@
-import React from 'react'
+/* eslint-disable complexity */
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import DoubleClick from 'react-native-double-click'
 import { connect } from 'react-redux'
 import StyledText from './StyledText'
 import { setEdit } from '../redux/actions'
@@ -23,34 +23,47 @@ const SubcategoryItem = ({
     ? color.primary
     : color.secondary
   const { title, current, base, type } = item
+  const [lastTap, setLastTap] = useState(null)
 
-  function handleOnClick(type) {
-    setEdit(item, type)
+  function handleOnPress(type) {
+    const DELAY = 300
+    const now = Date.now()
+    if (lastTap && now - lastTap < DELAY) {
+      setEdit(item, type)
+    } else {
+      setLastTap(now)
+    }
   }
+
+  useEffect(() => setLastTap(null), [])
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor }]}
+      activeOpacity={1}
       onLongPress={edit ? null : move}
-      onPressOut={edit ? null : moveEnd}>
-      <View style={styles.titleContainer}>
-        <TouchableOpacity
-          onMagicTap={() => handleOnClick('title')}
-          onLongPress={edit ? null : move}
-          onPressOut={edit ? null : moveEnd}>
-          <StyledText medium style={styles.title}>
-            {title}
-          </StyledText>
-        </TouchableOpacity>
-      </View>
+      onPressOut={edit ? null : isActive ? moveEnd : null}
+      style={[styles.container, { backgroundColor }]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => handleOnPress('title')}
+        onLongPress={edit ? null : move}
+        onPressOut={edit ? null : isActive ? moveEnd : null}
+        style={styles.titleContainer}>
+        <StyledText medium style={styles.title}>
+          {title}
+        </StyledText>
+      </TouchableOpacity>
 
-      {/* <View style={styles.currentContainer}> */}
-      <DoubleClick onClick={() => handleOnClick('current')}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => handleOnPress('current')}
+        onLongPress={edit ? null : move}
+        onPressOut={edit ? null : isActive ? moveEnd : null}
+        style={styles.currentContainer}>
         <StyledText bold style={styles.current}>
           {current}
         </StyledText>
-      </DoubleClick>
-      {/* </View> */}
+      </TouchableOpacity>
 
       <View style={styles.dividerContainer}>
         <StyledText light style={styles.divider}>
@@ -58,21 +71,27 @@ const SubcategoryItem = ({
         </StyledText>
       </View>
 
-      {/* <View style={styles.baseContainer}> */}
-      <DoubleClick onClick={() => handleOnClick('base')}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => handleOnPress('base')}
+        onLongPress={edit ? null : move}
+        onPressOut={edit ? null : isActive ? moveEnd : null}
+        style={styles.baseContainer}>
         <StyledText bold style={styles.base}>
           {base}
         </StyledText>
-      </DoubleClick>
-      {/* </View> */}
+      </TouchableOpacity>
 
-      <View style={styles.typeContainer}>
-        <DoubleClick onClick={() => handleOnClick('type')}>
-          <StyledText demi style={styles.type}>
-            {type}
-          </StyledText>
-        </DoubleClick>
-      </View>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => handleOnPress('type')}
+        onLongPress={edit ? null : move}
+        onPressOut={edit ? null : isActive ? moveEnd : null}
+        style={styles.typeContainer}>
+        <StyledText demi style={styles.type}>
+          {type}
+        </StyledText>
+      </TouchableOpacity>
     </TouchableOpacity>
   )
 }
@@ -80,26 +99,30 @@ const SubcategoryItem = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    aspectRatio: 7 / 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    paddingTop: '1%',
     width: '100%',
-    aspectRatio: 7 / 1,
   },
   titleContainer: {
     alignItems: 'center',
     flex: 4,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    paddingLeft: '4%',
+    paddingRight: '1%',
   },
   title: {
     flexWrap: 'wrap',
     fontSize: 18,
-    paddingLeft: '5%',
-    paddingRight: '5%',
+  },
+  currentContainer: {
+    paddingLeft: '1%',
+    paddingRight: '1%',
   },
   current: {
     fontSize: 20,
-    padding: '1%',
   },
   dividerContainer: {
     alignItems: 'center',
@@ -110,9 +133,12 @@ const styles = StyleSheet.create({
   divider: {
     fontSize: 40,
   },
+  baseContainer: {
+    paddingLeft: '1%',
+    paddingRight: '1%',
+  },
   base: {
     fontSize: 20,
-    padding: '1%',
   },
   typeContainer: {
     alignItems: 'center',

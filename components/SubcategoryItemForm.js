@@ -28,6 +28,7 @@ const SubcategoryItemForm = ({
   const [type, setType] = useState(item.type)
   const [modalIsVisible, setModalIsVisible] = useState(false)
   const { difference, key, shop } = item
+  const editTypeIsNew = edit.type === 'new'
   let inputs = {}
 
   function cleanup() {
@@ -50,12 +51,16 @@ const SubcategoryItemForm = ({
   }
 
   function handleOnBlur() {
-    if (
-      !inputs.title.isFocused() &&
-      !inputs.current.isFocused() &&
-      !inputs.base.isFocused() &&
-      !inputs.type.isFocused()
-    ) {
+    if (editTypeIsNew) {
+      if (
+        !inputs.title.isFocused() &&
+        !inputs.current.isFocused() &&
+        !inputs.base.isFocused() &&
+        !inputs.type.isFocused()
+      ) {
+        validateAndUpdate()
+      }
+    } else {
       validateAndUpdate()
     }
   }
@@ -91,42 +96,72 @@ const SubcategoryItemForm = ({
   }, [])
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
-      <View style={styles.titleContainer}>
-        <TextInput
-          autoFocus={edit.type === 'new' || edit.type === 'title'}
-          maxLength={42}
-          onBlur={handleOnBlur}
-          onChangeText={e => setTitle(e)}
-          onFocus={() => setModalIsVisible(false)}
-          onSubmitEditing={() => {
-            edit.type === 'new' ? focusInput('current') : Keyboard.dismiss()
-          }}
-          placeholder="Title & Description"
-          ref={ref => setRef(ref, 'title')}
-          returnKeyType="done"
-          selectionColor="black"
-          style={styles.title}
-          value={title}
-        />
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor,
+          borderWidth: editTypeIsNew ? 1 : null,
+          paddingTop: !editTypeIsNew ? '1%' : null,
+        },
+      ]}>
+      <View
+        style={[
+          styles.titleContainer,
+          { paddingBottom: edit.type === 'title' ? '1%' : null },
+        ]}>
+        {editTypeIsNew || edit.type === 'title' ? (
+          <TextInput
+            autoFocus={editTypeIsNew || edit.type === 'title'}
+            maxLength={42}
+            onBlur={handleOnBlur}
+            onChangeText={e => setTitle(e)}
+            onFocus={() => setModalIsVisible(false)}
+            onSubmitEditing={() => {
+              editTypeIsNew ? focusInput('current') : Keyboard.dismiss()
+            }}
+            placeholder="Title & Description"
+            ref={ref => setRef(ref, 'title')}
+            returnKeyType="done"
+            selectionColor="black"
+            style={styles.title}
+            value={title}
+          />
+        ) : (
+          <StyledText medium style={styles.title}>
+            {title}
+          </StyledText>
+        )}
       </View>
 
-      <TextInput
-        autoFocus={edit.type === 'current'}
-        keyboardType="numeric"
-        maxLength={3}
-        onBlur={handleOnBlur}
-        onChangeText={e => handleChangeText(e, setCurrent)}
-        onSubmitEditing={() => {
-          edit.type === 'new' ? focusInput('base') : Keyboard.dismiss()
-        }}
-        placeholder="0"
-        ref={ref => setRef(ref, 'current')}
-        returnKeyType="done"
-        selectionColor="black"
-        style={styles.current}
-        value={current}
-      />
+      <View
+        style={[
+          styles.currentContainer,
+          { paddingBottom: edit.type === 'current' ? '1.5%' : null },
+        ]}>
+        {editTypeIsNew || edit.type === 'current' ? (
+          <TextInput
+            autoFocus={edit.type === 'current'}
+            keyboardType="numeric"
+            maxLength={3}
+            onBlur={handleOnBlur}
+            onChangeText={e => handleChangeText(e, setCurrent)}
+            onSubmitEditing={() => {
+              edit.type === 'new' ? focusInput('base') : Keyboard.dismiss()
+            }}
+            placeholder="0"
+            ref={ref => setRef(ref, 'current')}
+            returnKeyType="done"
+            selectionColor="black"
+            style={styles.current}
+            value={current}
+          />
+        ) : (
+          <StyledText bold style={styles.current}>
+            {current}
+          </StyledText>
+        )}
+      </View>
 
       <View style={styles.dividerContainer}>
         <StyledText light style={styles.divider}>
@@ -134,43 +169,68 @@ const SubcategoryItemForm = ({
         </StyledText>
       </View>
 
-      <TextInput
-        autoFocus={edit.type === 'base'}
-        keyboardType="numeric"
-        maxLength={3}
-        onBlur={handleOnBlur}
-        onChangeText={e => handleChangeText(e, setBase)}
-        onSubmitEditing={() => {
-          edit.type === 'new' ? focusInput('type') : Keyboard.dismiss()
-        }}
-        placeholder="0"
-        ref={ref => setRef(ref, 'base')}
-        returnKeyType="done"
-        selectionColor="black"
-        style={styles.base}
-        value={base}
-      />
+      <View
+        style={[
+          styles.baseContainer,
+          {
+            paddingBottom: edit.type === 'base' ? '1.5%' : null,
+            marginLeft: edit.type === 'base' ? '1%' : null,
+          },
+        ]}>
+        {editTypeIsNew || edit.type === 'base' ? (
+          <TextInput
+            autoFocus={edit.type === 'base'}
+            keyboardType="numeric"
+            maxLength={3}
+            onBlur={handleOnBlur}
+            onChangeText={e => handleChangeText(e, setBase)}
+            onSubmitEditing={() => {
+              edit.type === 'new' ? focusInput('type') : Keyboard.dismiss()
+            }}
+            placeholder="0"
+            ref={ref => setRef(ref, 'base')}
+            returnKeyType="done"
+            selectionColor="black"
+            style={styles.base}
+            value={base}
+          />
+        ) : (
+          <StyledText bold style={styles.base}>
+            {base}
+          </StyledText>
+        )}
+      </View>
 
-      <View style={styles.typeContainer}>
-        <TextInput
-          autoFocus={edit.type === 'type'}
-          maxLength={10}
-          onBlur={() => edit.type !== 'new' && handleOnBlur()}
-          onChangeText={e => setType(e)}
-          onFocus={() => {
-            if (edit.type === 'new') {
-              Keyboard.dismiss()
-              setModalIsVisible(true)
-            }
-          }}
-          onSubmitEditing={validateAndUpdate}
-          placeholder=" UNIT-TYPE"
-          ref={ref => setRef(ref, 'type')}
-          returnKeyType="done"
-          selectionColor={edit.type === 'new' ? backgroundColor : 'black'}
-          style={styles.type}
-          value={type}
-        />
+      <View
+        style={[
+          styles.typeContainer,
+          { paddingBottom: edit.type === 'type' ? '.5%' : null },
+        ]}>
+        {editTypeIsNew || edit.type === 'type' ? (
+          <TextInput
+            autoFocus={edit.type === 'type'}
+            maxLength={10}
+            onBlur={() => edit.type !== 'new' && handleOnBlur()}
+            onChangeText={e => setType(e)}
+            onFocus={() => {
+              if (edit.type === 'new') {
+                Keyboard.dismiss()
+                setModalIsVisible(true)
+              }
+            }}
+            onSubmitEditing={validateAndUpdate}
+            placeholder=" UNIT-TYPE"
+            ref={ref => setRef(ref, 'type')}
+            returnKeyType="done"
+            selectionColor={edit.type === 'new' ? backgroundColor : 'black'}
+            style={styles.type}
+            value={type}
+          />
+        ) : (
+          <StyledText demi style={styles.type}>
+            {type}
+          </StyledText>
+        )}
 
         <Modal
           hasBackdrop={true}
@@ -198,27 +258,29 @@ const SubcategoryItemForm = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderWidth: 1,
+    aspectRatio: 7 / 1,
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    aspectRatio: 7 / 1,
   },
   titleContainer: {
     alignItems: 'center',
     flex: 4,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    paddingLeft: '4%',
+    paddingRight: '1%',
   },
   title: {
     flexWrap: 'wrap',
     fontSize: 18,
-    paddingLeft: '5%',
-    paddingRight: '5%',
+  },
+  currentContainer: {
+    paddingLeft: '1%',
+    paddingRight: '1%',
   },
   current: {
     fontSize: 20,
-    padding: '1%',
   },
   dividerContainer: {
     alignItems: 'center',
@@ -229,9 +291,12 @@ const styles = StyleSheet.create({
   divider: {
     fontSize: 40,
   },
+  baseContainer: {
+    paddingLeft: '1%',
+    paddingRight: '1%',
+  },
   base: {
     fontSize: 20,
-    padding: '1%',
   },
   typeContainer: {
     alignItems: 'center',

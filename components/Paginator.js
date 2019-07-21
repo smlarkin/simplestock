@@ -11,7 +11,7 @@ const itemMargin = itemWidth * 2
 const viewOffset = itemWidthTotal * 4
 const listHeaderOrFooterWidth = viewOffset
 
-class BodyPaginator extends Component {
+class Paginator extends Component {
   state = { viewableItems: [] }
 
   viewabilityConfig = {
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex: 1,
-    marginTop: -itemMargin,
+    justifyContent: 'flex-end',
   },
   contentContainerStyle: {
     alignItems: 'center',
@@ -210,4 +210,4 @@ const mapStateToProps = state => ({
   categories: state.categories,
 })
 
-export default connect(mapStateToProps)(BodyPaginator)
+export default connect(mapStateToProps)(Paginator)
