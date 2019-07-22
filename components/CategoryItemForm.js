@@ -9,11 +9,7 @@ const CategoryItemForm = ({
   categories,
   deleteCategory,
   edit,
-  // index,
-  // isActive,
   item,
-  // move,
-  // moveEnd,
   setEdit,
   updateCategory,
 }) => {
@@ -28,13 +24,12 @@ const CategoryItemForm = ({
     inputs = {}
   }
 
-  function handleOnBlur(/* previousFocus */) {
+  function handleOnBlur() {
     const currentFocus =
       inputs.title.isFocused() ||
       backgrounds.find(({ primary }) => inputs[primary].isFocused())
 
     if (!currentFocus) {
-      // inputs[previousFocus].focus()
       handleOnSubmitEditing()
     } else if (typeof currentFocus === 'object') {
       setColor(currentFocus)
@@ -66,6 +61,10 @@ const CategoryItemForm = ({
     }
   }
 
+  function setRef(ref, name) {
+    inputs[name] = ref
+  }
+
   useEffect(() => {
     return cleanup
   }, [])
@@ -79,9 +78,8 @@ const CategoryItemForm = ({
           maxLength={26}
           onBlur={handleOnBlur}
           onChangeText={e => setTitle(e)}
-          onSubmitEditing={handleOnSubmitEditing}
           placeholder="Category Title"
-          ref={ref => (inputs.title = ref)}
+          ref={ref => setRef(ref, 'title')}
           returnKeyType="done"
           selectionColor="black"
           style={styles.title}
@@ -101,10 +99,10 @@ const CategoryItemForm = ({
               },
             ]}>
             <TextInput
+              blurOnSubmit={true}
               maxLength={0}
-              onBlur={() => handleOnBlur(colorTile.primary)}
-              onSubmitEditing={handleOnSubmitEditing}
-              ref={ref => (inputs[colorTile.primary] = ref)}
+              onBlur={handleOnBlur}
+              ref={ref => setRef(ref, colorTile.primary)}
               returnKeyType="done"
               selectionColor={colorTile.primary}
               style={styles.colorTileInput}
@@ -131,13 +129,12 @@ const styles = StyleSheet.create({
     aspectRatio: 7 / 1,
     borderWidth: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingLeft: '5%',
     paddingRight: '5%',
     width: '100%',
   },
   title: {
-    flex: 5,
     fontSize: 19,
   },
   colorTilesContainer: {

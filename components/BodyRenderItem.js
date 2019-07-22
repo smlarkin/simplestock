@@ -1,5 +1,8 @@
 /* eslint-disable complexity */
 import React from 'react'
+// import Swipeout from 'rc-swipeout'
+// import Swipeout from 'react-native-swipeout'
+// import BlankScreen from './BlankScreen'
 import CategoryItem from './CategoryItem'
 import CategoryItemForm from './CategoryItemForm'
 import CategoryItemSwiper from './CategoryItemSwiper'

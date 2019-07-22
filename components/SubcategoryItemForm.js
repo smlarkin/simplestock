@@ -108,7 +108,7 @@ const SubcategoryItemForm = ({
       <View
         style={[
           styles.titleContainer,
-          { paddingBottom: edit.type === 'title' ? '1%' : null },
+          { marginBottom: edit.type === 'title' ? '1%' : null },
         ]}>
         {editTypeIsNew || edit.type === 'title' ? (
           <TextInput
@@ -137,7 +137,7 @@ const SubcategoryItemForm = ({
       <View
         style={[
           styles.currentContainer,
-          { paddingBottom: edit.type === 'current' ? '1.5%' : null },
+          { marginBottom: edit.type === 'current' ? '1.5%' : null },
         ]}>
         {editTypeIsNew || edit.type === 'current' ? (
           <TextInput
@@ -173,7 +173,7 @@ const SubcategoryItemForm = ({
         style={[
           styles.baseContainer,
           {
-            paddingBottom: edit.type === 'base' ? '1.5%' : null,
+            marginBottom: edit.type === 'base' ? '1.5%' : null,
             marginLeft: edit.type === 'base' ? '1%' : null,
           },
         ]}>
@@ -204,7 +204,7 @@ const SubcategoryItemForm = ({
       <View
         style={[
           styles.typeContainer,
-          { paddingBottom: edit.type === 'type' ? '.5%' : null },
+          { marginBottom: edit.type === 'type' ? '.5%' : null },
         ]}>
         {editTypeIsNew || edit.type === 'type' ? (
           <TextInput

@@ -111,7 +111,7 @@ class Paginator extends Component {
               : null
           }
           renderItem={({ index, item }) => {
-            const color = index === categoryIndex ? 'black' : item.color.primary
+            const color = index === categoryIndex ? 'grey' : item.color.primary
 
             return (
               <View
@@ -121,7 +121,7 @@ class Paginator extends Component {
                   aspectRatio: 1 / 1,
                   backgroundColor: color,
                   borderRadius: 50,
-                  borderColor: 'gray',
+                  // borderColor: 'gray',
                   borderWidth: 1,
                   margin: itemMargin,
                 }}

@@ -4,7 +4,6 @@ import { StyleSheet, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import Swipeout from 'rc-swipeout'
 import StyledText from './StyledText'
-import { layout } from '../constants'
 import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions'
 
 const CategoryItemSwiper = ({
@@ -18,34 +17,35 @@ const CategoryItemSwiper = ({
   setEdit,
 }) => {
   const { color, title } = item
+  const backgroundColor = isActive ? 'white' : color.primary
+
   return (
     <Swipeout
       autoClose={true}
       left={[
         {
           text: 'edit',
-          onPress: () => setEdit(item),
+          onPress: () => {
+            setTimeout(() => setEdit(item), 300)
+          },
           style: styles.left,
         },
       ]}
       right={[
         {
           text: 'delete',
-          onPress: () => deleteCategory(item.key),
+          onPress: () => {
+            setTimeout(() => deleteCategory(item.key), 300)
+          },
           style: styles.right,
         },
       ]}
       style={styles.swipeout}>
       <TouchableOpacity
-        style={[
-          styles.touchableOpacity,
-          {
-            backgroundColor: isActive ? 'white' : color.primary,
-          },
-        ]}
+        style={[styles.touchableOpacity, { backgroundColor }]}
         onPress={() => setCategoryIndex(index)}
         onLongPress={move}
-        onPressOut={isActive ? moveEnd : null}>
+        onPressOut={moveEnd}>
         <StyledText bold style={styles.text}>
           {title}
         </StyledText>
@@ -62,13 +62,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginBottom: '0.25%',
     marginTop: '0.25%',
-    width: layout.width,
+    width: '100%',
   },
   touchableOpacity: {
     alignItems: 'center',
     aspectRatio: 7 / 1,
     justifyContent: 'center',
-    width: layout.width,
+    width: '100%',
   },
   text: {
     fontSize: 19,
