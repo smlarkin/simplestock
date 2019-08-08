@@ -35,6 +35,8 @@ const Body = ({
     ? category.subcategories.filter(subcategory => subcategory.shop === true)
     : category.subcategories
 
+  // change to flatlist defaults for empty items
+  // use variables for shopping, category, subcategory
   const renderItem = !categories.length ? (
     <BlankScreen />
   ) : (
@@ -85,7 +87,6 @@ const Body = ({
 
 const styles = StyleSheet.create({
   container: {
-    // borderWidth: 1,
     width: '100%',
   },
 })

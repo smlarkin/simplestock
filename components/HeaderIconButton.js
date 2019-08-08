@@ -1,11 +1,11 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 
-const HeaderIconButton = ({ color, handlePress, name, size, visible }) => (
+const HeaderIconButton = ({ color, handleOnPress, name, size, visible }) => (
   <TouchableOpacity
     style={styles.container}
-    onPress={visible ? handlePress : null}>
+    onPress={visible ? handleOnPress : null}>
     {visible && <AntDesign color={color} name={name} size={size} />}
   </TouchableOpacity>
 )
@@ -15,8 +15,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    // borderWidth: 1,
-    // borderColor: 'red',
     aspectRatio: 1 / 1,
   },
 })

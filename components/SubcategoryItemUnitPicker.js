@@ -1,10 +1,10 @@
 import React from 'react'
-import { Button, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import Picker, { Item } from 'react-native-wheel-picker'
 import StyledText from './StyledText'
-import { layout, units } from '../constants'
+import { units } from '../constants'
 
-const SubcategoryItemUnitPicker = ({ handleSubmit, setType, type }) => {
+const SubcategoryItemUnitPicker = ({ handleOnPress, setType, type }) => {
   return (
     <View style={styles.container}>
       <Picker
@@ -12,12 +12,12 @@ const SubcategoryItemUnitPicker = ({ handleSubmit, setType, type }) => {
         onValueChange={value => setType(value)}
         selectedValue={type}
         style={styles.picker}>
-        {units.map((unit, index) => (
+        {units.map(unit => (
           <Item key={unit.key} label={unit.label} value={unit.value} />
         ))}
       </Picker>
       <TouchableOpacity
-        onPress={handleSubmit}
+        onPress={handleOnPress}
         style={styles.submitButtonContainer}>
         <StyledText bold style={styles.submitButton}>
           Submit

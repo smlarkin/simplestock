@@ -1,19 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
 import Checkbox from 'react-native-modest-checkbox'
 import StyledText from './StyledText'
 import { amountIsValid } from '../validation'
 
-const ShopForm = ({ color, edit, handleUpdate, item }) => {
+const ShopItemForm = ({ color, edit, handleUpdate, item }) => {
   const { key, current, base, title, type, shop } = item
   const [difference, setDifference] = useState(item.difference)
   const textInput = useRef(null)
 
-  function cleanup() {
-    setDifference('')
-  }
-
-  function handleChangeText(amount, callback) {
+  function handleOnChangeText(amount, callback) {
     if (amountIsValid(amount)) {
       callback(amount)
     }
@@ -21,7 +17,7 @@ const ShopForm = ({ color, edit, handleUpdate, item }) => {
 
   function handleOnBlur() {
     if (difference) {
-      const updatedCurrent = Number(current) + Number(difference)
+      const updatedCurrent = parseInt(current, 10) + parseInt(difference, 10)
       handleUpdate({
         key,
         current: `${updatedCurrent}`,
@@ -36,19 +32,6 @@ const ShopForm = ({ color, edit, handleUpdate, item }) => {
     }
   }
 
-  useEffect(() => {
-    if (edit.type === 'wait') {
-      setTimeout(() => {
-        const shop = 'wait'
-        handleUpdate({ key, current, base, title, type, difference, shop })
-      }, 300)
-    }
-  }, [edit.type])
-
-  useEffect(() => {
-    return cleanup
-  }, [])
-
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
       <View style={styles.titleContainer}>
@@ -58,34 +41,26 @@ const ShopForm = ({ color, edit, handleUpdate, item }) => {
       </View>
 
       <View style={styles.amountContainer}>
-        {edit.type !== 'wait' ? (
-          <TextInput
-            autoFocus={true}
-            keyboardType="numeric"
-            maxLength={3}
-            onBlur={() => handleOnBlur()}
-            onChangeText={e => handleChangeText(e, setDifference)}
-            placeholder="0"
-            ref={textInput}
-            returnKeyType="done"
-            selectionColor="black"
-            style={styles.difference}
-            value={difference}
-          />
-        ) : (
-          <StyledText bold style={styles.amount}>
-            {difference}
-          </StyledText>
-        )}
-        <StyledText
-          demi
-          style={edit.type !== 'wait' ? styles.type : styles.amountType}>
+        <TextInput
+          autoFocus={true}
+          keyboardType="numeric"
+          maxLength={3}
+          onBlur={() => handleOnBlur()}
+          onChangeText={e => handleOnChangeText(e, setDifference)}
+          placeholder="0"
+          ref={textInput}
+          returnKeyType="done"
+          selectionColor="black"
+          style={styles.difference}
+          value={difference}
+        />
+        <StyledText demi style={styles.type}>
           {type}
         </StyledText>
       </View>
 
       <View style={styles.checkboxContainer}>
-        <Checkbox checked={edit.type === 'wait'} label="" />
+        <Checkbox checked={false} label="" />
       </View>
     </View>
   )
@@ -123,11 +98,6 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingBottom: -5,
   },
-  amountType: {
-    fontSize: 10,
-    padding: 5,
-    paddingTop: -5,
-  },
   difference: {
     fontSize: 20,
   },
@@ -143,4 +113,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ShopForm
+export default ShopItemForm

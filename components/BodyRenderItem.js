@@ -6,6 +6,7 @@ import React from 'react'
 import CategoryItem from './CategoryItem'
 import CategoryItemForm from './CategoryItemForm'
 import CategoryItemSwiper from './CategoryItemSwiper'
+import ShopItem from './ShopItem'
 import SubcategoryItem from './SubcategoryItem'
 import SubcategoryItemForm from './SubcategoryItemForm'
 
@@ -37,6 +38,10 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
       return <SubcategoryItemForm index={index} item={item} />
     } else {
       return <SubcategoryItem index={index} item={item} />
+    }
+  } else if (categoryIndex !== null && shopping) {
+    if (item.shop) {
+      return <ShopItem index={index} item={item} />
     }
   } else if (categoryIndex !== null) {
     return (

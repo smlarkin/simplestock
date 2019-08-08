@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import { colors } from '../constants'
@@ -14,15 +14,10 @@ const CategoryItemForm = ({
   updateCategory,
 }) => {
   const { backgrounds } = colors
-  const { key, subcategories } = item
   const [title, setTitle] = useState(item.title)
   const [color, setColor] = useState(item.color)
+  const { key, subcategories } = item
   let inputs = {}
-
-  function cleanup() {
-    setTitle('')
-    inputs = {}
-  }
 
   function handleOnBlur() {
     const currentFocus =
@@ -33,6 +28,7 @@ const CategoryItemForm = ({
       handleOnSubmitEditing()
     } else if (typeof currentFocus === 'object') {
       setColor(currentFocus)
+      inputs.title.focus()
     }
   }
 
@@ -48,6 +44,7 @@ const CategoryItemForm = ({
         itemTitleIsDuplicate(title, categories)
       ) {
         alert('This category already exists!')
+        inputs.title.focus()
       } else {
         updateCategory({
           categoryKey: edit.item.key,
@@ -64,10 +61,6 @@ const CategoryItemForm = ({
   function setRef(ref, name) {
     inputs[name] = ref
   }
-
-  useEffect(() => {
-    return cleanup
-  }, [])
 
   return (
     <View style={styles.container}>

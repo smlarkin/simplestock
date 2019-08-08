@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import Swipeout from 'rc-swipeout'
@@ -39,8 +39,6 @@ const SubcategoryItem = ({
     }
   }
 
-  // useEffect(() => setLastTap(null), [])
-
   return (
     <Swipeout
       autoClose={true}
@@ -53,18 +51,23 @@ const SubcategoryItem = ({
       //     style: styles.left,
       //   },
       // ]}
-      right={[
-        {
-          text: 'delete',
-          onPress: () => {
-            setTimeout(
-              () => deleteSubcategory({ categoryKey, subcategoryKey }),
-              300
-            )
-          },
-          style: styles.right,
-        },
-      ]}
+      right={
+        // TEST THIS OUT!!!
+        edit
+          ? null
+          : [
+              {
+                text: 'delete',
+                onPress: () => {
+                  setTimeout(
+                    () => deleteSubcategory({ categoryKey, subcategoryKey }),
+                    300
+                  )
+                },
+                style: styles.right,
+              },
+            ]
+      }
       style={styles.swipeout}>
       <TouchableOpacity
         activeOpacity={1}

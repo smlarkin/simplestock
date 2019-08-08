@@ -1,54 +1,74 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import DoubleClick from 'react-native-double-click'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import Checkbox from 'react-native-modest-checkbox'
+import { connect } from 'react-redux'
 import StyledText from './StyledText'
+import { setEdit, updateSubcategory } from '../redux/actions'
 
-const ShopItem = ({ color, setEdit, item }) => {
-  const { key, title, current, base, type, difference } = item
+const ShopItem = ({
+  categories,
+  categoryIndex,
+  index,
+  item,
+  setEdit,
+  updateSubcategory,
+}) => {
+  const category = categories[categoryIndex]
+  const { color } = category
+  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
+  const { title, current, base, type, difference } = item
   const [isChecked, setIsChecked] = useState(false)
+  const [lastTap, setLastTap] = useState(null)
 
-  function cleanup() {
-    setIsChecked(false)
+  function handleOnPress() {
+    const DELAY = 300
+    const now = Date.now()
+    if (lastTap && now - lastTap < DELAY) {
+      setEdit(item)
+    } else {
+      setLastTap(now)
+    }
   }
 
-  function handleDoubleClick() {
-    setEdit(item)
-  }
-
-  function handleCheckbox() {
+  function handleOnChange() {
     setIsChecked(!isChecked)
   }
 
   useEffect(() => {
     if (isChecked) {
-      setEdit({ key, title, current, base, type, difference }, 'wait')
+      setTimeout(() => {
+        const shop = false
+        updateSubcategory({
+          categoryKey: category.key,
+          subcategoryKey: item.key,
+          subcategory: { ...item, shop },
+        })
+      }, 300)
     }
   }, [isChecked])
 
-  useEffect(() => {
-    return cleanup
-  }, [])
-
   return (
-    <View style={[styles.container, { backgroundColor: color }]}>
+    <View style={[styles.container, { backgroundColor }]}>
       <View style={styles.titleContainer}>
         <StyledText medium style={styles.title}>
           {title}
         </StyledText>
       </View>
 
-      <DoubleClick onClick={handleDoubleClick} style={styles.amountContainer}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={handleOnPress}
+        style={styles.amountContainer}>
         <StyledText bold style={styles.amount}>
           {difference}
         </StyledText>
         <StyledText demi style={styles.amountType}>
           {type}
         </StyledText>
-      </DoubleClick>
+      </TouchableOpacity>
 
       <View style={styles.checkboxContainer}>
-        <Checkbox checked={isChecked} label="" onChange={handleCheckbox} />
+        <Checkbox checked={isChecked} label="" onChange={handleOnChange} />
       </View>
     </View>
   )
@@ -57,24 +77,23 @@ const ShopItem = ({ color, setEdit, item }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'row',
-    width: '100%',
     aspectRatio: 7 / 1,
-    padding: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: '1%',
+    width: '100%',
   },
   titleContainer: {
     alignItems: 'center',
     flex: 4,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    paddingLeft: '4%',
+    paddingRight: '1%',
   },
   title: {
     flexWrap: 'wrap',
     fontSize: 18,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
   },
   amountContainer: {
     alignItems: 'center',
@@ -82,20 +101,30 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 20,
-    padding: 5,
-    paddingBottom: -5,
   },
   amountType: {
     fontSize: 10,
-    padding: 5,
-    paddingTop: -5,
   },
   checkboxContainer: {
     alignItems: 'center',
     flex: 1,
+    marginTop: '-1%',
     opacity: 0.75,
-    padding: 15,
   },
 })
 
-export default ShopItem
+const mapStateToProps = state => ({
+  categoryIndex: state.categoryIndex,
+  categories: state.categories,
+})
+
+const mapDisptachToProps = dispatch => ({
+  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
+    dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDisptachToProps
+)(ShopItem)

@@ -24,13 +24,13 @@ const Header = ({
   const category = categoryIndex !== null ? categories[categoryIndex] : null
   const title = category ? category.title : 'Simple Stock'
 
-  function handlePressHome() {
+  function handleOnPressHome() {
     if (edit) setEdit(null)
     setCategoryIndex(null)
   }
 
-  function handlePressPlus() {
-    if (!edit) {
+  function handleOnPressPlus() {
+    if (!edit && !shopping) {
       if (category) {
         const subcategory = {
           key: String(Math.random()),
@@ -61,10 +61,9 @@ const Header = ({
       <HeaderIconButton
         color={null}
         name="home"
-        handlePress={handlePressHome}
+        handleOnPress={handleOnPressHome}
         size={24}
         visible={category}
-        // visible={false}
       />
 
       <HeaderTitle title={title} />
@@ -72,10 +71,9 @@ const Header = ({
       <HeaderIconButton
         color={null}
         name="plus"
-        handlePress={handlePressPlus}
+        handleOnPress={handleOnPressPlus}
         size={24}
-        visible={!category || !shopping}
-        // visible={false}
+        visible={true}
       />
     </View>
   )
@@ -84,7 +82,6 @@ const Header = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    // borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

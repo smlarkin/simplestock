@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native'
 import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
@@ -31,43 +31,60 @@ const SubcategoryItemForm = ({
   const editTypeIsNew = edit.type === 'new'
   let inputs = {}
 
-  function cleanup() {
-    setTitle('')
-    setCurrent('')
-    setBase('')
-    setType('')
-    setModalIsVisible(false)
-    inputs = {}
-  }
-
   function focusInput(name) {
     inputs[name].focus()
   }
 
-  function handleChangeText(amount, callback) {
+  function handleOnChangeText(amount, callback) {
     if (amountIsValid(amount)) {
       callback(amount)
     }
   }
 
-  function handleOnBlur() {
-    if (editTypeIsNew) {
-      if (
-        !inputs.title.isFocused() &&
-        !inputs.current.isFocused() &&
-        !inputs.base.isFocused() &&
-        !inputs.type.isFocused()
-      ) {
-        validateAndUpdate()
-      }
-    } else {
+  function handleOnBlur(previous) {
+    if (
+      editTypeIsNew &&
+      !inputs.title.isFocused() &&
+      !inputs.current.isFocused() &&
+      !inputs.base.isFocused() &&
+      !inputs.type.isFocused()
+    ) {
+      focusInput(previous)
+    } else if (!editTypeIsNew || (!title && !current && !base && !type)) {
+      // NOTE: Will need update for edit type if swiper edit is enabled
+      // with options for inputs.text.isfocused() && inputs...
       validateAndUpdate()
     }
   }
 
-  function handleSubmit() {
-    setModalIsVisible(false)
-    validateAndUpdate()
+  function handleOnBackButtonPress() {
+    if (type) {
+      setModalIsVisible(false)
+      validateAndUpdate()
+    } else {
+      setModalIsVisible(true)
+    }
+  }
+
+  const handleOnBackdropPress = handleOnBackButtonPress
+  const handleOnPress = handleOnBackButtonPress
+
+  function handleOnFocus(previousInputValue, previousInput) {
+    if (!previousInputValue) focusInput(previousInput)
+  }
+
+  function handleOnSubmitEditing(previousInputValue, previousInput, nextInput) {
+    if (editTypeIsNew) {
+      if (!title && !current && !base && !type) {
+        validateAndUpdate()
+      } else if (previousInputValue) {
+        focusInput(nextInput)
+      } else {
+        focusInput(previousInput)
+      }
+    } else {
+      validateAndUpdate()
+    }
   }
 
   function setRef(ref, name) {
@@ -91,10 +108,6 @@ const SubcategoryItemForm = ({
     })
   }
 
-  useEffect(() => {
-    return cleanup
-  }, [])
-
   return (
     <View
       style={[
@@ -113,13 +126,13 @@ const SubcategoryItemForm = ({
         {editTypeIsNew || edit.type === 'title' ? (
           <TextInput
             autoFocus={editTypeIsNew || edit.type === 'title'}
+            blurOnSubmit={false}
             maxLength={42}
-            onBlur={handleOnBlur}
+            onBlur={() => handleOnBlur('title')}
             onChangeText={e => setTitle(e)}
-            onFocus={() => setModalIsVisible(false)}
-            onSubmitEditing={() => {
-              editTypeIsNew ? focusInput('current') : Keyboard.dismiss()
-            }}
+            onSubmitEditing={() =>
+              handleOnSubmitEditing(title, 'title', 'current')
+            }
             placeholder="Title & Description"
             ref={ref => setRef(ref, 'title')}
             returnKeyType="done"
@@ -142,13 +155,15 @@ const SubcategoryItemForm = ({
         {editTypeIsNew || edit.type === 'current' ? (
           <TextInput
             autoFocus={edit.type === 'current'}
+            blurOnSubmit={false}
             keyboardType="numeric"
             maxLength={3}
-            onBlur={handleOnBlur}
-            onChangeText={e => handleChangeText(e, setCurrent)}
-            onSubmitEditing={() => {
-              edit.type === 'new' ? focusInput('base') : Keyboard.dismiss()
-            }}
+            onBlur={() => handleOnBlur('current')}
+            onChangeText={e => handleOnChangeText(e, setCurrent)}
+            onFocus={() => handleOnFocus(title, 'title')}
+            onSubmitEditing={() =>
+              handleOnSubmitEditing(current, 'current', 'base')
+            }
             placeholder="0"
             ref={ref => setRef(ref, 'current')}
             returnKeyType="done"
@@ -180,13 +195,13 @@ const SubcategoryItemForm = ({
         {editTypeIsNew || edit.type === 'base' ? (
           <TextInput
             autoFocus={edit.type === 'base'}
+            blurOnSubmit={false}
             keyboardType="numeric"
             maxLength={3}
-            onBlur={handleOnBlur}
-            onChangeText={e => handleChangeText(e, setBase)}
-            onSubmitEditing={() => {
-              edit.type === 'new' ? focusInput('type') : Keyboard.dismiss()
-            }}
+            onBlur={() => handleOnBlur('base')}
+            onChangeText={e => handleOnChangeText(e, setBase)}
+            onFocus={() => handleOnFocus(current, 'current')}
+            onSubmitEditing={() => handleOnSubmitEditing(base, 'base', 'type')}
             placeholder="0"
             ref={ref => setRef(ref, 'base')}
             returnKeyType="done"
@@ -209,11 +224,12 @@ const SubcategoryItemForm = ({
         {editTypeIsNew || edit.type === 'type' ? (
           <TextInput
             autoFocus={edit.type === 'type'}
+            blurOnSubmit={false}
             maxLength={10}
-            onBlur={() => edit.type !== 'new' && handleOnBlur()}
+            onBlur={() => !editTypeIsNew && handleOnBlur()}
             onChangeText={e => setType(e)}
             onFocus={() => {
-              if (edit.type === 'new') {
+              if (editTypeIsNew && base) {
                 Keyboard.dismiss()
                 setModalIsVisible(true)
               }
@@ -235,8 +251,8 @@ const SubcategoryItemForm = ({
         <Modal
           hasBackdrop={true}
           isVisible={modalIsVisible}
-          onBackButtonPress={() => setModalIsVisible(false)}
-          onBackdropPress={() => setModalIsVisible(false)}
+          onBackButtonPress={handleOnBackButtonPress}
+          onBackdropPress={handleOnBackdropPress}
           style={{
             alignItems: 'center',
             deviceHeight: layout.height,
@@ -245,7 +261,7 @@ const SubcategoryItemForm = ({
             margin: 0,
           }}>
           <SubcategoryItemUnitPicker
-            handleSubmit={handleSubmit}
+            handleOnPress={handleOnPress}
             setType={setType}
             type={type}
           />

@@ -12,16 +12,17 @@ const FooterViewsNav = ({
   setShopping,
   shopping,
 }) => {
-  function handlePressShopping(toShop) {
-    if (toShop) {
-      setShopping(true)
-    } else {
-      updateDifferenceAndShopping(categories, setCategories)
-      setShopping(false)
-    }
+  function handleOnPressList() {
+    updateDifferenceAndShopping(categories, setCategories)
+    setShopping(false)
   }
 
-  function handlePressShare() {
+  function handleOnPressCheckSquare() {
+    updateDifferenceAndShopping(categories, setCategories)
+    setShopping(true)
+  }
+
+  function handleOnPressSend() {
     if (categoryIndex !== null && shopping) {
       console.log('share category shopping list')
     } else if (categoryIndex !== null) {
@@ -37,21 +38,21 @@ const FooterViewsNav = ({
       <FooterIconButton
         color={null}
         name="list"
-        handlePress={() => handlePressShopping(false)}
+        handleOnPress={handleOnPressList}
         size={24}
         visible={true}
       />
       <FooterIconButton
         color={null}
         name="check-square"
-        handlePress={() => handlePressShopping(true)}
+        handleOnPress={handleOnPressCheckSquare}
         size={24}
         visible={true}
       />
       <FooterIconButton
         color={null}
         name="send"
-        handlePress={handlePressShare}
+        handleOnPress={handleOnPressSend}
         size={24}
         visible={true}
       />

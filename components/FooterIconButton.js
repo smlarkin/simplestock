@@ -2,11 +2,16 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
-const FooterIconButton = ({ color, handlePress, name, size, visible }) => (
+const FooterIconButton = ({ color, handleOnPress, name, size, visible }) => (
   <View style={styles.container}>
     {visible && (
       <View style={styles.container}>
-        <Feather color={color} name={name} size={size} onPress={handlePress} />
+        <Feather
+          color={color}
+          name={name}
+          size={size}
+          onPress={handleOnPress}
+        />
       </View>
     )}
   </View>
