@@ -45,3 +45,18 @@ export function mapCategoriesToColors(categories, colors) {
     return colors[finalDigit]
   })
 }
+
+export function formatSubcategory({ title, current, base, type }) {
+  return `${title}    ${current} / ${base}  ${type}`
+}
+
+export function formatCategory({ title, subcategories }) {
+  const formattedSubcategories = subcategories
+    .map(subcategory => `  ${formatSubcategory(subcategory)}\n\n`)
+    .join('')
+  return `${title.toUpperCase()}\n\n${formattedSubcategories}`
+}
+
+export function formatCategories(categories) {
+  return categories.map(category => `${formatCategory(category)}\n`).join('')
+}

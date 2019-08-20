@@ -2,7 +2,7 @@ import React from 'react'
 import { Share, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import FooterIconButton from './FooterIconButton'
-import { updateDifferenceAndShopping } from '../util'
+import { updateDifferenceAndShopping, formatCategories } from '../util'
 import { setCategories, setShopping } from '../redux/actions'
 
 const FooterViewsNav = ({
@@ -25,7 +25,13 @@ const FooterViewsNav = ({
   function share({ title, message }) {
     Share.share({ title, message })
       .then(result => console.log('shared ', result))
-      .catch(e => console.error('error ', e))
+      // SHARED
+      // result.action === "sharedAction"
+      // SHARED + ACTIVITY TYPE (if available)
+      // result.activityType === "com.apple.UIKit.activity.CopyToPasteboard"
+      // DISMISSED
+      // result.action === "dismissedAction"
+      .catch(error => console.error('error ', error))
   }
 
   function handleOnPressSend() {
@@ -37,7 +43,9 @@ const FooterViewsNav = ({
       console.log('share entire shopping list')
     } else {
       console.log('share entire inventory list')
-      share({ title: 'sharing', message: categories.toString() })
+      const title = 'All Inventory'
+      const message = formatCategories(categories)
+      share({ title, message })
     }
   }
   return (
