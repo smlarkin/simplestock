@@ -33,7 +33,6 @@ const BodyNavigator = ({ categories, categoryIndex, setCategoryIndex }) => {
           {'<'}
         </StyledText>
       </TouchableOpacity>
-      {/* <View style={styles.spacer} /> */}
       <BodyPaginator />
       <TouchableOpacity
         onPress={() => handleOnPress('next')}
@@ -65,13 +64,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    // paddingRight: '2%',
   },
   rightArrow: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    // paddingLeft: '2%',
   },
 })
 

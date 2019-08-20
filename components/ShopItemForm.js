@@ -1,11 +1,23 @@
 import React, { useRef, useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
 import Checkbox from 'react-native-modest-checkbox'
+import { connect } from 'react-redux'
 import StyledText from './StyledText'
+import { setEdit, updateSubcategory } from '../redux/actions'
 import { amountIsValid } from '../validation'
 
-const ShopItemForm = ({ color, edit, handleUpdate, item }) => {
-  const { key, current, base, title, type, shop } = item
+const ShopItemForm = ({
+  categories,
+  categoryIndex,
+  index,
+  item,
+  setEdit,
+  updateSubcategory,
+}) => {
+  const category = categories[categoryIndex]
+  const { color } = category
+  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
+  const { title, type } = item
   const [difference, setDifference] = useState(item.difference)
   const textInput = useRef(null)
 
@@ -17,23 +29,19 @@ const ShopItemForm = ({ color, edit, handleUpdate, item }) => {
 
   function handleOnBlur() {
     if (difference) {
-      const updatedCurrent = parseInt(current, 10) + parseInt(difference, 10)
-      handleUpdate({
-        key,
-        current: `${updatedCurrent}`,
-        base,
-        title,
-        type,
-        difference,
-        shop,
+      updateSubcategory({
+        categoryKey: category.key,
+        subcategoryKey: item.key,
+        subcategory: { ...item, difference },
       })
+      setEdit(null)
     } else {
       textInput.current.focus()
     }
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: color }]}>
+    <View style={[styles.container, { backgroundColor }]}>
       <View style={styles.titleContainer}>
         <StyledText medium style={styles.title}>
           {title}
@@ -51,10 +59,10 @@ const ShopItemForm = ({ color, edit, handleUpdate, item }) => {
           ref={textInput}
           returnKeyType="done"
           selectionColor="black"
-          style={styles.difference}
+          style={styles.amount}
           value={difference}
         />
-        <StyledText demi style={styles.type}>
+        <StyledText demi style={styles.amountType}>
           {type}
         </StyledText>
       </View>
@@ -69,25 +77,23 @@ const ShopItemForm = ({ color, edit, handleUpdate, item }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'row',
-    width: '100%',
     aspectRatio: 7 / 1,
-    padding: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: '1%',
+    width: '100%',
   },
   titleContainer: {
     alignItems: 'center',
     flex: 4,
     flexDirection: 'row',
-    height: 60,
     justifyContent: 'flex-start',
+    paddingLeft: '4%',
+    paddingRight: '1%',
   },
   title: {
     flexWrap: 'wrap',
     fontSize: 18,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
   },
   amountContainer: {
     alignItems: 'center',
@@ -95,22 +101,30 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 20,
-    padding: 5,
-    paddingBottom: -5,
   },
-  difference: {
-    fontSize: 20,
-  },
-  type: {
+  amountType: {
     fontSize: 10,
-    marginTop: 3,
   },
   checkboxContainer: {
     alignItems: 'center',
     flex: 1,
+    marginTop: '-1%',
     opacity: 0.75,
-    padding: 15,
   },
 })
 
-export default ShopItemForm
+const mapStateToProps = state => ({
+  categoryIndex: state.categoryIndex,
+  categories: state.categories,
+})
+
+const mapDisptachToProps = dispatch => ({
+  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
+    dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDisptachToProps
+)(ShopItemForm)

@@ -52,7 +52,6 @@ const SubcategoryItem = ({
       //   },
       // ]}
       right={
-        // TEST THIS OUT!!!
         edit
           ? null
           : [

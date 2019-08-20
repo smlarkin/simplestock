@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import { layout } from '../constants'
-import StyledText from './StyledText'
 
 const { width } = layout
 const itemWidthTotal = width / 2 / 7
@@ -12,13 +11,11 @@ const viewOffset = itemWidthTotal * 3
 const listHeaderOrFooterWidth = viewOffset
 
 class Paginator extends Component {
-  state = { viewableItems: [] }
-
   viewabilityConfig = {
     itemVisiblePercentThreshold: 50,
   }
 
-  getItemLayout = (data, index) => {
+  getItemLayout = (_, index) => {
     return {
       length: itemWidthTotal,
       offset: itemWidthTotal * index,
@@ -26,22 +23,7 @@ class Paginator extends Component {
     }
   }
 
-  onViewableItemsChanged = ({ viewableItems, changed }) => {
-    this.setState({ viewableItems })
-    // console.log('Visible items are', viewableItems)
-    // console.log('Changed in this iteration', changed)
-  }
-
-  // componentDidMount() {
-  //   this.ref.scrollToIndex({
-  //     index: this.props.categoryIndex,
-  //     viewPosition: 0,
-  //     viewOffset: viewOffset,
-  //   })
-  // }
-
   componentDidUpdate() {
-    // VERSION 1
     if (this.props.categories.length > 0) {
       this.ref.scrollToIndex({
         animated: false,
@@ -50,7 +32,6 @@ class Paginator extends Component {
         viewOffset: 0,
       })
     } else {
-      // VERSION 2
       this.ref.scrollToIndex({
         animated: false,
         index: this.props.categoryIndex,
@@ -60,13 +41,8 @@ class Paginator extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.setState({ viewableItems: [] })
-  }
-
   render() {
     const { categoryIndex, categories } = this.props
-    const { viewableItems } = this.state
     return (
       <View style={styles.container}>
         <FlatList
@@ -116,12 +92,10 @@ class Paginator extends Component {
             return (
               <View
                 style={{
-                  // height: '15%',
                   width: itemWidth,
                   aspectRatio: 1 / 1,
                   backgroundColor: color,
                   borderRadius: 50,
-                  // borderColor: 'gray',
                   borderWidth: 1,
                   margin: itemMargin,
                 }}
@@ -137,10 +111,8 @@ class Paginator extends Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    // borderWidth: 1,
     flex: 2,
     justifyContent: 'center',
-    // marginLeft: -itemWidth,
   },
   contentContainerStyle: {
     alignItems: 'center',

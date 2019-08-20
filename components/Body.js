@@ -4,7 +4,6 @@ import { StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import DraggableFlatList from 'react-native-draggable-flatlist'
 import BodyRenderItem from './BodyRenderItem'
-import BlankScreen from './BlankScreen'
 import BodyNavigator from './BodyNavigator'
 import {
   setCategories,
@@ -37,15 +36,11 @@ const Body = ({
 
   // change to flatlist defaults for empty items
   // use variables for shopping, category, subcategory
-  const renderItem = !categories.length ? (
-    <BlankScreen />
-  ) : (
-    BodyRenderItem({
-      categoryIndex,
-      edit,
-      shopping,
-    })
-  )
+  const renderItem = BodyRenderItem({
+    categoryIndex,
+    edit,
+    shopping,
+  })
 
   function onMoveEnd(data) {
     if (category) {
@@ -54,17 +49,6 @@ const Body = ({
       setCategories(data)
     }
   }
-
-  // const content = !categories.length ? (
-  //   renderItem
-  // ) : (
-  //   <DraggableFlatList
-  //     data={data}
-  //     onMoveEnd={({ data }) => onMoveEnd(data)}
-  //     renderItem={renderItem}
-  //     scrollPercent={5}
-  //   />
-  // )
 
   return (
     <>

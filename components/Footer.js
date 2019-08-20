@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Share, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import FooterIconButton from './FooterIconButton'
 import { updateDifferenceAndShopping } from '../util'
@@ -22,6 +22,12 @@ const FooterViewsNav = ({
     setShopping(true)
   }
 
+  function share({ title, message }) {
+    Share.share({ title, message })
+      .then(result => console.log('shared ', result))
+      .catch(e => console.error('error ', e))
+  }
+
   function handleOnPressSend() {
     if (categoryIndex !== null && shopping) {
       console.log('share category shopping list')
@@ -31,6 +37,7 @@ const FooterViewsNav = ({
       console.log('share entire shopping list')
     } else {
       console.log('share entire inventory list')
+      share({ title: 'sharing', message: categories.toString() })
     }
   }
   return (

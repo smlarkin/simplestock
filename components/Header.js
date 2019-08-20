@@ -30,8 +30,8 @@ const Header = ({
   }
 
   function handleOnPressPlus() {
-    if (!edit && !shopping) {
-      if (category) {
+    if (!edit) {
+      if (category && !shopping) {
         const subcategory = {
           key: String(Math.random()),
           title: '',

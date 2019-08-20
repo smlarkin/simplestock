@@ -16,7 +16,7 @@ const ShopItem = ({
   const category = categories[categoryIndex]
   const { color } = category
   const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
-  const { title, current, base, type, difference } = item
+  const { title, current, type, difference } = item
   const [isChecked, setIsChecked] = useState(false)
   const [lastTap, setLastTap] = useState(null)
 
@@ -37,11 +37,13 @@ const ShopItem = ({
   useEffect(() => {
     if (isChecked) {
       setTimeout(() => {
+        const updatedCurrent = parseInt(current, 10) + parseInt(difference, 10)
         const shop = false
+        setIsChecked(false)
         updateSubcategory({
           categoryKey: category.key,
           subcategoryKey: item.key,
-          subcategory: { ...item, shop },
+          subcategory: { ...item, current: `${updatedCurrent}`, shop },
         })
       }, 300)
     }

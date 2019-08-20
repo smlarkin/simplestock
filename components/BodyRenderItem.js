@@ -1,12 +1,9 @@
 /* eslint-disable complexity */
 import React from 'react'
-// import Swipeout from 'rc-swipeout'
-// import Swipeout from 'react-native-swipeout'
-// import BlankScreen from './BlankScreen'
 import CategoryItem from './CategoryItem'
 import CategoryItemForm from './CategoryItemForm'
-import CategoryItemSwiper from './CategoryItemSwiper'
 import ShopItem from './ShopItem'
+import ShopItemForm from './ShopItemForm'
 import SubcategoryItem from './SubcategoryItem'
 import SubcategoryItemForm from './SubcategoryItemForm'
 
@@ -17,35 +14,33 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
   moveEnd,
   isActive,
 }) => {
-  if (categoryIndex === null && !edit) {
-    return (
-      <CategoryItemSwiper
-        index={index}
-        item={item}
-        move={move}
-        moveEnd={moveEnd}
-        isActive={isActive}
-      />
-    )
-  } else if (categoryIndex === null && edit) {
-    if (item.key === edit.item.key) {
-      return <CategoryItemForm item={item} />
-    } else {
-      return <CategoryItem item={item} />
-    }
-  } else if (categoryIndex !== null && edit) {
-    if (edit && item.key === edit.item.key) {
+  const itemIsEditItem = edit && edit.item.key === item.key
+
+  if (categoryIndex !== null) {
+    if (shopping && item.shop) {
+      if (itemIsEditItem) {
+        return <ShopItemForm index={index} item={item} />
+      } else {
+        return <ShopItem index={index} item={item} />
+      }
+    } else if (itemIsEditItem) {
       return <SubcategoryItemForm index={index} item={item} />
     } else {
-      return <SubcategoryItem index={index} item={item} />
+      return (
+        <SubcategoryItem
+          index={index}
+          item={item}
+          move={move}
+          moveEnd={moveEnd}
+          isActive={isActive}
+        />
+      )
     }
-  } else if (categoryIndex !== null && shopping) {
-    if (item.shop) {
-      return <ShopItem index={index} item={item} />
-    }
-  } else if (categoryIndex !== null) {
+  } else if (itemIsEditItem) {
+    return <CategoryItemForm item={item} />
+  } else {
     return (
-      <SubcategoryItem
+      <CategoryItem
         index={index}
         item={item}
         move={move}
