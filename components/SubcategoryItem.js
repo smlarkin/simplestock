@@ -1,10 +1,10 @@
 /* eslint-disable complexity */
-import React, { useState } from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
-import Swipeout from 'rc-swipeout'
-import StyledText from './StyledText'
-import { deleteSubcategory, setEdit } from '../redux/actions'
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+import Swipeout from 'rc-swipeout';
+import StyledText from './StyledText';
+import { deleteSubcategory, setEdit } from '../redux/actions';
 
 const SubcategoryItem = ({
   categoryIndex,
@@ -18,30 +18,31 @@ const SubcategoryItem = ({
   moveEnd,
   setEdit,
 }) => {
-  const { color, key } = categories[categoryIndex]
-  const categoryKey = key
-  const subcategoryKey = item.key
+  const { color, key } = categories[categoryIndex];
+  const categoryKey = key;
+  const subcategoryKey = item.key;
   const backgroundColor = isActive
     ? 'white'
     : index % 2 === 0
     ? color.primary
-    : color.secondary
-  const { title, current, base, type } = item
-  const [lastTap, setLastTap] = useState(null)
+    : color.secondary;
+  const { title, current, base, type } = item;
+  const [lastTap, setLastTap] = useState(null);
 
   function handleOnPress(type) {
-    const DELAY = 300
-    const now = Date.now()
+    const DELAY = 300;
+    const now = Date.now();
     if (lastTap && now - lastTap < DELAY) {
-      setEdit(item, type)
+      setEdit(item, type);
     } else {
-      setLastTap(now)
+      setLastTap(now);
     }
   }
 
   return (
     <Swipeout
       autoClose={true}
+      // NOTE: THIS IS PROBLEMATIC IF USED ... SO REDESIGN TO NOT USE IT AT ALL
       // left={[
       //   {
       //     text: 'edit',
@@ -60,8 +61,8 @@ const SubcategoryItem = ({
                 onPress: () => {
                   setTimeout(
                     () => deleteSubcategory({ categoryKey, subcategoryKey }),
-                    300
-                  )
+                    300,
+                  );
                 },
                 style: styles.right,
               },
@@ -124,8 +125,8 @@ const SubcategoryItem = ({
         </TouchableOpacity>
       </TouchableOpacity>
     </Swipeout>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   left: { backgroundColor: 'white', color: 'black', fontSize: 19 },
@@ -185,21 +186,21 @@ const styles = StyleSheet.create({
   type: {
     fontSize: 10,
   },
-})
+});
 
 const mapStateToProps = state => ({
   categoryIndex: state.categoryIndex,
   categories: state.categories,
   edit: state.edit,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   deleteSubcategory: ({ categoryKey, subcategoryKey }) =>
     dispatch(deleteSubcategory({ categoryKey, subcategoryKey })),
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(SubcategoryItem)
+  mapDispatchToProps,
+)(SubcategoryItem);

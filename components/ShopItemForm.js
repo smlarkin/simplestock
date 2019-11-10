@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
-import { StyleSheet, TextInput, View } from 'react-native'
-import Checkbox from 'react-native-modest-checkbox'
-import { connect } from 'react-redux'
-import StyledText from './StyledText'
-import { setEdit, updateSubcategory } from '../redux/actions'
-import { amountIsValid } from '../validation'
+import React, { useRef, useState } from 'react';
+import { StyleSheet, TextInput, View } from 'react-native';
+import Checkbox from 'react-native-modest-checkbox';
+import { connect } from 'react-redux';
+import StyledText from './StyledText';
+import { setEdit, updateSubcategory } from '../redux/actions';
+import { formatIntegersForNumericKeypad } from '../util';
 
 const ShopItemForm = ({
   categories,
@@ -14,18 +14,12 @@ const ShopItemForm = ({
   setEdit,
   updateSubcategory,
 }) => {
-  const category = categories[categoryIndex]
-  const { color } = category
-  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
-  const { title, type } = item
-  const [difference, setDifference] = useState(item.difference)
-  const textInput = useRef(null)
-
-  function handleOnChangeText(amount, callback) {
-    if (amountIsValid(amount)) {
-      callback(amount)
-    }
-  }
+  const category = categories[categoryIndex];
+  const { color } = category;
+  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
+  const { title, type } = item;
+  const [difference, setDifference] = useState(item.difference);
+  const textInput = useRef(null);
 
   function handleOnBlur() {
     if (difference) {
@@ -33,10 +27,10 @@ const ShopItemForm = ({
         categoryKey: category.key,
         subcategoryKey: item.key,
         subcategory: { ...item, difference },
-      })
-      setEdit(null)
+      });
+      setEdit(null);
     } else {
-      textInput.current.focus()
+      textInput.current.focus();
     }
   }
 
@@ -54,7 +48,7 @@ const ShopItemForm = ({
           keyboardType="numeric"
           maxLength={3}
           onBlur={() => handleOnBlur()}
-          onChangeText={e => handleOnChangeText(e, setDifference)}
+          onChangeText={e => formatIntegersForNumericKeypad(e, setDifference)}
           placeholder="0"
           ref={textInput}
           returnKeyType="done"
@@ -71,8 +65,8 @@ const ShopItemForm = ({
         <Checkbox checked={false} label="" />
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -111,20 +105,20 @@ const styles = StyleSheet.create({
     marginTop: '-1%',
     opacity: 0.75,
   },
-})
+});
 
 const mapStateToProps = state => ({
   categoryIndex: state.categoryIndex,
   categories: state.categories,
-})
+});
 
 const mapDisptachToProps = dispatch => ({
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDisptachToProps
-)(ShopItemForm)
+  mapDisptachToProps,
+)(ShopItemForm);

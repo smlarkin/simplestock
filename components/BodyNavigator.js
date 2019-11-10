@@ -1,23 +1,23 @@
-import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
-import StyledText from './StyledText'
-import { setCategoryIndex } from '../redux/actions'
-import { layout } from '../constants'
-const { width } = layout
-import BodyPaginator from './BodyPaginator'
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+import StyledText from './StyledText';
+import { setCategoryIndex } from '../redux/actions';
+import { layout } from '../constants';
+const { width } = layout;
+import BodyPaginator from './BodyPaginator';
 
 const BodyNavigator = ({ categories, categoryIndex, setCategoryIndex }) => {
-  const previousIndex = categoryIndex - 1
-  const previousIndexIsValid = previousIndex >= 0
-  const nextIndex = categoryIndex + 1
-  const nextIndexIsValid = nextIndex <= categories.length - 1
+  const previousIndex = categoryIndex - 1;
+  const previousIndexIsValid = previousIndex >= 0;
+  const nextIndex = categoryIndex + 1;
+  const nextIndexIsValid = nextIndex <= categories.length - 1;
 
   function handleOnPress(direction) {
     if (direction === 'previous' && previousIndexIsValid) {
-      setCategoryIndex(previousIndex)
+      setCategoryIndex(previousIndex);
     } else if (direction === 'next' && nextIndexIsValid) {
-      setCategoryIndex(nextIndex)
+      setCategoryIndex(nextIndex);
     }
   }
   return (
@@ -46,8 +46,8 @@ const BodyNavigator = ({ categories, categoryIndex, setCategoryIndex }) => {
         </StyledText>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -70,18 +70,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-})
+});
 
 const mapStateToProps = state => ({
   categories: state.categories,
   categoryIndex: state.categoryIndex,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   setCategoryIndex: index => dispatch(setCategoryIndex(index)),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(BodyNavigator)
+  mapDispatchToProps,
+)(BodyNavigator);

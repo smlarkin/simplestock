@@ -13,6 +13,6 @@ const units = [
   'Jars',
   'Pieces',
   'Trays',
-]
+];
 
-export default units.map(unit => ({ key: unit, label: unit, value: unit }))
+export default units.map(unit => ({ key: unit, label: unit, value: unit }));

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Checkbox from 'react-native-modest-checkbox'
-import { connect } from 'react-redux'
-import StyledText from './StyledText'
-import { setEdit, updateSubcategory } from '../redux/actions'
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Checkbox from 'react-native-modest-checkbox';
+import { connect } from 'react-redux';
+import StyledText from './StyledText';
+import { setEdit, updateSubcategory } from '../redux/actions';
 
 const ShopItem = ({
   categories,
@@ -13,41 +13,41 @@ const ShopItem = ({
   setEdit,
   updateSubcategory,
 }) => {
-  const category = categories[categoryIndex]
-  const { color } = category
-  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
-  const { title, current, type, difference } = item
-  const [isChecked, setIsChecked] = useState(false)
-  const [lastTap, setLastTap] = useState(null)
+  const category = categories[categoryIndex];
+  const { color } = category;
+  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
+  const { title, current, type, difference } = item;
+  const [isChecked, setIsChecked] = useState(false);
+  const [lastTap, setLastTap] = useState(null);
 
   function handleOnPress() {
-    const DELAY = 300
-    const now = Date.now()
+    const DELAY = 300;
+    const now = Date.now();
     if (lastTap && now - lastTap < DELAY) {
-      setEdit(item)
+      setEdit(item);
     } else {
-      setLastTap(now)
+      setLastTap(now);
     }
   }
 
   function handleOnChange() {
-    setIsChecked(!isChecked)
+    setIsChecked(!isChecked);
   }
 
   useEffect(() => {
     if (isChecked) {
       setTimeout(() => {
-        const updatedCurrent = parseInt(current, 10) + parseInt(difference, 10)
-        const shop = false
-        setIsChecked(false)
+        const updatedCurrent = parseInt(current, 10) + parseInt(difference, 10);
+        const shop = false;
+        setIsChecked(false);
         updateSubcategory({
           categoryKey: category.key,
           subcategoryKey: item.key,
           subcategory: { ...item, current: `${updatedCurrent}`, shop },
-        })
-      }, 300)
+        });
+      }, 300);
     }
-  }, [isChecked])
+  }, [isChecked]);
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -73,8 +73,8 @@ const ShopItem = ({
         <Checkbox checked={isChecked} label="" onChange={handleOnChange} />
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -113,20 +113,20 @@ const styles = StyleSheet.create({
     marginTop: '-1%',
     opacity: 0.75,
   },
-})
+});
 
 const mapStateToProps = state => ({
   categoryIndex: state.categoryIndex,
   categories: state.categories,
-})
+});
 
 const mapDisptachToProps = dispatch => ({
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDisptachToProps
-)(ShopItem)
+  mapDisptachToProps,
+)(ShopItem);

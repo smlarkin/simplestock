@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
-import { ActivityIndicator } from 'react-native'
-import * as Font from 'expo-font'
-import * as Icon from '@expo/vector-icons'
+import React, { useState } from 'react';
+import { ActivityIndicator } from 'react-native';
+import * as Font from 'expo-font';
+import * as Icon from '@expo/vector-icons';
 // import { Asset } from 'expo-asset'
-import { AppLoading } from 'expo'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
-import configureStore from './redux'
-import AppScreen from './components/AppScreen'
+import { AppLoading } from 'expo';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import configureStore from './redux';
+import AppScreen from './components/AppScreen';
 
-const { store, persistor } = configureStore()
+const { store, persistor } = configureStore();
 
 const App = (/* { skipLoading } */) => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   function startAsync() {
     return Promise.all([
@@ -28,15 +28,15 @@ const App = (/* { skipLoading } */) => {
         'avenir-next-regular': require('./assets/fonts/AvenirNext-Regular.ttf'),
         'avenir-next-light': require('./assets/fonts/AvenirNext-UltraLight.ttf'),
       }),
-    ])
+    ]);
   }
 
   function onError(err) {
-    return console.warn(err)
+    return console.warn(err);
   }
 
   function onFinish() {
-    return setLoading(false)
+    return setLoading(false);
   }
 
   if (loading /* && !skipLoading */) {
@@ -46,7 +46,7 @@ const App = (/* { skipLoading } */) => {
         onError={onError}
         onFinish={onFinish}
       />
-    )
+    );
   } else {
     return (
       <Provider store={store}>
@@ -54,8 +54,8 @@ const App = (/* { skipLoading } */) => {
           <AppScreen />
         </PersistGate>
       </Provider>
-    )
+    );
   }
-}
+};
 
-export default App
+export default App;

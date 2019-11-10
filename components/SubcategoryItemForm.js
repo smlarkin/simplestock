@@ -1,13 +1,24 @@
 /* eslint-disable complexity */
-import React, { useState } from 'react'
-import { Keyboard, StyleSheet, TextInput, View } from 'react-native'
-import Modal from 'react-native-modal'
-import { connect } from 'react-redux'
-import StyledText from './StyledText'
-import SubcategoryItemUnitPicker from './SubcategoryItemUnitPicker'
-import { layout } from '../constants'
-import { amountIsValid, validateAndUpdateSubcategory } from '../validation'
-import { deleteSubcategory, setEdit, updateSubcategory } from '../redux/actions'
+import React, { useState, useEffect } from 'react';
+import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
+import Modal from 'react-native-modal';
+import { connect } from 'react-redux';
+import StyledText from './StyledText';
+import SubcategoryItemUnitPicker from './SubcategoryItemUnitPicker';
+import { layout } from '../constants';
+import {
+  createDifference,
+  createShop,
+  focusInput,
+  formatIntegersForNumericKeypad,
+  itemTitleIsDuplicate,
+  setRef,
+} from '../util';
+import {
+  deleteSubcategory,
+  setEdit,
+  updateSubcategory,
+} from '../redux/actions';
 
 const SubcategoryItemForm = ({
   categories,
@@ -19,93 +30,102 @@ const SubcategoryItemForm = ({
   setEdit,
   updateSubcategory,
 }) => {
-  const category = categories[categoryIndex]
-  const { color } = category
-  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary
-  const [title, setTitle] = useState(item.title)
-  const [current, setCurrent] = useState(item.current)
-  const [base, setBase] = useState(item.base)
-  const [type, setType] = useState(item.type)
-  const [modalIsVisible, setModalIsVisible] = useState(false)
-  const { difference, key, shop } = item
-  const editTypeIsNew = edit.type === 'new'
-  let inputs = {}
+  const category = categories[categoryIndex];
+  const { color } = category;
+  const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
+  const [title, setTitle] = useState(item.title);
+  const [current, setCurrent] = useState(item.current);
+  const [base, setBase] = useState(item.base);
+  const [type, setType] = useState(item.type);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [ready, setReady] = useState(false);
+  const { difference, key, shop } = item;
+  const editTypeIsNew = edit.type === 'new';
+  const inputs = {};
 
-  function focusInput(name) {
-    inputs[name].focus()
+  useEffect(() => {
+    if (!ready) setReady(true);
+    else handleOnBlur();
+  }, [modalIsVisible]);
+
+  function noInputValues() {
+    return !title && !current && !base && !type;
   }
 
-  function handleOnChangeText(amount, callback) {
-    if (amountIsValid(amount)) {
-      callback(amount)
-    }
+  function allInputValues() {
+    return title && current && base && type;
   }
 
-  function handleOnBlur(previous) {
-    if (
-      editTypeIsNew &&
-      !inputs.title.isFocused() &&
-      !inputs.current.isFocused() &&
-      !inputs.base.isFocused() &&
-      !inputs.type.isFocused()
-    ) {
-      focusInput(previous)
-    } else if (!editTypeIsNew || (!title && !current && !base && !type)) {
-      // NOTE: Will need update for edit type if swiper edit is enabled
-      // with options for inputs.text.isfocused() && inputs...
-      validateAndUpdate()
-    }
+  function noInputFocus() {
+    return (
+      !modalIsVisible &&
+      Object.keys(inputs).every(key => !inputs[key].isFocused())
+    );
   }
 
-  function handleOnBackButtonPress() {
-    if (type) {
-      setModalIsVisible(false)
-      validateAndUpdate()
-    } else {
-      setModalIsVisible(true)
-    }
+  function noValuesHaveChanged(currentDifference, currentShop) {
+    return (
+      edit.item.title === title &&
+      edit.item.current === current &&
+      edit.item.base === base &&
+      edit.item.type === type &&
+      edit.item.difference === currentDifference &&
+      edit.item.shop === currentShop
+    );
   }
 
-  const handleOnBackdropPress = handleOnBackButtonPress
-  const handleOnPress = handleOnBackButtonPress
-
-  function handleOnFocus(previousInputValue, previousInput) {
-    if (!previousInputValue) focusInput(previousInput)
-  }
-
-  function handleOnSubmitEditing(previousInputValue, previousInput, nextInput) {
-    if (editTypeIsNew) {
-      if (!title && !current && !base && !type) {
-        validateAndUpdate()
-      } else if (previousInputValue) {
-        focusInput(nextInput)
-      } else {
-        focusInput(previousInput)
+  function focusOnFirstIncompleteInput() {
+    for (let key in inputs) {
+      if (!inputs[key].props.value) {
+        return inputs[key].focus();
       }
-    } else {
-      validateAndUpdate()
     }
+    return false;
   }
 
-  function setRef(ref, name) {
-    inputs[name] = ref
-  }
-
-  function validateAndUpdate() {
-    validateAndUpdateSubcategory({
-      category,
-      base,
-      edit,
-      current,
-      difference,
-      deleteSubcategory,
-      key,
-      setEdit,
-      shop,
-      title,
-      type,
-      updateSubcategory,
-    })
+  function handleOnBlur() {
+    if (noInputFocus()) {
+      if (noInputValues()) {
+        deleteSubcategory({
+          categoryKey: category.key,
+          subcategoryKey: edit.item.key,
+        });
+        setEdit(null);
+      } else if (allInputValues()) {
+        const currentDifference = !difference
+          ? createDifference(current, base)
+          : difference;
+        const currentShop = !shop ? createShop(currentDifference) : shop;
+        if (noValuesHaveChanged(currentDifference, currentShop)) {
+          setEdit(null);
+        } else if (
+          edit.item.title !== title &&
+          itemTitleIsDuplicate(title, category.subcategories)
+        ) {
+          focusInput('title', inputs);
+        } else {
+          const subcategory = {
+            key,
+            title,
+            current,
+            base,
+            type,
+            difference: currentDifference,
+            shop: currentShop,
+          };
+          updateSubcategory({
+            categoryKey: category.key,
+            subcategoryKey: edit.item.key,
+            subcategory,
+          });
+          setEdit(null);
+        }
+      } else {
+        setTimeout(() => {
+          focusOnFirstIncompleteInput();
+        }, 400);
+      }
+    }
   }
 
   return (
@@ -128,13 +148,13 @@ const SubcategoryItemForm = ({
             autoFocus={editTypeIsNew || edit.type === 'title'}
             blurOnSubmit={false}
             maxLength={42}
-            onBlur={() => handleOnBlur('title')}
+            onBlur={handleOnBlur}
             onChangeText={e => setTitle(e)}
-            onSubmitEditing={() =>
-              handleOnSubmitEditing(title, 'title', 'current')
-            }
+            onSubmitEditing={() => {
+              current ? Keyboard.dismiss() : focusInput('current', inputs);
+            }}
             placeholder="Title & Description"
-            ref={ref => setRef(ref, 'title')}
+            ref={ref => setRef(ref, 'title', inputs)}
             returnKeyType="done"
             selectionColor="black"
             style={styles.title}
@@ -158,14 +178,13 @@ const SubcategoryItemForm = ({
             blurOnSubmit={false}
             keyboardType="numeric"
             maxLength={3}
-            onBlur={() => handleOnBlur('current')}
-            onChangeText={e => handleOnChangeText(e, setCurrent)}
-            onFocus={() => handleOnFocus(title, 'title')}
-            onSubmitEditing={() =>
-              handleOnSubmitEditing(current, 'current', 'base')
-            }
+            onBlur={handleOnBlur}
+            onChangeText={e => formatIntegersForNumericKeypad(e, setCurrent)}
+            onSubmitEditing={() => {
+              base ? Keyboard.dismiss() : focusInput('base', inputs);
+            }}
             placeholder="0"
-            ref={ref => setRef(ref, 'current')}
+            ref={ref => setRef(ref, 'current', inputs)}
             returnKeyType="done"
             selectionColor="black"
             style={styles.current}
@@ -198,12 +217,13 @@ const SubcategoryItemForm = ({
             blurOnSubmit={false}
             keyboardType="numeric"
             maxLength={3}
-            onBlur={() => handleOnBlur('base')}
-            onChangeText={e => handleOnChangeText(e, setBase)}
-            onFocus={() => handleOnFocus(current, 'current')}
-            onSubmitEditing={() => handleOnSubmitEditing(base, 'base', 'type')}
+            onBlur={handleOnBlur}
+            onChangeText={e => formatIntegersForNumericKeypad(e, setBase)}
+            onSubmitEditing={() => {
+              type ? Keyboard.dismiss() : focusInput('type', inputs);
+            }}
             placeholder="0"
-            ref={ref => setRef(ref, 'base')}
+            ref={ref => setRef(ref, 'base', inputs)}
             returnKeyType="done"
             selectionColor="black"
             style={styles.base}
@@ -226,17 +246,23 @@ const SubcategoryItemForm = ({
             autoFocus={edit.type === 'type'}
             blurOnSubmit={false}
             maxLength={10}
-            onBlur={() => !editTypeIsNew && handleOnBlur()}
-            onChangeText={e => setType(e)}
-            onFocus={() => {
-              if (editTypeIsNew && base) {
-                Keyboard.dismiss()
-                setModalIsVisible(true)
+            onBlur={() => {
+              if (!editTypeIsNew) {
+                handleOnBlur();
               }
             }}
-            onSubmitEditing={validateAndUpdate}
+            onChangeText={e => setType(e)}
+            onFocus={() => {
+              if (editTypeIsNew) {
+                Keyboard.dismiss();
+                setModalIsVisible(true);
+              }
+            }}
+            onSubmitEditing={() => {
+              Keyboard.dismiss();
+            }}
             placeholder=" UNIT-TYPE"
-            ref={ref => setRef(ref, 'type')}
+            ref={ref => setRef(ref, 'type', inputs)}
             returnKeyType="done"
             selectionColor={edit.type === 'new' ? backgroundColor : 'black'}
             style={styles.type}
@@ -251,8 +277,12 @@ const SubcategoryItemForm = ({
         <Modal
           hasBackdrop={true}
           isVisible={modalIsVisible}
-          onBackButtonPress={handleOnBackButtonPress}
-          onBackdropPress={handleOnBackdropPress}
+          onBackButtonPress={() => {
+            setModalIsVisible(false);
+          }}
+          onBackdropPress={() => {
+            setModalIsVisible(false);
+          }}
           style={{
             alignItems: 'center',
             deviceHeight: layout.height,
@@ -261,15 +291,17 @@ const SubcategoryItemForm = ({
             margin: 0,
           }}>
           <SubcategoryItemUnitPicker
-            handleOnPress={handleOnPress}
+            handleOnPress={() => {
+              setModalIsVisible(false);
+            }}
             setType={setType}
             type={type}
           />
         </Modal>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -321,13 +353,13 @@ const styles = StyleSheet.create({
   type: {
     fontSize: 10,
   },
-})
+});
 
 const mapStateToProps = state => ({
   categoryIndex: state.categoryIndex,
   categories: state.categories,
   edit: state.edit,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   deleteSubcategory: ({ categoryKey, subcategoryKey }) =>
@@ -335,9 +367,9 @@ const mapDispatchToProps = dispatch => ({
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(SubcategoryItemForm)
+  mapDispatchToProps,
+)(SubcategoryItemForm);

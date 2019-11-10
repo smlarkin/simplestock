@@ -12,14 +12,14 @@ import {
   SET_SHOPPING,
   UPDATE_CATEGORY,
   UPDATE_SUBCATEGORY,
-} from '../types'
+} from '../types';
 
 // eslint-disable-next-line complexity
 export const categoriesReducer = (state = [], action) => {
-  const { type, payload } = action
+  const { type, payload } = action;
   switch (type) {
     case CREATE_CATEGORY:
-      return [payload, ...state]
+      return [payload, ...state];
     case CREATE_SUBCATEGORY:
       return state.map(category =>
         category.key === payload.categoryKey
@@ -27,12 +27,14 @@ export const categoriesReducer = (state = [], action) => {
               ...category,
               subcategories: [payload.subcategory, ...category.subcategories],
             }
-          : category)
+          : category,
+      );
     case RESET_CATEGORIES:
-      return []
+      return [];
     case UPDATE_CATEGORY:
       return state.map(category =>
-        category.key === payload.categoryKey ? payload.category : category)
+        category.key === payload.categoryKey ? payload.category : category,
+      );
     case UPDATE_SUBCATEGORY:
       return state.map(category =>
         category.key === payload.categoryKey
@@ -41,23 +43,26 @@ export const categoriesReducer = (state = [], action) => {
               subcategories: category.subcategories.map(subcategory =>
                 subcategory.key === payload.subcategoryKey
                   ? payload.subcategory
-                  : subcategory),
+                  : subcategory,
+              ),
             }
-          : category)
+          : category,
+      );
     case DELETE_CATEGORY:
-      return state.filter(category => category.key !== payload)
+      return state.filter(category => category.key !== payload);
     case DELETE_SUBCATEGORY:
       return state.map(category =>
         category.key === payload.categoryKey
           ? {
               ...category,
               subcategories: category.subcategories.filter(
-                subcategory => subcategory.key !== payload.subcategoryKey
+                subcategory => subcategory.key !== payload.subcategoryKey,
               ),
             }
-          : category)
+          : category,
+      );
     case SET_CATEGORIES:
-      return payload
+      return payload;
     case SET_SUBCATEGORIES:
       return state.map(category =>
         category.key === payload.categoryKey
@@ -65,38 +70,39 @@ export const categoriesReducer = (state = [], action) => {
               ...category,
               subcategories: payload.subcategories,
             }
-          : category)
+          : category,
+      );
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const categoryIndexReducer = (state = null, action) => {
-  const { type, payload } = action
+  const { type, payload } = action;
   switch (type) {
     case SET_CATEGORY_INDEX:
-      return payload
+      return payload;
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const editReducer = (state = null, action) => {
-  const { type, payload } = action
+  const { type, payload } = action;
   switch (type) {
     case SET_EDIT:
-      return payload
+      return payload;
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const shoppingReducer = (state = false, action) => {
-  const { type, payload } = action
+  const { type, payload } = action;
   switch (type) {
     case SET_SHOPPING:
-      return payload
+      return payload;
     default:
-      return state
+      return state;
   }
-}
+};

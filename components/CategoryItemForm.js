@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
-import { colors } from '../constants'
-import { deleteCategory, setEdit, updateCategory } from '../redux/actions'
-import { itemTitleIsDuplicate } from '../util'
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+import { colors } from '../constants';
+import { deleteCategory, setEdit, updateCategory } from '../redux/actions';
+import { focusInput, itemTitleIsDuplicate, setRef } from '../util';
 
 const CategoryItemForm = ({
   categories,
@@ -13,22 +13,22 @@ const CategoryItemForm = ({
   setEdit,
   updateCategory,
 }) => {
-  const { backgrounds } = colors
-  const [title, setTitle] = useState(item.title)
-  const [color, setColor] = useState(item.color)
-  const { key, subcategories } = item
-  let inputs = {}
+  const { backgrounds } = colors;
+  const [title, setTitle] = useState(item.title);
+  const [color, setColor] = useState(item.color);
+  const { key, subcategories } = item;
+  const inputs = {};
 
   function handleOnBlur() {
     const currentFocus =
       inputs.title.isFocused() ||
-      backgrounds.find(({ primary }) => inputs[primary].isFocused())
+      backgrounds.find(({ primary }) => inputs[primary].isFocused());
 
     if (!currentFocus) {
-      handleOnSubmitEditing()
+      handleOnSubmitEditing();
     } else if (typeof currentFocus === 'object') {
-      setColor(currentFocus)
-      inputs.title.focus()
+      setColor(currentFocus);
+      focusInput('title', inputs);
     }
   }
 
@@ -38,28 +38,23 @@ const CategoryItemForm = ({
         edit.item.title === title &&
         edit.item.color.primary === color.primary
       ) {
-        setEdit(null)
+        setEdit(null);
       } else if (
         edit.item.title !== title &&
         itemTitleIsDuplicate(title, categories)
       ) {
-        alert('This category already exists!')
-        inputs.title.focus()
+        focusInput('title', inputs);
       } else {
         updateCategory({
           categoryKey: edit.item.key,
           category: { color, key, title, subcategories },
-        })
-        setEdit(null)
+        });
+        setEdit(null);
       }
     } else {
-      setEdit(null)
-      deleteCategory(edit.item.key)
+      setEdit(null);
+      deleteCategory(edit.item.key);
     }
-  }
-
-  function setRef(ref, name) {
-    inputs[name] = ref
   }
 
   return (
@@ -72,7 +67,7 @@ const CategoryItemForm = ({
           onBlur={handleOnBlur}
           onChangeText={e => setTitle(e)}
           placeholder="Category Title"
-          ref={ref => setRef(ref, 'title')}
+          ref={ref => setRef(ref, 'title', inputs)}
           returnKeyType="done"
           selectionColor="black"
           style={styles.title}
@@ -95,7 +90,7 @@ const CategoryItemForm = ({
               blurOnSubmit={true}
               maxLength={0}
               onBlur={handleOnBlur}
-              ref={ref => setRef(ref, colorTile.primary)}
+              ref={ref => setRef(ref, colorTile.primary, inputs)}
               returnKeyType="done"
               selectionColor={colorTile.primary}
               style={styles.colorTileInput}
@@ -105,8 +100,8 @@ const CategoryItemForm = ({
         ))}
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -146,20 +141,20 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 1,
   },
-})
+});
 
 const mapStateToProps = state => ({
   categories: state.categories,
   edit: state.edit,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
   setEdit: item => dispatch(setEdit(item)),
   updateCategory: category => dispatch(updateCategory(category)),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(CategoryItemForm)
+  mapDispatchToProps,
+)(CategoryItemForm);

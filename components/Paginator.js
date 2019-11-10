@@ -1,36 +1,36 @@
-import React, { Component } from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
-import { layout } from '../constants'
-import StyledText from './StyledText'
+import React, { Component } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux';
+import { layout } from '../constants';
+import StyledText from './StyledText';
 
-const { width } = layout
-const itemWidthTotal = width / 2 / 7
-const itemWidth = itemWidthTotal / 3
-const itemMargin = itemWidth
-const viewOffset = itemWidthTotal * 3
-const listHeaderOrFooterWidth = viewOffset
+const { width } = layout;
+const itemWidthTotal = width / 2 / 7;
+const itemWidth = itemWidthTotal / 3;
+const itemMargin = itemWidth;
+const viewOffset = itemWidthTotal * 3;
+const listHeaderOrFooterWidth = viewOffset;
 
 class Paginator extends Component {
-  state = { viewableItems: [] }
+  state = { viewableItems: [] };
 
   viewabilityConfig = {
     itemVisiblePercentThreshold: 50,
-  }
+  };
 
   getItemLayout = (data, index) => {
     return {
       length: itemWidthTotal,
       offset: itemWidthTotal * index,
       index,
-    }
-  }
+    };
+  };
 
   onViewableItemsChanged = ({ viewableItems, changed }) => {
-    this.setState({ viewableItems })
+    this.setState({ viewableItems });
     // console.log('Visible items are', viewableItems)
     // console.log('Changed in this iteration', changed)
-  }
+  };
 
   // componentDidMount() {
   //   this.ref.scrollToIndex({
@@ -48,7 +48,7 @@ class Paginator extends Component {
         index: this.props.categoryIndex,
         viewPosition: 0,
         viewOffset: 0,
-      })
+      });
     } else {
       // VERSION 2
       this.ref.scrollToIndex({
@@ -56,17 +56,17 @@ class Paginator extends Component {
         index: this.props.categoryIndex,
         viewPosition: 0,
         viewOffset: viewOffset,
-      })
+      });
     }
   }
 
   componentWillUnmount() {
-    this.setState({ viewableItems: [] })
+    this.setState({ viewableItems: [] });
   }
 
   render() {
-    const { categoryIndex, categories } = this.props
-    const { viewableItems } = this.state
+    const { categoryIndex, categories } = this.props;
+    const { viewableItems } = this.state;
     return (
       <View style={styles.container}>
         <FlatList
@@ -111,7 +111,8 @@ class Paginator extends Component {
               : null
           }
           renderItem={({ index, item }) => {
-            const color = index === categoryIndex ? 'black' : item.color.primary
+            const color =
+              index === categoryIndex ? 'black' : item.color.primary;
 
             return (
               <View
@@ -126,11 +127,11 @@ class Paginator extends Component {
                   margin: itemMargin,
                 }}
               />
-            )
+            );
           }}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -145,11 +146,11 @@ const styles = StyleSheet.create({
   contentContainerStyle: {
     alignItems: 'center',
   },
-})
+});
 
 const mapStateToProps = state => ({
   categoryIndex: state.categoryIndex,
   categories: state.categories,
-})
+});
 
-export default connect(mapStateToProps)(Paginator)
+export default connect(mapStateToProps)(Paginator);

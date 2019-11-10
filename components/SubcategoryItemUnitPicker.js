@@ -1,8 +1,8 @@
-import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Picker, { Item } from 'react-native-wheel-picker'
-import StyledText from './StyledText'
-import { units } from '../constants'
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Picker, { Item } from 'react-native-wheel-picker';
+import StyledText from './StyledText';
+import { units } from '../constants';
 
 const SubcategoryItemUnitPicker = ({ handleOnPress, setType, type }) => {
   return (
@@ -24,8 +24,8 @@ const SubcategoryItemUnitPicker = ({ handleOnPress, setType, type }) => {
         </StyledText>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 19,
   },
-})
+});
 
-export default SubcategoryItemUnitPicker
+export default SubcategoryItemUnitPicker;

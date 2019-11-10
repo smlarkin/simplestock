@@ -1,11 +1,11 @@
 /* eslint-disable complexity */
-import React from 'react'
-import CategoryItem from './CategoryItem'
-import CategoryItemForm from './CategoryItemForm'
-import ShopItem from './ShopItem'
-import ShopItemForm from './ShopItemForm'
-import SubcategoryItem from './SubcategoryItem'
-import SubcategoryItemForm from './SubcategoryItemForm'
+import React from 'react';
+import CategoryItem from './CategoryItem';
+import CategoryItemForm from './CategoryItemForm';
+import ShopItem from './ShopItem';
+import ShopItemForm from './ShopItemForm';
+import SubcategoryItem from './SubcategoryItem';
+import SubcategoryItemForm from './SubcategoryItemForm';
 
 const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
   item,
@@ -14,17 +14,17 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
   moveEnd,
   isActive,
 }) => {
-  const itemIsEditItem = edit && edit.item.key === item.key
+  const itemIsEditItem = edit && edit.item.key === item.key;
 
   if (categoryIndex !== null) {
     if (shopping && item.shop) {
       if (itemIsEditItem) {
-        return <ShopItemForm index={index} item={item} />
+        return <ShopItemForm index={index} item={item} />;
       } else {
-        return <ShopItem index={index} item={item} />
+        return <ShopItem index={index} item={item} />;
       }
     } else if (itemIsEditItem) {
-      return <SubcategoryItemForm index={index} item={item} />
+      return <SubcategoryItemForm index={index} item={item} />;
     } else {
       return (
         <SubcategoryItem
@@ -34,10 +34,10 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
           moveEnd={moveEnd}
           isActive={isActive}
         />
-      )
+      );
     }
   } else if (itemIsEditItem) {
-    return <CategoryItemForm item={item} />
+    return <CategoryItemForm item={item} />;
   } else {
     return (
       <CategoryItem
@@ -47,8 +47,8 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
         moveEnd={moveEnd}
         isActive={isActive}
       />
-    )
+    );
   }
-}
+};
 
-export default BodyRenderItem
+export default BodyRenderItem;

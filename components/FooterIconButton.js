@@ -1,6 +1,6 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Feather } from '@expo/vector-icons'
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 const FooterIconButton = ({ color, handleOnPress, name, size, visible }) => (
   <View style={styles.container}>
@@ -15,7 +15,7 @@ const FooterIconButton = ({ color, handleOnPress, name, size, visible }) => (
       </View>
     )}
   </View>
-)
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-})
+});
 
-export default FooterIconButton
+export default FooterIconButton;

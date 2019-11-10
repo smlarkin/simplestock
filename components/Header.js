@@ -1,15 +1,15 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
-import HeaderIconButton from './HeaderIconButton'
-import HeaderTitle from './HeaderTitle'
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux';
+import HeaderIconButton from './HeaderIconButton';
+import HeaderTitle from './HeaderTitle';
 import {
   createCategory,
   createSubcategory,
   setCategoryIndex,
   setEdit,
-} from '../redux/actions'
-import { colors } from '../constants'
+} from '../redux/actions';
+import { colors } from '../constants';
 
 const Header = ({
   categories,
@@ -21,12 +21,12 @@ const Header = ({
   setCategoryIndex,
   setEdit,
 }) => {
-  const category = categoryIndex !== null ? categories[categoryIndex] : null
-  const title = category ? category.title : 'Simple Stock'
+  const category = categoryIndex !== null ? categories[categoryIndex] : null;
+  const title = category ? category.title : 'Simple Stock';
 
   function handleOnPressHome() {
-    if (edit) setEdit(null)
-    setCategoryIndex(null)
+    if (edit) setEdit(null);
+    setCategoryIndex(null);
   }
 
   function handleOnPressPlus() {
@@ -39,19 +39,19 @@ const Header = ({
           base: '',
           difference: '',
           shop: false,
-        }
-        const categoryKey = category.key
-        createSubcategory({ categoryKey, subcategory })
-        setEdit(subcategory, 'new')
+        };
+        const categoryKey = category.key;
+        createSubcategory({ categoryKey, subcategory });
+        setEdit(subcategory, 'new');
       } else {
         const category = {
           color: colors.backgrounds[0],
           key: String(Math.random()),
           title: '',
           subcategories: [],
-        }
-        createCategory(category)
-        setEdit(category)
+        };
+        createCategory(category);
+        setEdit(category);
       }
     }
   }
@@ -76,8 +76,8 @@ const Header = ({
         visible={true}
       />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -87,14 +87,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
   },
-})
+});
 
 const mapStateToProps = state => ({
   categories: state.categories,
   categoryIndex: state.categoryIndex,
   edit: state.edit,
   shopping: state.shopping,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   createCategory: category => dispatch(createCategory(category)),
@@ -102,9 +102,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(createSubcategory({ categoryKey, subcategory })),
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setEdit: (item, type) => dispatch(setEdit(item, type)),
-})
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(Header)
+  mapDispatchToProps,
+)(Header);

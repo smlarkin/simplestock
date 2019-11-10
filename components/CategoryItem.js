@@ -1,10 +1,10 @@
 /* eslint-disable complexity */
-import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
-import Swipeout from 'rc-swipeout'
-import StyledText from './StyledText'
-import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions'
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { connect } from 'react-redux';
+import Swipeout from 'rc-swipeout';
+import StyledText from './StyledText';
+import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions';
 
 const CategoryItem = ({
   deleteCategory,
@@ -17,13 +17,13 @@ const CategoryItem = ({
   setCategoryIndex,
   setEdit,
 }) => {
-  const { color, title } = item
-  const backgroundColor = isActive ? 'white' : color.primary
+  const { color, title } = item;
+  const backgroundColor = isActive ? 'white' : color.primary;
   const content = (
     <StyledText bold style={styles.text}>
       {title}
     </StyledText>
-  )
+  );
 
   return (
     <Swipeout
@@ -35,7 +35,7 @@ const CategoryItem = ({
               {
                 text: 'edit',
                 onPress: () => {
-                  setTimeout(() => setEdit(item), 300)
+                  setTimeout(() => setEdit(item), 300);
                 },
                 style: styles.left,
               },
@@ -48,7 +48,7 @@ const CategoryItem = ({
               {
                 text: 'delete',
                 onPress: () => {
-                  setTimeout(() => deleteCategory(item.key), 300)
+                  setTimeout(() => deleteCategory(item.key), 300);
                 },
                 style: styles.right,
               },
@@ -67,8 +67,8 @@ const CategoryItem = ({
         </TouchableOpacity>
       )}
     </Swipeout>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   left: { backgroundColor: 'white', color: 'black', fontSize: 19 },
@@ -89,15 +89,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 19,
   },
-})
+});
 
 const mapDispatchToState = dispatch => ({
   deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setEdit: category => dispatch(setEdit(category)),
-})
+});
 
 export default connect(
   null,
-  mapDispatchToState
-)(CategoryItem)
+  mapDispatchToState,
+)(CategoryItem);

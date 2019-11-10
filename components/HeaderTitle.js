@@ -1,6 +1,6 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import StyledText from './StyledText'
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import StyledText from './StyledText';
 
 const HeaderTitle = ({ title }) => (
   <View style={styles.container}>
@@ -8,7 +8,7 @@ const HeaderTitle = ({ title }) => (
       {title}
     </StyledText>
   </View>
-)
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +19,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
   },
-})
+});
 
-export default HeaderTitle
+export default HeaderTitle;

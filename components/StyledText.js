@@ -1,6 +1,6 @@
-import React from 'react'
-import ScalableText from 'react-native-text'
-import { colors } from '../constants'
+import React from 'react';
+import ScalableText from 'react-native-text';
+import { colors } from '../constants';
 
 const StyledText = props => (
   <ScalableText
@@ -22,6 +22,6 @@ const StyledText = props => (
     ]}>
     {props.children}
   </ScalableText>
-)
+);
 
-export default StyledText
+export default StyledText;

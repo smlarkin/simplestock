@@ -1,4 +1,4 @@
-const tintColor = '#2f95dc'
+const tintColor = '#2f95dc';
 
 const primary = [
   '#FFC6C6',
@@ -11,7 +11,7 @@ const primary = [
   '#C6D5FF',
   '#D3C6FF',
   '#FFC6F2',
-]
+];
 
 const primaryHighlighted = [
   '#F0A8A8',
@@ -24,7 +24,7 @@ const primaryHighlighted = [
   '#A6B3D8',
   '#AFA4D3',
   '#D5A3CA',
-]
+];
 
 const secondary = [
   '#EBB8B8',
@@ -37,7 +37,7 @@ const secondary = [
   '#B5C3EB',
   '#C0B4E6',
   '#EBB5DF',
-]
+];
 
 const secondaryHighlighted = [
   '#FFB2B2',
@@ -50,14 +50,14 @@ const secondaryHighlighted = [
   '#9CB4F8',
   '#B29BFF',
   '#FF9DE9',
-]
+];
 
 const backgrounds = [...Array(10)].map((item, index) => ({
   primary: primary[index],
   primaryHighlighted: primaryHighlighted[index],
   secondary: secondary[index],
   secondaryHighlighted: secondaryHighlighted[index],
-}))
+}));
 
 export default {
   text: '#4A4A4A',
@@ -77,4 +77,4 @@ export default {
   secondaryHighlighted,
   backgrounds,
   selected: 'grey',
-}
+};
