@@ -4,7 +4,9 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  View,
 } from 'react-native';
+import Constants from 'expo-constants';
 import StatusBarSpacer from './StatusBarSpacer';
 import Header from './Header';
 import Body from './Body';
@@ -12,8 +14,7 @@ import Footer from './Footer';
 
 const AppScreen = () => (
   <KeyboardAvoidingView behavior="padding" style={styles.container}>
-    {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-    {Platform.OS === 'ios' && <StatusBarSpacer />}
+    <StatusBarSpacer />
     <Header />
     <Body />
     <Footer />
