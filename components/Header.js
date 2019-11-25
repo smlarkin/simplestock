@@ -24,9 +24,16 @@ const Header = ({
   const category = categoryIndex !== null ? categories[categoryIndex] : null;
   const title = category ? category.title : 'Simple Stock';
 
+  // TODO: Create logic for all home button scenarios if you are in edit mode
   function handleOnPressHome() {
-    if (edit) setEdit(null);
-    setCategoryIndex(null);
+    if (edit) {
+      if (!Object.values(edit.item).length) {
+        setEdit(null);
+        setCategoryIndex(null);
+      }
+    } else {
+      setCategoryIndex(null);
+    }
   }
 
   function handleOnPressPlus() {

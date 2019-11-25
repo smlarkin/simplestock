@@ -94,7 +94,7 @@ class Paginator extends Component {
                 style={{
                   width: itemWidth,
                   aspectRatio: 1 / 1,
-                  qbackgroundColor: color,
+                  backgroundColor: color,
                   borderRadius: 50,
                   borderWidth: 1,
                   margin: itemMargin,
