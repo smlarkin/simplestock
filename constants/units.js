@@ -14,5 +14,3 @@ export default [
   'Pieces',
   'Trays',
 ];
-
-// export default units.map(unit => ({ key: unit, label: unit, value: unit }));

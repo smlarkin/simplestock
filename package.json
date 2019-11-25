@@ -24,8 +24,6 @@
     "react-native-swipeout": "^2.3.6",
     "react-native-text": "^0.2.0",
     "react-native-web": "^0.11.7",
-    "react-native-wheel-picker": "^1.2.0",
-    "react-native-wheel-picker-android": "^2.0.5",
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
