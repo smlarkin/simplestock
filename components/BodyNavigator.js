@@ -81,7 +81,4 @@ const mapDispatchToProps = dispatch => ({
   setCategoryIndex: index => dispatch(setCategoryIndex(index)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(BodyNavigator);
+export default connect(mapStateToProps, mapDispatchToProps)(BodyNavigator);

@@ -200,7 +200,4 @@ const mapDispatchToProps = dispatch => ({
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SubcategoryItem);
+export default connect(mapStateToProps, mapDispatchToProps)(SubcategoryItem);

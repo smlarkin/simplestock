@@ -126,7 +126,4 @@ const mapDisptachToProps = dispatch => ({
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDisptachToProps,
-)(ShopItem);
+export default connect(mapStateToProps, mapDisptachToProps)(ShopItem);

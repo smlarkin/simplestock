@@ -1,4 +1,4 @@
-const units = [
+export default [
   'UNIT-TYPE',
   'Bags',
   'Bottles',
@@ -15,4 +15,4 @@ const units = [
   'Trays',
 ];
 
-export default units.map(unit => ({ key: unit, label: unit, value: unit }));
+// export default units.map(unit => ({ key: unit, label: unit, value: unit }));

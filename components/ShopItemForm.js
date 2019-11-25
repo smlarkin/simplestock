@@ -118,7 +118,4 @@ const mapDisptachToProps = dispatch => ({
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDisptachToProps,
-)(ShopItemForm);
+export default connect(mapStateToProps, mapDisptachToProps)(ShopItemForm);

@@ -90,7 +90,4 @@ const mapDispatchToProps = dispatch => ({
   setEdit: category => dispatch(setEdit(category)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Body);
+export default connect(mapStateToProps, mapDispatchToProps)(Body);

@@ -97,7 +97,4 @@ const mapDispatchToState = dispatch => ({
   setEdit: category => dispatch(setEdit(category)),
 });
 
-export default connect(
-  null,
-  mapDispatchToState,
-)(CategoryItem);
+export default connect(null, mapDispatchToState)(CategoryItem);

@@ -30,8 +30,8 @@ const Header = ({
   }
 
   function handleOnPressPlus() {
-    if (!edit) {
-      if (category && !shopping) {
+    if (!edit && !shopping) {
+      if (category) {
         const subcategory = {
           key: String(Math.random()),
           title: '',
@@ -104,7 +104,4 @@ const mapDispatchToProps = dispatch => ({
   setEdit: (item, type) => dispatch(setEdit(item, type)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

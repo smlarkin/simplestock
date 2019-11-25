@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import Constants from 'expo-constants';
+import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 import StatusBarSpacer from './StatusBarSpacer';
 import Header from './Header';
 import Body from './Body';

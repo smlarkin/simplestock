@@ -32,16 +32,7 @@ class Paginator extends Component {
     // console.log('Changed in this iteration', changed)
   };
 
-  // componentDidMount() {
-  //   this.ref.scrollToIndex({
-  //     index: this.props.categoryIndex,
-  //     viewPosition: 0,
-  //     viewOffset: viewOffset,
-  //   })
-  // }
-
   componentDidUpdate() {
-    // VERSION 1
     if (this.props.categories.length > 0) {
       this.ref.scrollToIndex({
         animated: false,
@@ -50,12 +41,11 @@ class Paginator extends Component {
         viewOffset: 0,
       });
     } else {
-      // VERSION 2
       this.ref.scrollToIndex({
         animated: false,
         index: this.props.categoryIndex,
         viewPosition: 0,
-        viewOffset: viewOffset,
+        viewOffset,
       });
     }
   }

@@ -25,14 +25,26 @@
     "react-native-text": "^0.2.0",
     "react-native-web": "^0.11.7",
     "react-native-wheel-picker": "^1.2.0",
+    "react-native-wheel-picker-android": "^2.0.5",
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
-    "redux-persist": "^5.10.0",
-    "remote-redux-devtools": "^0.5.16"
+    "redux-persist": "^5.10.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.1.1"
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
+    "babel-preset-expo": "^5.1.1",
+    "eslint": "^6.7.0",
+    "eslint-config-universe": "^2.0.0",
+    "prettier": "^1.19.1"
   },
-  "private": true
+  "private": true,
+  "eslintConfig": {
+    "extends": [
+      "universe/native",
+      "universe/node",
+      "universe/web"
+    ]
+  }
 }

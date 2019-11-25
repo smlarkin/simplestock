@@ -101,7 +101,4 @@ const mapDispatchToProps = dispatch => ({
   setShopping: boolean => dispatch(setShopping(boolean)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(FooterViewsNav);
+export default connect(mapStateToProps, mapDispatchToProps)(FooterViewsNav);

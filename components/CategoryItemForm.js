@@ -154,7 +154,4 @@ const mapDispatchToProps = dispatch => ({
   updateCategory: category => dispatch(updateCategory(category)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CategoryItemForm);
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryItemForm);
