@@ -37,7 +37,7 @@ export function formatCategoryToShare({ title, subcategories }, shopping) {
     ? subcategoriesToShare
         .map(
           subcategory =>
-            `\t${formatSubcategoryToShare(subcategory, shopping)}\n\n`,
+            `\t${formatSubcategoryToShare(subcategory, shopping)}\n`,
         )
         .join('')
     : null;
@@ -51,10 +51,10 @@ export function formatSubcategoryToShare(
   shopping,
 ) {
   const content = shopping
-    ? `${difference} ${type.toLowerCase()}`
-    : `${current} / ${base} ${type.toLowerCase()}`;
+    ? `${difference} (${type.toLowerCase()} of) `
+    : `${current}/${base} (${type.toLowerCase()} of) `;
 
-  return `${formatTitleText(title, 'CAPITALCASE')}\n\n\t\t${content}`;
+  return content + formatTitleText(title, 'CAPITALCASE');
 }
 
 export function formatTitleText(title, option = null) {

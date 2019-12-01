@@ -62,22 +62,30 @@ const FooterShareForm = ({
         case 'ALL_INVENTORY':
           return share({
             title,
-            message: formatCategoriesToShare(categories),
+            message: `*** ${title} ***\n\n${formatCategoriesToShare(
+              categories,
+            )}`,
           });
         case 'ALL_SHOPPING':
           return share({
             title,
-            message: formatCategoriesToShare(categories, 'shopping'),
+            message: `*** ${title} ***\n\n${formatCategoriesToShare(
+              categories,
+              'shopping',
+            )}`,
           });
         case 'CATEGORY_INVENTORY':
           return share({
             title,
-            message: formatCategoryToShare(category),
+            message: `*** ${title} ***\n\n${formatCategoryToShare(category)}`,
           });
         case 'CATEGORY_SHOPPING':
           return share({
             title,
-            message: formatCategoryToShare(category, 'shopping'),
+            message: `*** ${title} ***\n\n${formatCategoryToShare(
+              category,
+              'shopping',
+            )}`,
           });
         default:
           return;
