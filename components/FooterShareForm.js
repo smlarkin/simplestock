@@ -16,19 +16,23 @@ const FooterShareForm = ({
   shopping,
 }) => {
   const category = categoryIndex !== null ? categories[categoryIndex] : null;
-  const categoryHasShopping = category.subcategories.some(
-    subcategory => subcategory.shop,
-  );
+  const categoryHasShopping = category
+    ? category.subcategories.some(subcategory => subcategory.shop)
+    : null;
 
   const radioButtons = [
     { label: 'All Inventory', value: 'ALL_INVENTORY' },
     { label: 'All Shopping', value: 'ALL_SHOPPING' },
     {
-      label: `${formatTitleText(category.title, 'CAPITALCASE')} Inventory`,
+      label: `${
+        category ? formatTitleText(category.title, 'CAPITALCASE') : null
+      } Inventory`,
       value: 'CATEGORY_INVENTORY',
     },
     {
-      label: `${formatTitleText(category.title, 'CAPITALCASE')} Shopping`,
+      label: `${
+        category ? formatTitleText(category.title, 'CAPITALCASE') : null
+      } Shopping`,
       value: 'CATEGORY_SHOPPING',
     },
   ].filter((item, index) => {
@@ -56,7 +60,10 @@ const FooterShareForm = ({
       const { label: title, value } = radioButtons[index];
       switch (value) {
         case 'ALL_INVENTORY':
-          return share({ title, message: formatCategoriesToShare(categories) });
+          return share({
+            title,
+            message: formatCategoriesToShare(categories),
+          });
         case 'ALL_SHOPPING':
           return share({
             title,
