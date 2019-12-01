@@ -6,6 +6,7 @@ import {
   categoriesReducer,
   categoryIndexReducer,
   editReducer,
+  sharingReducer,
   shoppingReducer,
 } from './reducers';
 
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   categories: categoriesReducer,
   categoryIndex: categoryIndexReducer,
   edit: editReducer,
+  sharing: sharingReducer,
   shopping: shoppingReducer,
 });
 

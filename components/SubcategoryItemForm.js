@@ -11,6 +11,7 @@ import {
   createShop,
   focusInput,
   formatIntegersForNumericKeypad,
+  formatTitleText,
   itemTitleIsDuplicate,
   setRef,
 } from '../util';
@@ -39,7 +40,7 @@ const SubcategoryItemForm = ({
   const [type, setType] = useState(item.type);
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [ready, setReady] = useState(false);
-  const { difference, key, shop } = item;
+  const { key } = item;
   const editTypeIsNew = edit.type === 'new';
   const inputs = {};
 
@@ -63,14 +64,14 @@ const SubcategoryItemForm = ({
     );
   }
 
-  function noValuesHaveChanged(currentDifference, currentShop) {
+  function noValuesHaveChanged(difference, shop) {
     return (
       edit.item.title === title &&
       edit.item.current === current &&
       edit.item.base === base &&
       edit.item.type === type &&
-      edit.item.difference === currentDifference &&
-      edit.item.shop === currentShop
+      edit.item.difference === difference &&
+      edit.item.shop === shop
     );
   }
 
@@ -92,26 +93,25 @@ const SubcategoryItemForm = ({
         });
         setEdit(null);
       } else if (allInputValues()) {
-        const currentDifference = !difference
-          ? createDifference(current, base)
-          : difference;
-        const currentShop = !shop ? createShop(currentDifference) : shop;
-        if (noValuesHaveChanged(currentDifference, currentShop)) {
+        const difference = createDifference(current, base);
+        const shop = createShop(difference);
+        const formattedTitle = formatTitleText(title);
+        if (noValuesHaveChanged(difference, shop)) {
           setEdit(null);
         } else if (
-          edit.item.title !== title &&
-          itemTitleIsDuplicate(title, category.subcategories)
+          edit.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
+          itemTitleIsDuplicate(formattedTitle, category.subcategories)
         ) {
           focusInput('title', inputs);
         } else {
           const subcategory = {
             key,
-            title,
+            title: formattedTitle,
             current,
             base,
             type,
-            difference: currentDifference,
-            shop: currentShop,
+            difference,
+            shop,
           };
           updateSubcategory({
             categoryKey: category.key,

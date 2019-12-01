@@ -1,15 +1,21 @@
 import React from 'react';
-import { Share, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import FooterIconButton from './FooterIconButton';
-import { updateDifferenceAndShopping, formatCategories } from '../util';
-import { setCategories, setShopping } from '../redux/actions';
+import FooterShareForm from './FooterShareForm';
+import { layout } from '../constants';
+import { updateDifferenceAndShopping } from '../util';
+import { setCategories, setSharing, setShopping } from '../redux/actions';
 
 const FooterViewsNav = ({
   categories,
   categoryIndex,
+  edit,
   setCategories,
+  setSharing,
   setShopping,
+  sharing,
   shopping,
 }) => {
   function handleOnPressList() {
@@ -22,30 +28,9 @@ const FooterViewsNav = ({
     setShopping(true);
   }
 
-  function share({ title, message }) {
-    Share.share({ title, message })
-      .then(result => console.log('shared ', result))
-      // SHARED
-      // result.action === "sharedAction"
-      // SHARED + ACTIVITY TYPE (if available)
-      // result.activityType === "com.apple.UIKit.activity.CopyToPasteboard"
-      // DISMISSED
-      // result.action === "dismissedAction"
-      .catch(error => console.error('error ', error));
-  }
-
   function handleOnPressSend() {
-    if (categoryIndex !== null && shopping) {
-      console.log('share category shopping list');
-    } else if (categoryIndex !== null) {
-      console.log('share category inventory list');
-    } else if (shopping) {
-      console.log('share entire shopping list');
-    } else {
-      console.log('share entire inventory list');
-      const title = 'All Inventory';
-      const message = formatCategories(categories);
-      share({ title, message });
+    if (!edit) {
+      setSharing(true);
     }
   }
   return (
@@ -71,6 +56,28 @@ const FooterViewsNav = ({
         size={24}
         visible={true}
       />
+      <Modal
+        animationIn="slideInDown"
+        animationOut="slideOutUp"
+        isVisible={sharing}
+        hasBackdrop={true}
+        onBackButtonPress={() => {
+          setSharing(false);
+        }}
+        onBackdropPress={() => {
+          setSharing(false);
+        }}
+        style={{
+          alignItems: 'center',
+          deviceHeight: layout.height,
+          deviceWidth: layout.width,
+          justifyContent: 'flex-start',
+          margin: 0,
+        }}>
+        <FooterShareForm
+          {...{ edit, categories, categoryIndex, setSharing, shopping }}
+        />
+      </Modal>
     </View>
   );
 };
@@ -91,13 +98,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
+  edit: state.edit,
   categories: state.categories,
   categoryIndex: state.categoryIndex,
+  sharing: state.sharing,
   shopping: state.shopping,
 });
 
 const mapDispatchToProps = dispatch => ({
   setCategories: categories => dispatch(setCategories(categories)),
+  setSharing: boolean => dispatch(setSharing(boolean)),
   setShopping: boolean => dispatch(setShopping(boolean)),
 });
 

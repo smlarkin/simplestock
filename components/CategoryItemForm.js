@@ -3,7 +3,12 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import { colors } from '../constants';
 import { deleteCategory, setEdit, updateCategory } from '../redux/actions';
-import { focusInput, itemTitleIsDuplicate, setRef } from '../util';
+import {
+  focusInput,
+  formatTitleText,
+  itemTitleIsDuplicate,
+  setRef,
+} from '../util';
 
 const CategoryItemForm = ({
   categories,
@@ -34,20 +39,21 @@ const CategoryItemForm = ({
 
   function handleOnSubmitEditing() {
     if (title) {
+      const formattedTitle = formatTitleText(title);
       if (
         edit.item.title === title &&
         edit.item.color.primary === color.primary
       ) {
         setEdit(null);
       } else if (
-        edit.item.title !== title &&
+        edit.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
         itemTitleIsDuplicate(title, categories)
       ) {
         focusInput('title', inputs);
       } else {
         updateCategory({
           categoryKey: edit.item.key,
-          category: { color, key, title, subcategories },
+          category: { color, key, title: formattedTitle, subcategories },
         });
         setEdit(null);
       }

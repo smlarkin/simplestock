@@ -6,7 +6,7 @@ import Body from './Body';
 import Footer from './Footer';
 
 const AppScreen = () => (
-  <KeyboardAvoidingView behavior="padding" style={styles.container}>
+  <KeyboardAvoidingView {...{ behavior: 'padding', style: styles.container }}>
     <StatusBarSpacer />
     <Header />
     <Body />

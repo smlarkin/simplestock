@@ -8,6 +8,7 @@ import {
   SET_CATEGORIES,
   SET_CATEGORY_INDEX,
   SET_EDIT,
+  SET_SHARING,
   SET_SUBCATEGORIES,
   SET_SHOPPING,
   UPDATE_CATEGORY,
@@ -91,6 +92,16 @@ export const editReducer = (state = null, action) => {
   const { type, payload } = action;
   switch (type) {
     case SET_EDIT:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+export const sharingReducer = (state = false, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case SET_SHARING:
       return payload;
     default:
       return state;

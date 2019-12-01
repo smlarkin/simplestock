@@ -1,3 +1,9 @@
+export function capitalizeWord(word) {
+  return word.length > 1
+    ? word[0].toUpperCase() + word.slice(1).toLowerCase()
+    : word.toUpperCase();
+}
+
 export function createDifference(numberStringA, numberStringB) {
   const current = parseInt(numberStringA);
   const base = parseInt(numberStringB);
@@ -13,15 +19,62 @@ export function focusInput(name, inputs) {
   inputs[name].focus();
 }
 
-export function formatCategories(categories) {
-  return categories.map(category => `${formatCategory(category)}\n`).join('');
+export function formatCategoriesToShare(categories, shopping = false) {
+  return categories
+    .map(category => {
+      return formatCategoryToShare(category, shopping);
+    })
+    .filter(category => category)
+    .map(category => `${category}\n`)
+    .join('');
 }
 
-export function formatCategory({ title, subcategories }) {
-  const formattedSubcategories = subcategories
-    .map(subcategory => `  ${formatSubcategory(subcategory)}\n\n`)
-    .join('');
-  return `${title.toUpperCase()}\n\n${formattedSubcategories}`;
+export function formatCategoryToShare({ title, subcategories }, shopping) {
+  const subcategoriesToShare = shopping
+    ? subcategories.filter(subcategory => subcategory.shop)
+    : subcategories;
+  const formattedSubcategories = subcategoriesToShare.length
+    ? subcategoriesToShare
+        .map(
+          subcategory =>
+            `\t${formatSubcategoryToShare(subcategory, shopping)}\n\n`,
+        )
+        .join('')
+    : null;
+  return formattedSubcategories
+    ? `${title.toUpperCase()}\n\n${formattedSubcategories}`
+    : null;
+}
+
+export function formatSubcategoryToShare(
+  { title, current, base, type, difference },
+  shopping,
+) {
+  const content = shopping
+    ? `${difference} ${type.toLowerCase()}`
+    : `${current} / ${base} ${type.toLowerCase()}`;
+
+  return `${formatTitleText(title, 'CAPITALCASE')}\n\n\t\t${content}`;
+}
+
+export function formatTitleText(title, option = null) {
+  return title
+    .split(' ')
+    .filter(word => word.length)
+    .map(word => {
+      const currentWord = word.trim();
+      switch (option) {
+        case 'CAPITALCASE':
+          return capitalizeWord(currentWord);
+        case 'UPPERCASE':
+          return currentWord.toUpperCase();
+        case 'LOWERCASE':
+          return currentWord.toLowerCase();
+        default:
+          return currentWord;
+      }
+    })
+    .join(' ');
 }
 
 export function formatIntegersForNumericKeypad(amount, callback) {
@@ -30,12 +83,8 @@ export function formatIntegersForNumericKeypad(amount, callback) {
   callback(finalAmount);
 }
 
-export function formatSubcategory({ title, current, base, type }) {
-  return `${title}    ${current} / ${base}  ${type}`;
-}
-
 export function itemTitleIsDuplicate(title, array) {
-  return array.some(item => item.title === title);
+  return array.some(item => item.title.toLowerCase() === title.toLowerCase());
 }
 
 export function mapCategoriesToColors(categories, colors) {

@@ -7,6 +7,7 @@ import {
   SET_CATEGORIES,
   SET_CATEGORY_INDEX,
   SET_EDIT,
+  SET_SHARING,
   SET_SUBCATEGORIES,
   SET_SHOPPING,
   UPDATE_CATEGORY,
@@ -51,6 +52,11 @@ export const setCategoryIndex = categoryIndex => ({
 export const setEdit = (item, type = null) => ({
   type: SET_EDIT,
   payload: item ? { item, type } : null,
+});
+
+export const setSharing = boolean => ({
+  type: SET_SHARING,
+  payload: boolean,
 });
 
 export const setShopping = boolean => ({

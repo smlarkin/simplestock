@@ -48,9 +48,10 @@ const App = (/* { skipLoading } */) => {
       />
     );
   } else {
+    const loading = <ActivityIndicator />;
     return (
-      <Provider store={store}>
-        <PersistGate loading={<ActivityIndicator />} persistor={persistor}>
+      <Provider {...{ store }}>
+        <PersistGate {...{ loading, persistor }}>
           <AppScreen />
         </PersistGate>
       </Provider>
