@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import IconButton from './IconButton';
 import FooterShareForm from './FooterShareForm';
-import { layout } from '../constants';
-import { updateDifferenceAndShopping } from '../util';
+import { colors, layout } from '../constants';
+import { getCategory, updateDifferenceAndShopping } from '../util';
 import {
+  createCategory,
+  createSubcategory,
+  setEdit,
   setCategories,
   setCategoryIndex,
   setSharing,
@@ -16,7 +20,10 @@ import {
 const FooterViewsNav = ({
   categories,
   categoryIndex,
+  createCategory,
+  createSubcategory,
   edit,
+  setEdit,
   setCategories,
   setCategoryIndex,
   setSharing,
@@ -24,9 +31,38 @@ const FooterViewsNav = ({
   sharing,
   shopping,
 }) => {
+  const category = getCategory(categoryIndex, categories);
+
   function handleOnPressHome() {
     if (!edit) {
       setCategoryIndex(null);
+    }
+  }
+
+  function handleOnPressPlus() {
+    if (!edit && !shopping) {
+      if (category) {
+        const subcategory = {
+          key: uuid(),
+          title: '',
+          current: '',
+          base: '',
+          difference: '',
+          shop: false,
+        };
+        const categoryKey = category.key;
+        createSubcategory({ categoryKey, subcategory });
+        setEdit(subcategory, 'new');
+      } else {
+        const category = {
+          color: colors.backgrounds[0],
+          key: uuid(),
+          title: '',
+          subcategories: [],
+        };
+        createCategory(category);
+        setEdit(category);
+      }
     }
   }
 
@@ -40,6 +76,13 @@ const FooterViewsNav = ({
       setSharing(true);
     }
   }
+
+  useEffect(() => {
+    if (!categories.length) {
+      setShopping(false);
+    }
+  }, [categories]);
+
   return (
     <View style={styles.container}>
       <IconButton
@@ -50,20 +93,30 @@ const FooterViewsNav = ({
         size={24}
       />
       <IconButton
-        active={true}
+        active={categories.length}
         activeOpacity={1}
         color="black"
         name={shopping ? 'checksquareo' : 'bars'}
         handleOnPress={handleOnPressToggleShopping}
         size={24}
       />
-      <IconButton
-        active={true}
-        color="black"
-        name="upload"
-        handleOnPress={handleOnPressUpload}
-        size={24}
-      />
+      {!shopping ? (
+        <IconButton
+          active={true}
+          color="black"
+          name="plus"
+          handleOnPress={handleOnPressPlus}
+          size={24}
+        />
+      ) : (
+        <IconButton
+          active={categories.length}
+          color="black"
+          name="upload"
+          handleOnPress={handleOnPressUpload}
+          size={24}
+        />
+      )}
       <Modal
         animationIn="slideInDown"
         animationOut="slideOutUp"
@@ -114,6 +167,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  createCategory: category => dispatch(createCategory(category)),
+  createSubcategory: ({ categoryKey, subcategory }) =>
+    dispatch(createSubcategory({ categoryKey, subcategory })),
+  setEdit: (item, type) => dispatch(setEdit(item, type)),
   setCategories: categories => dispatch(setCategories(categories)),
   setCategoryIndex: index => dispatch(setCategoryIndex(index)),
   setSharing: boolean => dispatch(setSharing(boolean)),

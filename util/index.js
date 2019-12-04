@@ -83,6 +83,10 @@ export function formatIntegersForNumericKeypad(amount, callback) {
   callback(finalAmount);
 }
 
+export function getCategory(categoryIndex, categories) {
+  return categoryIndex !== null ? categories[categoryIndex] : null;
+}
+
 export function itemTitleIsDuplicate(title, array) {
   return array.some(item => item.title.toLowerCase() === title.toLowerCase());
 }

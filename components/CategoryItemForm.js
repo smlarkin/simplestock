@@ -69,7 +69,8 @@ const CategoryItemForm = ({
         <TextInput
           autoFocus={true}
           blurOnSubmit={true}
-          maxLength={26}
+          // TODO: Figure out safe maxLength on all screen sizes
+          maxLength={40}
           onBlur={handleOnBlur}
           onChangeText={e => setTitle(e)}
           placeholder="Category Title"

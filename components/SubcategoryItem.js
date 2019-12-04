@@ -42,7 +42,7 @@ const SubcategoryItem = ({
   return (
     <Swipeout
       autoClose={true}
-      // NOTE: THIS IS PROBLEMATIC IF USED ... SO REDESIGN TO NOT USE IT AT ALL
+      // TODO: THIS IS PROBLEMATIC IF USED ... SO REDESIGN TO NOT USE IT AT ALL
       // left={[
       //   {
       //     text: 'edit',

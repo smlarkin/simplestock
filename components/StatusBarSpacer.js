@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
-import Constants from 'expo-constants';
+import { layout } from '../constants';
 
 const StatusBarSpacer = () => (
-  <View style={{ height: Constants.statusBarHeight }} />
+  <View style={{ height: layout.statusBarHeight }} />
 );
 
 export default StatusBarSpacer;

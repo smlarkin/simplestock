@@ -4,7 +4,9 @@ import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import BodyRenderItem from './BodyRenderItem';
+import BodyRenderItemNoContent from './BodyRenderItemNoContent';
 import BodyNavigator from './BodyNavigator';
+import { getCategory } from '../util';
 import {
   setCategories,
   setCategoryIndex,
@@ -17,16 +19,12 @@ const Body = ({
   categoryIndex,
   edit,
   setCategories,
-  setCategoryIndex,
-  setEdit,
   setSubcategories,
   shopping,
 }) => {
-  // RESETS
-  // setEdit(null)
-  // setCategories([])
-  // setCategoryIndex(null)
-  const category = categoryIndex !== null ? categories[categoryIndex] : null;
+  const category = getCategory(categoryIndex, categories);
+  const categoryTitle = category ? category.title : null;
+  const categoriesLength = categories.length ? categories.length : null;
 
   const data = !category
     ? categories
@@ -34,13 +32,17 @@ const Body = ({
     ? category.subcategories.filter(subcategory => subcategory.shop === true)
     : category.subcategories;
 
-  // change to flatlist defaults for empty items
-  // use variables for shopping, category, subcategory
   const renderItem = BodyRenderItem({
     categoryIndex,
     edit,
     shopping,
   });
+
+  const listEmptyComponent = (
+    <BodyRenderItemNoContent
+      {...{ categoriesLength, categoryTitle, shopping }}
+    />
+  );
 
   function onMoveEnd(data) {
     if (category) {
@@ -59,6 +61,7 @@ const Body = ({
         ]}>
         <DraggableFlatList
           data={data}
+          ListEmptyComponent={listEmptyComponent}
           onMoveEnd={({ data }) => onMoveEnd(data)}
           renderItem={renderItem}
           scrollPercent={5}
