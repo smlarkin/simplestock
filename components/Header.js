@@ -1,14 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-import HeaderIconButton from './HeaderIconButton';
+import IconButton from './IconButton';
 import HeaderTitle from './HeaderTitle';
-import {
-  createCategory,
-  createSubcategory,
-  setCategoryIndex,
-  setEdit,
-} from '../redux/actions';
+import { createCategory, createSubcategory, setEdit } from '../redux/actions';
 import { colors } from '../constants';
 
 const Header = ({
@@ -18,17 +13,10 @@ const Header = ({
   createSubcategory,
   edit,
   shopping,
-  setCategoryIndex,
   setEdit,
 }) => {
   const category = categoryIndex !== null ? categories[categoryIndex] : null;
   const title = category ? category.title : 'Simple Stock';
-
-  function handleOnPressHome() {
-    if (!edit) {
-      setCategoryIndex(null);
-    }
-  }
 
   function handleOnPressPlus() {
     if (!edit && !shopping) {
@@ -59,22 +47,16 @@ const Header = ({
 
   return (
     <View style={styles.container}>
-      <HeaderIconButton
-        color={null}
-        name="home"
-        handleOnPress={handleOnPressHome}
-        size={24}
-        visible={category}
-      />
+      <View style={styles.placeholder} />
 
       <HeaderTitle title={title} />
 
-      <HeaderIconButton
-        color={null}
+      <IconButton
+        active={!shopping}
+        color="black"
         name="plus"
         handleOnPress={handleOnPressPlus}
         size={24}
-        visible={true}
       />
     </View>
   );
@@ -87,6 +69,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  placeholder: {
+    flex: 1,
   },
 });
 
@@ -101,7 +86,6 @@ const mapDispatchToProps = dispatch => ({
   createCategory: category => dispatch(createCategory(category)),
   createSubcategory: ({ categoryKey, subcategory }) =>
     dispatch(createSubcategory({ categoryKey, subcategory })),
-  setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setEdit: (item, type) => dispatch(setEdit(item, type)),
 });
 

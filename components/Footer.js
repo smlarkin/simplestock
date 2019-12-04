@@ -2,59 +2,67 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-import FooterIconButton from './FooterIconButton';
+import IconButton from './IconButton';
 import FooterShareForm from './FooterShareForm';
 import { layout } from '../constants';
 import { updateDifferenceAndShopping } from '../util';
-import { setCategories, setSharing, setShopping } from '../redux/actions';
+import {
+  setCategories,
+  setCategoryIndex,
+  setSharing,
+  setShopping,
+} from '../redux/actions';
 
 const FooterViewsNav = ({
   categories,
   categoryIndex,
   edit,
   setCategories,
+  setCategoryIndex,
   setSharing,
   setShopping,
   sharing,
   shopping,
 }) => {
-  function handleOnPressList() {
-    updateDifferenceAndShopping(categories, setCategories);
-    setShopping(false);
+  function handleOnPressHome() {
+    if (!edit) {
+      setCategoryIndex(null);
+    }
   }
 
-  function handleOnPressCheckSquare() {
+  function handleOnPressToggleShopping() {
     updateDifferenceAndShopping(categories, setCategories);
-    setShopping(true);
+    setShopping(!shopping);
   }
 
-  function handleOnPressSend() {
+  function handleOnPressUpload() {
     if (!edit) {
       setSharing(true);
     }
   }
   return (
     <View style={styles.container}>
-      <FooterIconButton
-        color={null}
-        name="list"
-        handleOnPress={handleOnPressList}
+      <IconButton
+        active={categoryIndex !== null}
+        color="black"
+        name="home"
+        handleOnPress={handleOnPressHome}
         size={24}
-        visible={true}
       />
-      <FooterIconButton
-        color={null}
-        name="check-square"
-        handleOnPress={handleOnPressCheckSquare}
+      <IconButton
+        active={true}
+        activeOpacity={1}
+        color="black"
+        name={shopping ? 'checksquareo' : 'bars'}
+        handleOnPress={handleOnPressToggleShopping}
         size={24}
-        visible={true}
       />
-      <FooterIconButton
-        color={null}
-        name="send"
-        handleOnPress={handleOnPressSend}
+      <IconButton
+        active={true}
+        color="black"
+        name="upload"
+        handleOnPress={handleOnPressUpload}
         size={24}
-        visible={true}
       />
       <Modal
         animationIn="slideInDown"
@@ -107,6 +115,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setCategories: categories => dispatch(setCategories(categories)),
+  setCategoryIndex: index => dispatch(setCategoryIndex(index)),
   setSharing: boolean => dispatch(setSharing(boolean)),
   setShopping: boolean => dispatch(setShopping(boolean)),
 });
