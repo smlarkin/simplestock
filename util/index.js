@@ -96,7 +96,6 @@ export function filterSubcategories(
   categoryIndex,
   shopping,
 ) {
-  console.log('shopping ', shopping);
   return !shopping
     ? filteredCategories[categoryIndex].subcategories
     : filteredCategories[categoryIndex].subcategories.filter(

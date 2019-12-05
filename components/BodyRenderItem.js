@@ -19,35 +19,19 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
   if (categoryIndex !== null) {
     if (shopping && item.shop) {
       if (itemIsEditItem) {
-        return <ShopItemForm index={index} item={item} />;
+        return <ShopItemForm {...{ index, item }} />;
       } else {
-        return <ShopItem index={index} item={item} />;
+        return <ShopItem {...{ index, item }} />;
       }
     } else if (itemIsEditItem) {
-      return <SubcategoryItemForm index={index} item={item} />;
+      return <SubcategoryItemForm {...{ index, item }} />;
     } else {
-      return (
-        <SubcategoryItem
-          index={index}
-          item={item}
-          move={move}
-          moveEnd={moveEnd}
-          isActive={isActive}
-        />
-      );
+      return <SubcategoryItem {...{ index, item, move, moveEnd, isActive }} />;
     }
   } else if (itemIsEditItem) {
-    return <CategoryItemForm item={item} />;
+    return <CategoryItemForm {...{ item }} />;
   } else {
-    return (
-      <CategoryItem
-        index={index}
-        item={item}
-        move={!shopping ? move : null}
-        moveEnd={!shopping ? moveEnd : null}
-        isActive={!shopping ? isActive : null}
-      />
-    );
+    return <CategoryItem {...{ index, item, move, moveEnd, isActive }} />;
   }
 };
 

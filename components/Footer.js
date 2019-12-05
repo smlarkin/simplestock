@@ -35,16 +35,15 @@ const FooterViewsNav = ({
 
   function handleOnPressHome() {
     if (!edit) {
-      if (shopping) {
-        updateDifferenceAndShopping(categories, setCategories);
-      }
+      updateDifferenceAndShopping(categories, setCategories);
       setCategoryIndex(null);
     }
   }
 
   function handleOnPressToggleShopping() {
-    updateDifferenceAndShopping(categories, setCategories);
-    setShopping(!shopping);
+    if (!edit) {
+      setShopping(!shopping);
+    }
   }
 
   function handleOnPressUpload() {
@@ -103,34 +102,14 @@ const FooterViewsNav = ({
         handleOnPress={handleOnPressToggleShopping}
         size={24}
       />
-      {
-        <IconButton
-          active={!shopping}
-          color="black"
-          name="plus"
-          handleOnLongPress={handleOnPressUpload}
-          handleOnPress={handleOnPressPlus}
-          size={24}
-        />
-      }
-      {/* !shopping ? (
-        <IconButton
-          active={true}
-          color="black"
-          name="plus"
-          handleOnLongPress={handleOnPressUpload}
-          handleOnPress={handleOnPressPlus}
-          size={24}
-        />
-      ) : (
-        <IconButton
-          active={categories.length}
-          color="black"
-          name="upload"
-          handleOnPress={handleOnPressUpload}
-          size={24}
-        />
-      ) */}
+      <IconButton
+        active={true}
+        color="black"
+        name={!shopping ? 'plus' : 'upload'}
+        handleOnLongPress={handleOnPressUpload}
+        handleOnPress={!shopping ? handleOnPressPlus : handleOnPressUpload}
+        size={24}
+      />
       <Modal
         animationIn="slideInDown"
         animationOut="slideOutUp"

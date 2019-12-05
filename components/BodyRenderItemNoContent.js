@@ -23,9 +23,11 @@ const BodyRenderItemNoContent = ({
       ? 'No categories yet!'
       : categoryIndex === null && shopping
       ? 'No shopping to do!'
-      : categoryIndex !== null && !shopping
+      : categoryIndex !== null && categoriesFiltered.length && shopping
+      ? 'This category has no shopping!'
+      : categoryIndex !== null && categoriesFiltered.length && !shopping
       ? 'This category has no subcategories!'
-      : 'This category has no shopping!';
+      : '';
 
   return (
     <View style={[styles.container, { height }]}>

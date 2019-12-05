@@ -27,6 +27,7 @@ const Body = ({
   setSubcategories,
   shopping,
 }) => {
+  // DEV RESETS
   // setCategories([]);
   // setCategoryIndex(null);
   // setEdit(null);
@@ -80,7 +81,6 @@ const Body = ({
               }}
             />
           }
-          // NOTE: data is scoped below.
           onMoveEnd={({ data }) => onMoveEnd(data)}
           renderItem={renderItem}
           scrollPercent={5}

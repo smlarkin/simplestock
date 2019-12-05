@@ -22,12 +22,20 @@ const ShopItemForm = ({
   const textInput = useRef(null);
 
   function handleOnBlur() {
-    if (difference) {
-      updateSubcategory({
-        categoryKey: category.key,
-        subcategoryKey: item.key,
-        subcategory: { ...item, difference },
-      });
+    if (difference !== null) {
+      if (difference === '0') {
+        updateSubcategory({
+          categoryKey: category.key,
+          subcategoryKey: item.key,
+          subcategory: { ...item, shop: false },
+        });
+      } else {
+        updateSubcategory({
+          categoryKey: category.key,
+          subcategoryKey: item.key,
+          subcategory: { ...item, difference },
+        });
+      }
       setEdit(null);
     } else {
       textInput.current.focus();

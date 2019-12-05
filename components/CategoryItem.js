@@ -64,8 +64,8 @@ const CategoryItem = ({
         <TouchableOpacity
           style={[styles.touchableOpacity, { backgroundColor }]}
           onPress={() => setCategoryIndex(index)}
-          onLongPress={move}
-          onPressOut={moveEnd}>
+          onLongPress={!shopping ? move : null}
+          onPressOut={!shopping ? moveEnd : null}>
           {content}
         </TouchableOpacity>
       )}
