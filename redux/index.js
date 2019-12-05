@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   categoriesReducer,
+  categoriesFilteredReducer,
   categoryIndexReducer,
   editReducer,
   sharingReducer,
@@ -12,6 +13,7 @@ import {
 
 const rootReducer = combineReducers({
   categories: categoriesReducer,
+  categoriesFiltered: categoriesFilteredReducer,
   categoryIndex: categoryIndexReducer,
   edit: editReducer,
   sharing: sharingReducer,

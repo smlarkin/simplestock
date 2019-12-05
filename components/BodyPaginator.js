@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { connect } from 'react-redux';
 import { layout } from '../constants';
 
 const { width } = layout;
@@ -9,40 +8,27 @@ const itemWidth = itemWidthTotal / 3;
 const itemMargin = itemWidth;
 const viewOffset = itemWidthTotal * 3;
 const listHeaderOrFooterWidth = viewOffset;
+const viewabilityConfig = {
+  itemVisiblePercentThreshold: 50,
+};
+const getItemLayout = (_, index) => ({
+  length: itemWidthTotal,
+  offset: itemWidthTotal * index,
+  index,
+});
 
-class Paginator extends Component {
-  viewabilityConfig = {
-    itemVisiblePercentThreshold: 50,
-  };
-
-  getItemLayout = (_, index) => {
-    return {
-      length: itemWidthTotal,
-      offset: itemWidthTotal * index,
-      index,
-    };
-  };
-
+class BodyPaginator extends Component {
   componentDidUpdate() {
-    if (this.props.categories.length > 0) {
-      this.ref.scrollToIndex({
-        animated: false,
-        index: this.props.categoryIndex,
-        viewPosition: 0,
-        viewOffset: 0,
-      });
-    } else {
-      this.ref.scrollToIndex({
-        animated: false,
-        index: this.props.categoryIndex,
-        viewPosition: 0,
-        viewOffset: viewOffset,
-      });
-    }
+    this.ref.scrollToIndex({
+      animated: false,
+      index: this.props.categoryIndex,
+      viewPosition: 0,
+      viewOffset: 0,
+    });
   }
 
   render() {
-    const { categoryIndex, categories } = this.props;
+    const { categoryIndex, categoriesFiltered } = this.props;
     return (
       <View style={styles.container}>
         <FlatList
@@ -51,17 +37,16 @@ class Paginator extends Component {
           snapToAlignment="start"
           disableScrollViewPanResponder={true}
           decelerationRate="fast"
-          onViewableItemsChanged={this.onViewableItemsChanged}
-          viewabilityConfig={this.viewabilityConfig}
+          viewabilityConfig={viewabilityConfig}
           ref={ref => (this.ref = ref)}
           contentContainerStyle={styles.contentContainerStyle}
           showsHorizontalScrollIndicator={false}
           scrollEnabled={false}
-          getItemLayout={this.getItemLayout}
-          data={categories}
+          getItemLayout={getItemLayout}
+          data={categoriesFiltered}
           horizontal
           ListFooterComponent={
-            categories.length > 7
+            categoriesFiltered.length > 7
               ? () => (
                   <View
                     style={{
@@ -74,7 +59,7 @@ class Paginator extends Component {
               : null
           }
           ListHeaderComponent={
-            categories.length > 7
+            categoriesFiltered.length > 7
               ? () => (
                   <View
                     style={{
@@ -119,9 +104,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => ({
-  categoryIndex: state.categoryIndex,
-  categories: state.categories,
-});
+// const mapStateToProps = state => ({
+//   categoryIndex: state.categoryIndex,
+//   categories: state.categories,
+//   shopping: state.shopping,
+// });
 
-export default connect(mapStateToProps)(Paginator);
+// export default connect(mapStateToProps)(BodyPaginator);
+export default BodyPaginator;

@@ -22,7 +22,7 @@ import {
 } from '../redux/actions';
 
 const SubcategoryItemForm = ({
-  categories,
+  categoriesFiltered,
   categoryIndex,
   deleteSubcategory,
   edit,
@@ -31,7 +31,7 @@ const SubcategoryItemForm = ({
   setEdit,
   updateSubcategory,
 }) => {
-  const category = categories[categoryIndex];
+  const category = categoriesFiltered[categoryIndex];
   const { color } = category;
   const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
   const [title, setTitle] = useState(item.title);
@@ -356,8 +356,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
+  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
-  categories: state.categories,
   edit: state.edit,
 });
 

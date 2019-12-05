@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 import IconButton from './IconButton';
 import FooterShareForm from './FooterShareForm';
 import { colors, layout } from '../constants';
-import { getCategory, updateDifferenceAndShopping } from '../util';
+import { selectCategory, updateDifferenceAndShopping } from '../util';
 import {
   createCategory,
   createSubcategory,
@@ -31,11 +31,25 @@ const FooterViewsNav = ({
   sharing,
   shopping,
 }) => {
-  const category = getCategory(categoryIndex, categories);
+  const category = selectCategory(categoryIndex, categories);
 
   function handleOnPressHome() {
     if (!edit) {
+      if (shopping) {
+        updateDifferenceAndShopping(categories, setCategories);
+      }
       setCategoryIndex(null);
+    }
+  }
+
+  function handleOnPressToggleShopping() {
+    updateDifferenceAndShopping(categories, setCategories);
+    setShopping(!shopping);
+  }
+
+  function handleOnPressUpload() {
+    if (!edit) {
+      setSharing(true);
     }
   }
 
@@ -47,7 +61,7 @@ const FooterViewsNav = ({
           title: '',
           current: '',
           base: '',
-          difference: '',
+          difference: 0,
           shop: false,
         };
         const categoryKey = category.key;
@@ -63,17 +77,6 @@ const FooterViewsNav = ({
         createCategory(category);
         setEdit(category);
       }
-    }
-  }
-
-  function handleOnPressToggleShopping() {
-    updateDifferenceAndShopping(categories, setCategories);
-    setShopping(!shopping);
-  }
-
-  function handleOnPressUpload() {
-    if (!edit) {
-      setSharing(true);
     }
   }
 
@@ -93,18 +96,29 @@ const FooterViewsNav = ({
         size={24}
       />
       <IconButton
-        active={categories.length}
+        active={categories.length && categoryIndex === null}
         activeOpacity={1}
         color="black"
         name={shopping ? 'checksquareo' : 'bars'}
         handleOnPress={handleOnPressToggleShopping}
         size={24}
       />
-      {!shopping ? (
+      {
+        <IconButton
+          active={!shopping}
+          color="black"
+          name="plus"
+          handleOnLongPress={handleOnPressUpload}
+          handleOnPress={handleOnPressPlus}
+          size={24}
+        />
+      }
+      {/* !shopping ? (
         <IconButton
           active={true}
           color="black"
           name="plus"
+          handleOnLongPress={handleOnPressUpload}
           handleOnPress={handleOnPressPlus}
           size={24}
         />
@@ -116,7 +130,7 @@ const FooterViewsNav = ({
           handleOnPress={handleOnPressUpload}
           size={24}
         />
-      )}
+      ) */}
       <Modal
         animationIn="slideInDown"
         animationOut="slideOutUp"

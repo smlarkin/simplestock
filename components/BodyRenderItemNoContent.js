@@ -4,22 +4,28 @@ import StyledText from './StyledText';
 import { layout } from '../constants';
 
 const BodyRenderItemNoContent = ({
-  categoriesLength,
-  categoryTitle,
+  categories,
+  categoriesFiltered,
+  categoryIndex,
   shopping,
 }) => {
   const adjustedHeight = layout.height - layout.statusBarHeight;
 
   const height =
-    categoryTitle && categoriesLength && categoriesLength > 1
+    categoryIndex !== null &&
+    categoriesFiltered.length &&
+    categoriesFiltered.length > 1
       ? Math.floor(adjustedHeight * 0.7)
       : Math.floor(adjustedHeight * 0.8);
 
-  const content = !categoryTitle
-    ? 'You have no categories!'
-    : !shopping
-    ? `You have no subcategories for:\n\n${categoryTitle}`
-    : `You have no shopping to do for:\n\n${categoryTitle}`;
+  const content =
+    !categories.length && !shopping
+      ? 'No categories yet!'
+      : categoryIndex === null && shopping
+      ? 'No shopping to do!'
+      : categoryIndex !== null && !shopping
+      ? 'This category has no subcategories!'
+      : 'This category has no shopping!';
 
   return (
     <View style={[styles.container, { height }]}>

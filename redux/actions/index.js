@@ -5,6 +5,7 @@ import {
   DELETE_SUBCATEGORY,
   RESET_CATEGORIES,
   SET_CATEGORIES,
+  SET_CATEGORIES_FILTERED,
   SET_CATEGORY_INDEX,
   SET_EDIT,
   SET_SHARING,
@@ -52,6 +53,11 @@ export const setCategoryIndex = categoryIndex => ({
 export const setEdit = (item, type = null) => ({
   type: SET_EDIT,
   payload: item ? { item, type } : null,
+});
+
+export const setCategoriesFiltered = categoriesFiltered => ({
+  type: SET_CATEGORIES_FILTERED,
+  payload: categoriesFiltered,
 });
 
 export const setSharing = boolean => ({

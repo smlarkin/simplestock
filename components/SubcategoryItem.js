@@ -7,8 +7,8 @@ import StyledText from './StyledText';
 import { deleteSubcategory, setEdit } from '../redux/actions';
 
 const SubcategoryItem = ({
+  categoriesFiltered,
   categoryIndex,
-  categories,
   deleteSubcategory,
   edit,
   index,
@@ -18,7 +18,7 @@ const SubcategoryItem = ({
   moveEnd,
   setEdit,
 }) => {
-  const { color, key } = categories[categoryIndex];
+  const { color, key } = categoriesFiltered[categoryIndex];
   const categoryKey = key;
   const subcategoryKey = item.key;
   const backgroundColor = isActive
@@ -120,7 +120,7 @@ const SubcategoryItem = ({
           onPressOut={moveEnd}
           style={styles.typeContainer}>
           <StyledText demi style={styles.type}>
-            {type}
+            {type ? type : ''}
           </StyledText>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -189,8 +189,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
+  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
-  categories: state.categories,
   edit: state.edit,
 });
 

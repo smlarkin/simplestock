@@ -6,6 +6,7 @@ const IconButton = ({
   active,
   activeOpacity,
   color,
+  handleOnLongPress,
   handleOnPress,
   name,
   size,
@@ -13,8 +14,9 @@ const IconButton = ({
   <View style={styles.container}>
     <TouchableOpacity
       activeOpacity={activeOpacity ? activeOpacity : active ? 0.2 : 1}
-      style={{ width: size }}
-      onPress={active ? handleOnPress : null}>
+      onLongPress={active && handleOnLongPress ? handleOnLongPress : null}
+      onPress={active ? handleOnPress : null}
+      style={{ width: size }}>
       <AntDesign color={active ? color : 'silver'} name={name} size={size} />
     </TouchableOpacity>
   </View>

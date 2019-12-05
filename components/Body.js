@@ -1,14 +1,15 @@
 /* eslint-disable complexity */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import BodyRenderItem from './BodyRenderItem';
 import BodyRenderItemNoContent from './BodyRenderItemNoContent';
 import BodyNavigator from './BodyNavigator';
-import { getCategory } from '../util';
+import { filterCategories, filterSubcategories } from '../util';
 import {
   setCategories,
+  setCategoriesFiltered,
   setCategoryIndex,
   setEdit,
   setSubcategories,
@@ -16,21 +17,25 @@ import {
 
 const Body = ({
   categories,
+  categoriesFiltered,
   categoryIndex,
   edit,
   setCategories,
+  setCategoriesFiltered,
+  setCategoryIndex,
+  setEdit,
   setSubcategories,
   shopping,
 }) => {
-  const category = getCategory(categoryIndex, categories);
-  const categoryTitle = category ? category.title : null;
-  const categoriesLength = categories.length ? categories.length : null;
+  // setCategories([]);
+  // setCategoryIndex(null);
+  // setEdit(null);
+  // setfilteredCategories([]);
 
-  const data = !category
-    ? categories
-    : shopping
-    ? category.subcategories.filter(subcategory => subcategory.shop === true)
-    : category.subcategories;
+  const filteredData =
+    categoryIndex !== null
+      ? filterSubcategories(categoriesFiltered, categoryIndex, shopping)
+      : categoriesFiltered;
 
   const renderItem = BodyRenderItem({
     categoryIndex,
@@ -38,36 +43,54 @@ const Body = ({
     shopping,
   });
 
-  const listEmptyComponent = (
-    <BodyRenderItemNoContent
-      {...{ categoriesLength, categoryTitle, shopping }}
-    />
-  );
-
   function onMoveEnd(data) {
-    if (category) {
-      setSubcategories({ categoryKey: category.key, subcategories: data });
+    if (categoryIndex !== null) {
+      setSubcategories({
+        categoryKey: category.key,
+        subcategories: data,
+      });
     } else {
       setCategories(data);
     }
   }
+
+  useEffect(() => {
+    setCategoriesFiltered(filterCategories(categories, shopping));
+  }, [categories, shopping]);
 
   return (
     <>
       <View
         style={[
           styles.container,
-          { flex: categoryIndex !== null && categories.length > 1 ? 7 : 8 },
+          {
+            flex:
+              categoryIndex !== null && categoriesFiltered.length > 1 ? 7 : 8,
+          },
         ]}>
         <DraggableFlatList
-          data={data}
-          ListEmptyComponent={listEmptyComponent}
+          data={filteredData}
+          ListEmptyComponent={
+            <BodyRenderItemNoContent
+              {...{
+                categories,
+                categoriesFiltered,
+                categoryIndex,
+                shopping,
+              }}
+            />
+          }
+          // NOTE: data is scoped below.
           onMoveEnd={({ data }) => onMoveEnd(data)}
           renderItem={renderItem}
           scrollPercent={5}
         />
       </View>
-      {categoryIndex !== null && categories.length > 1 && <BodyNavigator />}
+      {categoryIndex !== null && categoriesFiltered.length > 1 && (
+        <BodyNavigator
+          {...{ categoriesFiltered, categoryIndex, setCategoryIndex }}
+        />
+      )}
     </>
   );
 };
@@ -80,6 +103,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   categories: state.categories,
+  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
   edit: state.edit,
   shopping: state.shopping,
@@ -87,6 +111,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setCategories: categories => dispatch(setCategories(categories)),
+  setCategoriesFiltered: categoriesFiltered =>
+    dispatch(setCategoriesFiltered(categoriesFiltered)),
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setSubcategories: ({ categoryKey, subcategories }) =>
     dispatch(setSubcategories({ categoryKey, subcategories })),

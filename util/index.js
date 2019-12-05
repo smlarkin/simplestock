@@ -78,13 +78,30 @@ export function formatTitleText(title, option = null) {
 }
 
 export function formatIntegersForNumericKeypad(amount, callback) {
-  const amountMatched = amount.match(/\d+/g);
-  const finalAmount = amountMatched ? amountMatched[0] : amount;
+  const amountMatched = amount.match(/^(0|[1-9][0-9]{0,2})$/g);
+  const finalAmount = amountMatched ? amountMatched[0] : null;
   callback(finalAmount);
 }
 
-export function getCategory(categoryIndex, categories) {
-  return categoryIndex !== null ? categories[categoryIndex] : null;
+export function filterCategories(categories, shopping) {
+  return !shopping
+    ? categories
+    : categories.filter(category =>
+        category.subcategories.some(subcategory => subcategory.difference > 0),
+      );
+}
+
+export function filterSubcategories(
+  filteredCategories,
+  categoryIndex,
+  shopping,
+) {
+  console.log('shopping ', shopping);
+  return !shopping
+    ? filteredCategories[categoryIndex].subcategories
+    : filteredCategories[categoryIndex].subcategories.filter(
+        subcategory => subcategory.shop,
+      );
 }
 
 export function itemTitleIsDuplicate(title, array) {
@@ -103,6 +120,10 @@ export function mapIndexToColors(index, colorsArray) {
   const stringifiedIndex = index.toString();
   const finalDigit = stringifiedIndex[stringifiedIndex.length - 1];
   return colorsArray[finalDigit];
+}
+
+export function selectCategory(categoryIndex, categories) {
+  return categoryIndex !== null ? categories[categoryIndex] : null;
 }
 
 export function setRef(ref, name, inputs) {

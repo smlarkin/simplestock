@@ -16,6 +16,7 @@ const CategoryItem = ({
   moveEnd,
   setCategoryIndex,
   setEdit,
+  shopping,
 }) => {
   const { color, title } = item;
   const backgroundColor = isActive ? 'white' : color.primary;
@@ -29,7 +30,7 @@ const CategoryItem = ({
     <Swipeout
       autoClose={true}
       left={
-        edit
+        edit || shopping
           ? null
           : [
               {
@@ -42,7 +43,7 @@ const CategoryItem = ({
             ]
       }
       right={
-        edit
+        edit || shopping
           ? null
           : [
               {
@@ -56,7 +57,9 @@ const CategoryItem = ({
       }
       style={styles.swipeout}>
       {edit ? (
-        <View style={[styles.container, { backgroundColor }]}>{content}</View>
+        <View style={[styles.touchableOpacity, { backgroundColor }]}>
+          {content}
+        </View>
       ) : (
         <TouchableOpacity
           style={[styles.touchableOpacity, { backgroundColor }]}
@@ -91,10 +94,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = state => ({
+  shopping: state.shopping,
+});
+
 const mapDispatchToState = dispatch => ({
   deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setEdit: category => dispatch(setEdit(category)),
 });
 
-export default connect(null, mapDispatchToState)(CategoryItem);
+export default connect(mapStateToProps, mapDispatchToState)(CategoryItem);

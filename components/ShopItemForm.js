@@ -7,14 +7,14 @@ import { setEdit, updateSubcategory } from '../redux/actions';
 import { formatIntegersForNumericKeypad } from '../util';
 
 const ShopItemForm = ({
-  categories,
+  categoriesFiltered,
   categoryIndex,
   index,
   item,
   setEdit,
   updateSubcategory,
 }) => {
-  const category = categories[categoryIndex];
+  const category = categoriesFiltered[categoryIndex];
   const { color } = category;
   const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
   const { title, type } = item;
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   categoryIndex: state.categoryIndex,
-  categories: state.categories,
+  categoriesFiltered: state.categoriesFiltered,
 });
 
 const mapDisptachToProps = dispatch => ({

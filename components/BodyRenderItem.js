@@ -43,9 +43,9 @@ const BodyRenderItem = ({ categoryIndex, edit, shopping }) => ({
       <CategoryItem
         index={index}
         item={item}
-        move={move}
-        moveEnd={moveEnd}
-        isActive={isActive}
+        move={!shopping ? move : null}
+        moveEnd={!shopping ? moveEnd : null}
+        isActive={!shopping ? isActive : null}
       />
     );
   }

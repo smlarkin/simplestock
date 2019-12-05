@@ -6,6 +6,7 @@ import {
   DELETE_SUBCATEGORY,
   RESET_CATEGORIES,
   SET_CATEGORIES,
+  SET_CATEGORIES_FILTERED,
   SET_CATEGORY_INDEX,
   SET_EDIT,
   SET_SHARING,
@@ -92,6 +93,16 @@ export const editReducer = (state = null, action) => {
   const { type, payload } = action;
   switch (type) {
     case SET_EDIT:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+export const categoriesFilteredReducer = (state = [], action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case SET_CATEGORIES_FILTERED:
       return payload;
     default:
       return state;

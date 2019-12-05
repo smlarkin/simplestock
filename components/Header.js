@@ -2,10 +2,10 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import StyledText from './StyledText';
-import { getCategory } from '../util';
+import { selectCategory } from '../util';
 
-const Header = ({ categories, categoryIndex }) => {
-  const category = getCategory(categoryIndex, categories);
+const Header = ({ categoriesFiltered, categoryIndex }) => {
+  const category = selectCategory(categoryIndex, categoriesFiltered);
   const title = category ? category.title : 'Simple Stock';
 
   return (
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  categories: state.categories,
+  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
 });
 
