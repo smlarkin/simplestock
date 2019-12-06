@@ -54,6 +54,8 @@ const FooterShareForm = ({
   const selectedIndex =
     !category && !shopping
       ? 0
+      : category && !shopping && !globalShopping
+      ? 1
       : !category && shopping && !globalShopping
       ? 0
       : !category && shopping && globalShopping

@@ -107,7 +107,7 @@ const FooterViewsNav = ({
         active={true}
         color="black"
         name={!shopping ? 'plus' : 'upload'}
-        handleOnLongPress={handleOnPressUpload}
+        handleOnLongPress={categories.length ? handleOnPressUpload : null}
         handleOnPress={!shopping ? handleOnPressPlus : handleOnPressUpload}
         size={24}
       />
