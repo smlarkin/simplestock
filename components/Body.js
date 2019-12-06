@@ -6,7 +6,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import BodyRenderItem from './BodyRenderItem';
 import BodyRenderItemNoContent from './BodyRenderItemNoContent';
 import BodyNavigator from './BodyNavigator';
-import { filterCategories, filterSubcategories } from '../util';
+import { filterCategories, filterSubcategories, selectCategory } from '../util';
 import {
   setCategories,
   setCategoriesFiltered,
@@ -33,10 +33,11 @@ const Body = ({
   // setEdit(null);
   // setfilteredCategories([]);
 
-  const filteredData =
-    categoryIndex !== null
-      ? filterSubcategories(categoriesFiltered, categoryIndex, shopping)
-      : categoriesFiltered;
+  const category = selectCategory(categoryIndex, categoriesFiltered);
+
+  const filteredData = category
+    ? filterSubcategories(categoriesFiltered, categoryIndex, shopping)
+    : categoriesFiltered;
 
   const renderItem = BodyRenderItem({
     categoryIndex,
