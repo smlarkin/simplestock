@@ -59,6 +59,7 @@ const backgrounds = [...Array(10)].map((item, index) => ({
   secondaryHighlighted: secondaryHighlighted[index],
 }));
 
+// TODO: Sort default colors including selected and unselected greys.
 export default {
   text: '#4A4A4A',
   tintColor,

@@ -29,6 +29,7 @@ const CategoryItem = ({
   return (
     <Swipeout
       autoClose={true}
+      // TODO: Remove left editing capability and implement double-tap to edit categories.
       left={
         edit || shopping
           ? null

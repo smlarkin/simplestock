@@ -27,7 +27,7 @@ const Body = ({
   setSubcategories,
   shopping,
 }) => {
-  // DEV RESETS
+  // NOTE: DEV RESETS (keep for future degugging)
   // setCategories([]);
   // setCategoryIndex(null);
   // setEdit(null);

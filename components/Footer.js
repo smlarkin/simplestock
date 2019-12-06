@@ -19,6 +19,7 @@ import {
 
 const FooterViewsNav = ({
   categories,
+  categoriesFiltered,
   categoryIndex,
   createCategory,
   createSubcategory,
@@ -31,7 +32,7 @@ const FooterViewsNav = ({
   sharing,
   shopping,
 }) => {
-  const category = selectCategory(categoryIndex, categories);
+  const category = selectCategory(categoryIndex, categoriesFiltered);
 
   function handleOnPressHome() {
     if (!edit) {
@@ -129,7 +130,15 @@ const FooterViewsNav = ({
           margin: 0,
         }}>
         <FooterShareForm
-          {...{ edit, categories, categoryIndex, setSharing, shopping }}
+          {...{
+            edit,
+            categories,
+            categoriesFiltered,
+            category,
+            categoryIndex,
+            setSharing,
+            shopping,
+          }}
         />
       </Modal>
     </View>
@@ -154,6 +163,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   edit: state.edit,
   categories: state.categories,
+  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
   sharing: state.sharing,
   shopping: state.shopping,

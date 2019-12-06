@@ -3,6 +3,7 @@ import { Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import StyledText from './StyledText';
 import {
+  filterCategories,
   formatCategoriesToShare,
   formatCategoryToShare,
   formatTitleText,
@@ -11,11 +12,16 @@ import {
 const FooterShareForm = ({
   edit,
   categories,
+  categoriesFiltered,
+  category,
   categoryIndex,
   setSharing,
   shopping,
 }) => {
-  const category = categoryIndex !== null ? categories[categoryIndex] : null;
+  const globalShopping = shopping
+    ? categoriesFiltered.length
+    : filterCategories(categories, true).length;
+
   const categoryHasShopping = category
     ? category.subcategories.some(subcategory => subcategory.shop)
     : null;
@@ -37,9 +43,10 @@ const FooterShareForm = ({
     },
   ].filter((item, index) => {
     if (
-      (category && categoryHasShopping) ||
-      (category && index < 3) ||
-      (!category && index < 2)
+      index === 0 ||
+      (globalShopping && index === 1) ||
+      (category && index === 2) ||
+      (category && categoryHasShopping & (index === 3))
     )
       return item;
   });
@@ -47,11 +54,13 @@ const FooterShareForm = ({
   const selectedIndex =
     !category && !shopping
       ? 0
-      : !category && shopping
+      : !category && shopping && globalShopping
       ? 1
-      : category && !shopping
+      : category && !shopping && globalShopping
       ? 2
-      : 3;
+      : category && shopping && categoryHasShopping
+      ? 3
+      : 2;
 
   const [index, setIndex] = useState(selectedIndex);
 
