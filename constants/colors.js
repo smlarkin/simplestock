@@ -52,7 +52,7 @@ const secondaryHighlighted = [
   '#FF9DE9',
 ];
 
-const backgrounds = [...Array(10)].map((item, index) => ({
+const backgrounds = [...Array(10)].map((_, index) => ({
   primary: primary[index],
   primaryHighlighted: primaryHighlighted[index],
   secondary: secondary[index],
