@@ -20,31 +20,36 @@ const CategoryItem = ({
 }) => {
   const { color, title } = item;
   const backgroundColor = isActive ? 'white' : color.primary;
-
   const [firstTap, setFirstTap] = useState(true);
   const [lastTap, setLastTap] = useState(null);
   const [timer, setTimer] = useState(null);
   const delay = 200;
 
   function handleOnPress() {
-    const now = Date.now();
-
-    if (firstTap) {
-      setFirstTap(false);
-      setTimer(
-        setTimeout(() => {
+    if (shopping) {
+      timer && clearTimeout(timer);
+      setTimer(null);
+      setFirstTap(true);
+      setCategoryIndex(index);
+    } else {
+      const now = Date.now();
+      if (firstTap) {
+        setFirstTap(false);
+        setTimer(
+          setTimeout(() => {
+            setTimer(null);
+            setFirstTap(true);
+            setCategoryIndex(index);
+          }, delay),
+        );
+        setLastTap(now);
+      } else {
+        if (now - lastTap < delay) {
+          clearTimeout(timer);
           setTimer(null);
           setFirstTap(true);
-          setCategoryIndex(index);
-        }, delay),
-      );
-      setLastTap(now);
-    } else {
-      if (now - lastTap < delay) {
-        clearTimeout(timer);
-        setTimer(null);
-        setFirstTap(true);
-        setEditing(item);
+          setEditing(item);
+        }
       }
     }
   }
