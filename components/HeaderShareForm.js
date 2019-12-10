@@ -10,7 +10,7 @@ import {
 } from '../util';
 
 const HeaderShareForm = ({
-  edit,
+  editing,
   categories,
   categoryIndex,
   setSharing,
@@ -63,7 +63,7 @@ const HeaderShareForm = ({
   const [index, setIndex] = useState(selectedIndex);
 
   function handleOnPressShare() {
-    if (!edit) {
+    if (!editing) {
       const { label: title, value } = radioButtons[index];
       switch (value) {
         case 'ALL_INVENTORY':

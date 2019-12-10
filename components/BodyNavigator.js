@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import StyledText from './StyledText';
+import { StyleSheet, View } from 'react-native';
 import BodyPaginator from './BodyPaginator';
+import IconButton from './IconButton';
 import { layout } from '../constants';
 
 const BodyNavigator = ({
@@ -24,29 +24,21 @@ const BodyNavigator = ({
   }
   return (
     <View style={[styles.container, { width }]}>
-      <TouchableOpacity
-        onPress={() => handleOnPress('previous')}
-        style={styles.leftArrow}>
-        <StyledText
-          style={{
-            fontSize: 30,
-            color: !previousIndexIsValid ? 'lightgrey' : 'black',
-          }}>
-          {'<'}
-        </StyledText>
-      </TouchableOpacity>
+      <IconButton
+        active={previousIndexIsValid}
+        color="black"
+        name="left"
+        handleOnPress={() => handleOnPress('previous')}
+        size={30}
+      />
       <BodyPaginator {...{ categoryIndex, currentCategories }} />
-      <TouchableOpacity
-        onPress={() => handleOnPress('next')}
-        style={styles.rightArrow}>
-        <StyledText
-          style={{
-            fontSize: 30,
-            color: !nextIndexIsValid ? 'lightgrey' : 'black',
-          }}>
-          {'>'}
-        </StyledText>
-      </TouchableOpacity>
+      <IconButton
+        active={nextIndexIsValid}
+        color="black"
+        name="right"
+        handleOnPress={() => handleOnPress('next')}
+        size={30}
+      />
     </View>
   );
 };

@@ -1,25 +1,54 @@
 /* eslint-disable complexity */
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import Swipeout from 'rc-swipeout';
 import StyledText from './StyledText';
-import { deleteCategory, setEdit, setCategoryIndex } from '../redux/actions';
+import { deleteCategory, setEditing, setCategoryIndex } from '../redux/actions';
 
 const CategoryItem = ({
   deleteCategory,
-  edit,
+  editing,
   index,
   isActive,
   item,
   move,
   moveEnd,
   setCategoryIndex,
-  setEdit,
+  setEditing,
   shopping,
 }) => {
   const { color, title } = item;
   const backgroundColor = isActive ? 'white' : color.primary;
+
+  const [firstTap, setFirstTap] = useState(true);
+  const [lastTap, setLastTap] = useState(null);
+  const [timer, setTimer] = useState(null);
+  const delay = 200;
+
+  function handleOnPress() {
+    const now = Date.now();
+
+    if (firstTap) {
+      setFirstTap(false);
+      setTimer(
+        setTimeout(() => {
+          setTimer(null);
+          setFirstTap(true);
+          setCategoryIndex(index);
+        }, delay),
+      );
+      setLastTap(now);
+    } else {
+      if (now - lastTap < delay) {
+        clearTimeout(timer);
+        setTimer(null);
+        setFirstTap(true);
+        setEditing(item);
+      }
+    }
+  }
+
   const content = (
     <StyledText bold style={styles.text}>
       {title}
@@ -29,22 +58,21 @@ const CategoryItem = ({
   return (
     <Swipeout
       autoClose={true}
-      // TODO: Remove left editing capability and implement double-tap to edit categories.
-      left={
-        edit || shopping
-          ? null
-          : [
-              {
-                text: 'edit',
-                onPress: () => {
-                  setTimeout(() => setEdit(item), 300);
-                },
-                style: styles.left,
-              },
-            ]
-      }
+      // left={
+      //   editing || shopping
+      //     ? null
+      //     : [
+      //         {
+      //           text: 'edit',
+      //           onPress: () => {
+      //             setTimeout(() => setEditing(item), 300);
+      //           },
+      //           style: styles.left,
+      //         },
+      //       ]
+      // }
       right={
-        edit || shopping
+        editing || shopping
           ? null
           : [
               {
@@ -57,16 +85,17 @@ const CategoryItem = ({
             ]
       }
       style={styles.swipeout}>
-      {edit ? (
+      {editing ? (
         <View style={[styles.touchableOpacity, { backgroundColor }]}>
           {content}
         </View>
       ) : (
         <TouchableOpacity
-          style={[styles.touchableOpacity, { backgroundColor }]}
-          onPress={() => setCategoryIndex(index)}
+          // onPress={() => setCategoryIndex(index)}
+          onPress={handleOnPress}
           onLongPress={!shopping ? move : null}
-          onPressOut={!shopping ? moveEnd : null}>
+          onPressOut={!shopping ? moveEnd : null}
+          style={[styles.touchableOpacity, { backgroundColor }]}>
           {content}
         </TouchableOpacity>
       )}
@@ -102,7 +131,7 @@ const mapStateToProps = state => ({
 const mapDispatchToState = dispatch => ({
   deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
-  setEdit: category => dispatch(setEdit(category)),
+  setEditing: category => dispatch(setEditing(category)),
 });
 
 export default connect(mapStateToProps, mapDispatchToState)(CategoryItem);

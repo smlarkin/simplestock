@@ -11,7 +11,7 @@ import { setSharing } from '../redux/actions';
 const Header = ({
   categories,
   categoryIndex,
-  edit,
+  editing,
   setSharing,
   sharing,
   shopping,
@@ -22,7 +22,7 @@ const Header = ({
   const title = currentCategory ? currentCategory.title : 'Simple Stock';
 
   function handleOnPressArrowup() {
-    if (!edit) {
+    if (!editing) {
       setSharing(true);
     }
   }
@@ -32,6 +32,8 @@ const Header = ({
       <Modal
         animationIn="slideInDown"
         animationOut="slideOutUp"
+        // TODO: Use local state for this
+        // TODO: Remove sharing from redux
         isVisible={sharing}
         hasBackdrop={true}
         onBackButtonPress={() => {
@@ -49,7 +51,7 @@ const Header = ({
         }}>
         <HeaderShareForm
           {...{
-            edit,
+            editing,
             categories,
             categoryIndex,
             setSharing,
@@ -60,7 +62,7 @@ const Header = ({
       <IconButton
         active={true}
         color="black"
-        name="question"
+        name="questioncircleo"
         handleOnPress={null}
         size={20}
       />
@@ -97,13 +99,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   categories: state.categories,
   categoryIndex: state.categoryIndex,
-  edit: state.edit,
+  editing: state.editing,
   sharing: state.sharing,
   shopping: state.shopping,
 });
 
 const mapDispatchToProps = dispatch => ({
-  setEdit: (item, type) => dispatch(setEdit(item, type)),
   setSharing: boolean => dispatch(setSharing(boolean)),
 });
 

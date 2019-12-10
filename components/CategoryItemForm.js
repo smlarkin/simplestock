@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import { colors } from '../constants';
-import { deleteCategory, setEdit, updateCategory } from '../redux/actions';
+import { deleteCategory, setEditing, updateCategory } from '../redux/actions';
 import {
   focusInput,
   formatTitleText,
@@ -13,9 +13,9 @@ import {
 const CategoryItemForm = ({
   categories,
   deleteCategory,
-  edit,
+  editing,
   item,
-  setEdit,
+  setEditing,
   updateCategory,
 }) => {
   const { backgrounds } = colors;
@@ -41,25 +41,25 @@ const CategoryItemForm = ({
     if (title) {
       const formattedTitle = formatTitleText(title);
       if (
-        edit.item.title === title &&
-        edit.item.color.primary === color.primary
+        editing.item.title === title &&
+        editing.item.color.primary === color.primary
       ) {
-        setEdit(null);
+        setEditing(null);
       } else if (
-        edit.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
+        editing.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
         itemTitleIsDuplicate(title, categories)
       ) {
         focusInput('title', inputs);
       } else {
         updateCategory({
-          categoryKey: edit.item.key,
+          categoryKey: editing.item.key,
           category: { color, key, title: formattedTitle, subcategories },
         });
-        setEdit(null);
+        setEditing(null);
       }
     } else {
-      setEdit(null);
-      deleteCategory(edit.item.key);
+      setEditing(null);
+      deleteCategory(editing.item.key);
     }
   }
 
@@ -69,7 +69,6 @@ const CategoryItemForm = ({
         <TextInput
           autoFocus={true}
           blurOnSubmit={true}
-          // TODO: Figure out safe maxLength on all screen sizes
           maxLength={40}
           onBlur={handleOnBlur}
           onChangeText={e => setTitle(e)}
@@ -152,12 +151,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   categories: state.categories,
-  edit: state.edit,
+  editing: state.editing,
 });
 
 const mapDispatchToProps = dispatch => ({
   deleteCategory: categoryKey => dispatch(deleteCategory(categoryKey)),
-  setEdit: item => dispatch(setEdit(item)),
+  setEditing: item => dispatch(setEditing(item)),
   updateCategory: category => dispatch(updateCategory(category)),
 });
 

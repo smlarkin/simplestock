@@ -4,19 +4,19 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import Swipeout from 'rc-swipeout';
 import StyledText from './StyledText';
-import { deleteSubcategory, setEdit } from '../redux/actions';
+import { deleteSubcategory, setEditing } from '../redux/actions';
 
 const SubcategoryItem = ({
   categories,
   categoryIndex,
   deleteSubcategory,
-  edit,
+  editing,
   index,
   isActive,
   item,
   move,
   moveEnd,
-  setEdit,
+  setEditing,
   shopping,
 }) => {
   const currentCategories = shopping ? shopping.categories : categories;
@@ -32,12 +32,12 @@ const SubcategoryItem = ({
     : color.secondary;
   const { title, current, base, type } = item;
   const [lastTap, setLastTap] = useState(null);
+  const delay = 300;
 
   function handleOnPress(type) {
-    const DELAY = 300;
     const now = Date.now();
-    if (lastTap && now - lastTap < DELAY) {
-      setEdit(item, type);
+    if (lastTap && now - lastTap < delay) {
+      setEditing(item, type);
     } else {
       setLastTap(now);
     }
@@ -46,7 +46,6 @@ const SubcategoryItem = ({
   return (
     <Swipeout
       autoClose={true}
-      // TODO: THIS IS PROBLEMATIC IF USED ... SO REDESIGN TO NOT USE IT AT ALL
       // left={[
       //   {
       //     text: 'edit',
@@ -57,7 +56,7 @@ const SubcategoryItem = ({
       //   },
       // ]}
       right={
-        edit
+        editing
           ? null
           : [
               {
@@ -195,14 +194,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   categories: state.categories,
   categoryIndex: state.categoryIndex,
-  edit: state.edit,
+  editing: state.editing,
   shopping: state.shopping,
 });
 
 const mapDispatchToProps = dispatch => ({
   deleteSubcategory: ({ categoryKey, subcategoryKey }) =>
     dispatch(deleteSubcategory({ categoryKey, subcategoryKey })),
-  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  setEditing: (subcategory, option) =>
+    dispatch(setEditing(subcategory, option)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubcategoryItem);

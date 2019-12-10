@@ -8,7 +8,7 @@ import { filterCategoriesToShop, updateDifferenceAndShop } from '../util';
 import {
   createCategory,
   createSubcategory,
-  setEdit,
+  setEditing,
   setCategories,
   setCategoryIndex,
   setShopping,
@@ -19,8 +19,8 @@ const Footer = ({
   categoryIndex,
   createCategory,
   createSubcategory,
-  edit,
-  setEdit,
+  editing,
+  setEditing,
   setCategories,
   setCategoryIndex,
   setShopping,
@@ -31,13 +31,13 @@ const Footer = ({
     categoryIndex !== null ? currentCategories[categoryIndex] : null;
 
   function handleOnPressHome() {
-    if (!edit) {
+    if (!editing) {
       setCategoryIndex(null);
     }
   }
 
   function handleOnPressToggleShopping() {
-    if (!edit) {
+    if (!editing) {
       if (shopping) {
         const index = currentCategory
           ? categories.findIndex(
@@ -59,14 +59,8 @@ const Footer = ({
     }
   }
 
-  function handleOnPressUpload() {
-    if (!edit) {
-      setSharing(true);
-    }
-  }
-
   function handleOnPressPlus() {
-    if (!edit && !shopping) {
+    if (!editing && !shopping) {
       if (currentCategory) {
         const subcategory = {
           key: uuid(),
@@ -78,7 +72,7 @@ const Footer = ({
         };
         const categoryKey = currentCategory.key;
         createSubcategory({ categoryKey, subcategory });
-        setEdit(subcategory, 'new');
+        setEditing(subcategory, 'new');
       } else {
         const category = {
           color: colors.backgrounds[0],
@@ -87,7 +81,7 @@ const Footer = ({
           subcategories: [],
         };
         createCategory(category);
-        setEdit(category);
+        setEditing(category);
       }
     }
   }
@@ -136,7 +130,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  edit: state.edit,
+  editing: state.editing,
   categories: state.categories,
   categoryIndex: state.categoryIndex,
   shopping: state.shopping,
@@ -148,7 +142,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(createSubcategory({ categoryKey, subcategory })),
   setCategories: categories => dispatch(setCategories(categories)),
   setCategoryIndex: index => dispatch(setCategoryIndex(index)),
-  setEdit: (item, type) => dispatch(setEdit(item, type)),
+  setEditing: (item, type) => dispatch(setEditing(item, type)),
   setShopping: shoppingObject => dispatch(setShopping(shoppingObject)),
 });
 

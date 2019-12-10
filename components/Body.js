@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -10,7 +10,7 @@ import { filterSubcategoriesToShop } from '../util';
 import {
   setCategories,
   setCategoryIndex,
-  setEdit,
+  setEditing,
   setShopping,
   setSubcategories,
 } from '../redux/actions';
@@ -18,10 +18,10 @@ import {
 const Body = ({
   categories,
   categoryIndex,
-  edit,
+  editing,
   setCategories,
   setCategoryIndex,
-  setEdit,
+  setEditing,
   setShopping,
   setSubcategories,
   shopping,
@@ -29,7 +29,7 @@ const Body = ({
   // NOTE: DEV RESETS (keep for future degugging)
   // setCategories([]);
   // setCategoryIndex(null);
-  // setEdit(null);
+  // setEditing(null);
   // setShopping(null);
 
   const currentCategories = shopping ? shopping.categories : categories;
@@ -42,7 +42,7 @@ const Body = ({
     : filterSubcategoriesToShop(currentCategory);
   const renderItem = BodyRenderItem({
     categoryIndex,
-    edit,
+    editing,
     shopping,
   });
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   categories: state.categories,
   categoryIndex: state.categoryIndex,
-  edit: state.edit,
+  editing: state.editing,
   shopping: state.shopping,
 });
 
@@ -110,7 +110,7 @@ const mapDispatchToProps = dispatch => ({
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setSubcategories: ({ categoryKey, subcategories }) =>
     dispatch(setSubcategories({ categoryKey, subcategories })),
-  setEdit: category => dispatch(setEdit(category)),
+  setEditing: category => dispatch(setEditing(category)),
   setShopping: shoppingObject => dispatch(setShopping(shoppingObject)),
 });
 

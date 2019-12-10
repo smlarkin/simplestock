@@ -13,18 +13,18 @@ const primary = [
   '#FFC6F2',
 ];
 
-const primaryHighlighted = [
-  '#F0A8A8',
-  '#F0C1AB',
-  '#EFD6A7',
-  '#C1D8A6',
-  '#AAD9B0',
-  '#AEDBDA',
-  '#ADCCDB',
-  '#A6B3D8',
-  '#AFA4D3',
-  '#D5A3CA',
-];
+// const primaryHighlighted = [
+//   '#F0A8A8',
+//   '#F0C1AB',
+//   '#EFD6A7',
+//   '#C1D8A6',
+//   '#AAD9B0',
+//   '#AEDBDA',
+//   '#ADCCDB',
+//   '#A6B3D8',
+//   '#AFA4D3',
+//   '#D5A3CA',
+// ];
 
 const secondary = [
   '#EBB8B8',
@@ -39,27 +39,42 @@ const secondary = [
   '#EBB5DF',
 ];
 
-const secondaryHighlighted = [
-  '#FFB2B2',
-  '#FFC7AD',
-  '#FDDEA4',
-  '#D5FDA6',
-  '#A7FFB2',
-  '#8FFDFA',
-  '#A2E2FF',
-  '#9CB4F8',
-  '#B29BFF',
-  '#FF9DE9',
+// const secondaryHighlighted = [
+//   '#FFB2B2',
+//   '#FFC7AD',
+//   '#FDDEA4',
+//   '#D5FDA6',
+//   '#A7FFB2',
+//   '#8FFDFA',
+//   '#A2E2FF',
+//   '#9CB4F8',
+//   '#B29BFF',
+//   '#FF9DE9',
+// ];
+
+const absolute = [
+  'red',
+  'coral',
+  'orange',
+  'greenyellow',
+  'lime',
+  'cyan',
+  'deepskyblue',
+  'slateblue',
+  'blueviolet',
+  'magenta',
 ];
 
 const backgrounds = [...Array(10)].map((_, index) => ({
+  absolute: absolute[index],
   primary: primary[index],
-  primaryHighlighted: primaryHighlighted[index],
+  // primaryHighlighted: primaryHighlighted[index],
   secondary: secondary[index],
-  secondaryHighlighted: secondaryHighlighted[index],
+  // secondaryHighlighted: secondaryHighlighted[index],
 }));
 
 // TODO: Sort default colors including selected and unselected greys.
+// TODO: Get rid of all ununused variables
 export default {
   text: '#4A4A4A',
   tintColor,
@@ -72,10 +87,10 @@ export default {
   warningText: '#666804',
   noticeBackground: tintColor,
   noticeText: '#fff',
-  primary,
-  primaryHighlighted,
-  secondary,
-  secondaryHighlighted,
+  // primary,
+  /* primaryHighlighted, */
+  // secondary,
+  /* secondaryHighlighted, */
   backgrounds,
   selected: 'grey',
 };

@@ -72,14 +72,16 @@ class BodyPaginator extends Component {
               : null
           }
           renderItem={({ index, item }) => {
-            const color = index === categoryIndex ? 'grey' : item.color.primary;
+            const backgroundColor =
+              index === categoryIndex ? 'grey' : item.color.primary;
 
             return (
               <View
                 style={{
                   width: itemWidth,
                   aspectRatio: 1 / 1,
-                  backgroundColor: color,
+                  backgroundColor,
+                  borderColor: 'black',
                   borderRadius: 50,
                   borderWidth: 1,
                   margin: itemMargin,

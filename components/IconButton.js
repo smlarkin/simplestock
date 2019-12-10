@@ -16,7 +16,12 @@ const IconButton = ({
       activeOpacity={activeOpacity ? activeOpacity : active ? 0.2 : 1}
       onLongPress={active && handleOnLongPress ? handleOnLongPress : null}
       onPress={active ? handleOnPress : null}
-      style={{ width: size }}>
+      style={[
+        styles.touchableOpacity,
+        {
+          width: size * 2,
+        },
+      ]}>
       <AntDesign color={active ? color : 'silver'} name={name} size={size} />
     </TouchableOpacity>
   </View>
@@ -27,7 +32,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  touchableOpacity: {
+    alignItems: 'center',
     aspectRatio: 1 / 1,
+    justifyContent: 'center',
   },
 });
 

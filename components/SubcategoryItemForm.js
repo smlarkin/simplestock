@@ -17,7 +17,7 @@ import {
 } from '../util';
 import {
   deleteSubcategory,
-  setEdit,
+  setEditing,
   updateSubcategory,
 } from '../redux/actions';
 
@@ -25,10 +25,10 @@ const SubcategoryItemForm = ({
   categories,
   categoryIndex,
   deleteSubcategory,
-  edit,
+  editing,
   index,
   item,
-  setEdit,
+  setEditing,
   shopping,
   updateSubcategory,
 }) => {
@@ -44,7 +44,7 @@ const SubcategoryItemForm = ({
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [ready, setReady] = useState(false);
   const { key } = item;
-  const editTypeIsNew = edit.type === 'new';
+  const editTypeIsNew = editing.type === 'new';
   const inputs = {};
 
   useEffect(() => {
@@ -69,12 +69,12 @@ const SubcategoryItemForm = ({
 
   function noValuesHaveChanged(difference, shop) {
     return (
-      edit.item.title === title &&
-      edit.item.current === current &&
-      edit.item.base === base &&
-      edit.item.type === type &&
-      edit.item.difference === difference &&
-      edit.item.shop === shop
+      editing.item.title === title &&
+      editing.item.current === current &&
+      editing.item.base === base &&
+      editing.item.type === type &&
+      editing.item.difference === difference &&
+      editing.item.shop === shop
     );
   }
 
@@ -92,17 +92,17 @@ const SubcategoryItemForm = ({
       if (noInputValues()) {
         deleteSubcategory({
           categoryKey: currentCategory.key,
-          subcategoryKey: edit.item.key,
+          subcategoryKey: editing.item.key,
         });
-        setEdit(null);
+        setEditing(null);
       } else if (allInputValues()) {
         const difference = createDifference(current, base);
         const shop = createShop(difference);
         const formattedTitle = formatTitleText(title);
         if (noValuesHaveChanged(difference, shop)) {
-          setEdit(null);
+          setEditing(null);
         } else if (
-          edit.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
+          editing.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
           itemTitleIsDuplicate(formattedTitle, currentCategory.subcategories)
         ) {
           focusInput('title', inputs);
@@ -118,10 +118,10 @@ const SubcategoryItemForm = ({
           };
           updateSubcategory({
             categoryKey: currentCategory.key,
-            subcategoryKey: edit.item.key,
+            subcategoryKey: editing.item.key,
             subcategory,
           });
-          setEdit(null);
+          setEditing(null);
         }
       } else {
         setTimeout(() => {
@@ -144,11 +144,11 @@ const SubcategoryItemForm = ({
       <View
         style={[
           styles.titleContainer,
-          { marginBottom: edit.type === 'title' ? '1%' : null },
+          { marginBottom: editing.type === 'title' ? '1%' : null },
         ]}>
-        {editTypeIsNew || edit.type === 'title' ? (
+        {editTypeIsNew || editing.type === 'title' ? (
           <TextInput
-            autoFocus={editTypeIsNew || edit.type === 'title'}
+            autoFocus={editTypeIsNew || editing.type === 'title'}
             blurOnSubmit={false}
             maxLength={42}
             onBlur={handleOnBlur}
@@ -173,11 +173,11 @@ const SubcategoryItemForm = ({
       <View
         style={[
           styles.currentContainer,
-          { marginBottom: edit.type === 'current' ? '1.5%' : null },
+          { marginBottom: editing.type === 'current' ? '1.5%' : null },
         ]}>
-        {editTypeIsNew || edit.type === 'current' ? (
+        {editTypeIsNew || editing.type === 'current' ? (
           <TextInput
-            autoFocus={edit.type === 'current'}
+            autoFocus={editing.type === 'current'}
             blurOnSubmit={false}
             keyboardType="numeric"
             maxLength={3}
@@ -210,13 +210,13 @@ const SubcategoryItemForm = ({
         style={[
           styles.baseContainer,
           {
-            marginBottom: edit.type === 'base' ? '1.5%' : null,
-            marginLeft: edit.type === 'base' ? '1%' : null,
+            marginBottom: editing.type === 'base' ? '1.5%' : null,
+            marginLeft: editing.type === 'base' ? '1%' : null,
           },
         ]}>
-        {editTypeIsNew || edit.type === 'base' ? (
+        {editTypeIsNew || editing.type === 'base' ? (
           <TextInput
-            autoFocus={edit.type === 'base'}
+            autoFocus={editing.type === 'base'}
             blurOnSubmit={false}
             keyboardType="numeric"
             maxLength={3}
@@ -242,11 +242,11 @@ const SubcategoryItemForm = ({
       <View
         style={[
           styles.typeContainer,
-          { marginBottom: edit.type === 'type' ? '.5%' : null },
+          { marginBottom: editing.type === 'type' ? '.5%' : null },
         ]}>
-        {editTypeIsNew || edit.type === 'type' ? (
+        {editTypeIsNew || editing.type === 'type' ? (
           <TextInput
-            autoFocus={edit.type === 'type'}
+            autoFocus={editing.type === 'type'}
             blurOnSubmit={false}
             maxLength={10}
             onBlur={() => {
@@ -267,7 +267,7 @@ const SubcategoryItemForm = ({
             placeholder=" UNIT-TYPE"
             ref={ref => setRef(ref, 'type', inputs)}
             returnKeyType="done"
-            selectionColor={edit.type === 'new' ? backgroundColor : 'black'}
+            selectionColor={editing.type === 'new' ? backgroundColor : 'black'}
             style={styles.type}
             value={type}
           />
@@ -361,14 +361,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   categories: state.categories,
   categoryIndex: state.categoryIndex,
-  edit: state.edit,
+  editing: state.editing,
   shopping: state.shopping,
 });
 
 const mapDispatchToProps = dispatch => ({
   deleteSubcategory: ({ categoryKey, subcategoryKey }) =>
     dispatch(deleteSubcategory({ categoryKey, subcategoryKey })),
-  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  setEditing: (subcategory, option) =>
+    dispatch(setEditing(subcategory, option)),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
 });

@@ -4,7 +4,7 @@ import Checkbox from 'react-native-modest-checkbox';
 import { connect } from 'react-redux';
 import StyledText from './StyledText';
 import {
-  setEdit,
+  setEditing,
   setShopping,
   updateShopping,
   updateSubcategory,
@@ -15,7 +15,7 @@ const ShopItem = ({
   categoryIndex,
   index,
   item,
-  setEdit,
+  setEditing,
   shopping,
   updateShopping,
   updateSubcategory,
@@ -33,7 +33,7 @@ const ShopItem = ({
     const DELAY = 300;
     const now = Date.now();
     if (lastTap && now - lastTap < DELAY) {
-      setEdit(item);
+      setEditing(item);
     } else {
       setLastTap(now);
     }
@@ -139,7 +139,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDisptachToProps = dispatch => ({
-  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  setEditing: (subcategory, option) =>
+    dispatch(setEditing(subcategory, option)),
   setShopping: shoppingObject => dispatch(setShopping(shoppingObject)),
   updateShopping: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateShopping({ categoryKey, subcategoryKey, subcategory })),

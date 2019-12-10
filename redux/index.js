@@ -5,7 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   categoriesReducer,
   categoryIndexReducer,
-  editReducer,
+  editingReducer,
   sharingReducer,
   shoppingReducer,
 } from './reducers';
@@ -13,7 +13,7 @@ import {
 const rootReducer = combineReducers({
   categories: categoriesReducer,
   categoryIndex: categoryIndexReducer,
-  edit: editReducer,
+  editing: editingReducer,
   sharing: sharingReducer,
   shopping: shoppingReducer,
 });

@@ -6,7 +6,7 @@ import {
   RESET_CATEGORIES,
   SET_CATEGORIES,
   SET_CATEGORY_INDEX,
-  SET_EDIT,
+  SET_EDITING,
   SET_SHARING,
   SET_SUBCATEGORIES,
   SET_SHOPPING,
@@ -45,13 +45,15 @@ export const setCategories = categories => ({
   payload: categories,
 });
 
+// TODO: change all setCategoryIndex to setCurrentCategory
+// AND categoryIndex to currentIndex
 export const setCategoryIndex = categoryIndex => ({
   type: SET_CATEGORY_INDEX,
   payload: categoryIndex,
 });
 
-export const setEdit = (item, type = null) => ({
-  type: SET_EDIT,
+export const setEditing = (item, type = null) => ({
+  type: SET_EDITING,
   payload: item ? { item, type } : null,
 });
 

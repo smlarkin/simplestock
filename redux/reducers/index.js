@@ -6,7 +6,7 @@ import {
   RESET_CATEGORIES,
   SET_CATEGORIES,
   SET_CATEGORY_INDEX,
-  SET_EDIT,
+  SET_EDITING,
   SET_SHARING,
   SET_SUBCATEGORIES,
   SET_SHOPPING,
@@ -87,10 +87,10 @@ export const categoryIndexReducer = (state = null, action) => {
   }
 };
 
-export const editReducer = (state = null, action) => {
+export const editingReducer = (state = null, action) => {
   const { type, payload } = action;
   switch (type) {
-    case SET_EDIT:
+    case SET_EDITING:
       return payload;
     default:
       return state;

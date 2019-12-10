@@ -3,7 +3,11 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import Checkbox from 'react-native-modest-checkbox';
 import { connect } from 'react-redux';
 import StyledText from './StyledText';
-import { setEdit, updateShopping, updateSubcategory } from '../redux/actions';
+import {
+  setEditing,
+  updateShopping,
+  updateSubcategory,
+} from '../redux/actions';
 import { formatIntegersForNumericKeypad } from '../util';
 
 const ShopItemForm = ({
@@ -12,7 +16,7 @@ const ShopItemForm = ({
   categoryIndex,
   index,
   item,
-  setEdit,
+  setEditing,
   shopping,
   updateShopping,
   updateSubcategory,
@@ -45,7 +49,7 @@ const ShopItemForm = ({
         subcategory,
       });
 
-      setEdit(null);
+      setEditing(null);
     } else {
       textInput.current.focus();
     }
@@ -132,7 +136,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDisptachToProps = dispatch => ({
-  setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  setEditing: (subcategory, option) =>
+    dispatch(setEditing(subcategory, option)),
   updateShopping: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateShopping({ categoryKey, subcategoryKey, subcategory })),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
