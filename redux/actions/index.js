@@ -5,13 +5,13 @@ import {
   DELETE_SUBCATEGORY,
   RESET_CATEGORIES,
   SET_CATEGORIES,
-  SET_CATEGORIES_FILTERED,
   SET_CATEGORY_INDEX,
   SET_EDIT,
   SET_SHARING,
   SET_SUBCATEGORIES,
   SET_SHOPPING,
   UPDATE_CATEGORY,
+  UPDATE_SHOPPING,
   UPDATE_SUBCATEGORY,
 } from '../types';
 
@@ -55,14 +55,9 @@ export const setEdit = (item, type = null) => ({
   payload: item ? { item, type } : null,
 });
 
-export const setCategoriesFiltered = categoriesFiltered => ({
-  type: SET_CATEGORIES_FILTERED,
-  payload: categoriesFiltered,
-});
-
-export const setSharing = boolean => ({
+export const setSharing = sharingObject => ({
   type: SET_SHARING,
-  payload: boolean,
+  payload: sharingObject,
 });
 
 export const setShopping = boolean => ({
@@ -78,6 +73,15 @@ export const setSubcategories = ({ categoryKey, subcategories }) => ({
 export const updateCategory = ({ categoryKey, category }) => ({
   type: UPDATE_CATEGORY,
   payload: { categoryKey, category },
+});
+
+export const updateShopping = ({
+  categoryKey,
+  subcategoryKey,
+  subcategory,
+}) => ({
+  type: UPDATE_SHOPPING,
+  payload: { categoryKey, subcategoryKey, subcategory },
 });
 
 export const updateSubcategory = ({

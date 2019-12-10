@@ -28,7 +28,7 @@ class BodyPaginator extends Component {
   }
 
   render() {
-    const { categoryIndex, categoriesFiltered } = this.props;
+    const { categoryIndex, currentCategories } = this.props;
     return (
       <View style={styles.container}>
         <FlatList
@@ -43,10 +43,10 @@ class BodyPaginator extends Component {
           showsHorizontalScrollIndicator={false}
           scrollEnabled={false}
           getItemLayout={getItemLayout}
-          data={categoriesFiltered}
+          data={currentCategories}
           horizontal
           ListFooterComponent={
-            categoriesFiltered.length > 7
+            currentCategories.length > 7
               ? () => (
                   <View
                     style={{
@@ -59,7 +59,7 @@ class BodyPaginator extends Component {
               : null
           }
           ListHeaderComponent={
-            categoriesFiltered.length > 7
+            currentCategories.length > 7
               ? () => (
                   <View
                     style={{
@@ -104,11 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = state => ({
-//   categoryIndex: state.categoryIndex,
-//   categories: state.categories,
-//   shopping: state.shopping,
-// });
-
-// export default connect(mapStateToProps)(BodyPaginator);
 export default BodyPaginator;

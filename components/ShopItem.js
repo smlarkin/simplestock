@@ -3,18 +3,27 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Checkbox from 'react-native-modest-checkbox';
 import { connect } from 'react-redux';
 import StyledText from './StyledText';
-import { setEdit, updateSubcategory } from '../redux/actions';
+import {
+  setEdit,
+  setShopping,
+  updateShopping,
+  updateSubcategory,
+} from '../redux/actions';
 
 const ShopItem = ({
-  categoriesFiltered,
+  categories,
   categoryIndex,
   index,
   item,
   setEdit,
+  shopping,
+  updateShopping,
   updateSubcategory,
 }) => {
-  const category = categoriesFiltered[categoryIndex];
-  const { color } = category;
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+  const { color } = currentCategory;
   const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
   const { title, current, type, difference } = item;
   const [isChecked, setIsChecked] = useState(false);
@@ -39,9 +48,17 @@ const ShopItem = ({
       setTimeout(() => {
         const updatedCurrent = parseInt(current, 10) + parseInt(difference, 10);
         const shop = false;
+
         setIsChecked(false);
+
         updateSubcategory({
-          categoryKey: category.key,
+          categoryKey: currentCategory.key,
+          subcategoryKey: item.key,
+          subcategory: { ...item, current: `${updatedCurrent}`, shop },
+        });
+
+        updateShopping({
+          categoryKey: currentCategory.key,
           subcategoryKey: item.key,
           subcategory: { ...item, current: `${updatedCurrent}`, shop },
         });
@@ -116,12 +133,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
+  categories: state.categories,
   categoryIndex: state.categoryIndex,
-  categoriesFiltered: state.categoriesFiltered,
+  shopping: state.shopping,
 });
 
 const mapDisptachToProps = dispatch => ({
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  setShopping: shoppingObject => dispatch(setShopping(shoppingObject)),
+  updateShopping: ({ categoryKey, subcategoryKey, subcategory }) =>
+    dispatch(updateShopping({ categoryKey, subcategoryKey, subcategory })),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
 });

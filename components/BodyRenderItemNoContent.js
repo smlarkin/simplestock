@@ -3,29 +3,23 @@ import { View, StyleSheet } from 'react-native';
 import StyledText from './StyledText';
 import { layout } from '../constants';
 
-const BodyRenderItemNoContent = ({
-  categories,
-  categoriesFiltered,
-  categoryIndex,
-  shopping,
-}) => {
-  const adjustedHeight = layout.height - layout.statusBarHeight;
-
+const BodyRenderItemNoContent = ({ categories, categoryIndex, shopping }) => {
+  const currentHeight = layout.height - layout.statusBarHeight;
+  const currentCategories = shopping ? shopping.categories : categories;
   const height =
     categoryIndex !== null &&
-    categoriesFiltered.length &&
-    categoriesFiltered.length > 1
-      ? Math.floor(adjustedHeight * 0.7)
-      : Math.floor(adjustedHeight * 0.8);
-
+    currentCategories.length &&
+    currentCategories.length > 1
+      ? Math.floor(currentHeight * 0.7)
+      : Math.floor(currentHeight * 0.8);
   const content =
     !categories.length && !shopping
       ? 'No categories yet!'
       : categoryIndex === null && shopping
       ? 'No shopping to do!'
-      : categoryIndex !== null && categoriesFiltered.length && shopping
+      : categoryIndex !== null && shopping && shopping.categories.length
       ? 'This category has no shopping!'
-      : categoryIndex !== null && categoriesFiltered.length && !shopping
+      : categoryIndex !== null && !shopping && categories.length
       ? 'This category has no subcategories!'
       : '';
 

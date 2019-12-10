@@ -3,27 +3,28 @@ import { Share, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import StyledText from './StyledText';
 import {
-  filterCategories,
+  filterCategoriesToShop,
   formatCategoriesToShare,
   formatCategoryToShare,
   formatTitleText,
 } from '../util';
 
-const FooterShareForm = ({
+const HeaderShareForm = ({
   edit,
   categories,
-  categoriesFiltered,
-  category,
   categoryIndex,
   setSharing,
   shopping,
 }) => {
-  const globalShopping = shopping
-    ? categoriesFiltered.length
-    : filterCategories(categories, true).length;
+  const allShopping = filterCategoriesToShop(categories);
 
-  const categoryHasShopping = category
-    ? category.subcategories.some(subcategory => subcategory.shop)
+  const currentCategories = shopping ? shopping.categories : categories;
+
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+
+  const currentCategoryShopping = currentCategory
+    ? currentCategory.subcategories.filter(subcategory => subcategory.shop)
     : null;
 
   const radioButtons = [
@@ -31,40 +32,33 @@ const FooterShareForm = ({
     { label: 'All Shopping', value: 'ALL_SHOPPING' },
     {
       label: `${
-        category ? formatTitleText(category.title, 'CAPITALCASE') : null
+        currentCategory
+          ? formatTitleText(currentCategory.title, 'CAPITALCASE')
+          : null
       } Inventory`,
       value: 'CATEGORY_INVENTORY',
     },
     {
       label: `${
-        category ? formatTitleText(category.title, 'CAPITALCASE') : null
+        currentCategory
+          ? formatTitleText(currentCategory.title, 'CAPITALCASE')
+          : null
       } Shopping`,
       value: 'CATEGORY_SHOPPING',
     },
   ].filter((item, index) => {
     if (
       index === 0 ||
-      (globalShopping && index === 1) ||
-      (category && index === 2) ||
-      (category && categoryHasShopping & (index === 3))
+      (allShopping.length && index === 1) ||
+      (currentCategory &&
+        currentCategory.subcategories.length &&
+        index === 2) ||
+      (currentCategory && currentCategoryShopping.length && index === 3)
     )
       return item;
   });
 
-  const selectedIndex =
-    !category && !shopping
-      ? 0
-      : category && !shopping && !globalShopping
-      ? 1
-      : !category && shopping && !globalShopping
-      ? 0
-      : !category && shopping && globalShopping
-      ? 1
-      : category && !shopping && globalShopping
-      ? 2
-      : category && shopping && categoryHasShopping
-      ? 3
-      : 2;
+  const selectedIndex = 0;
 
   const [index, setIndex] = useState(selectedIndex);
 
@@ -90,13 +84,15 @@ const FooterShareForm = ({
         case 'CATEGORY_INVENTORY':
           return share({
             title,
-            message: `*** ${title} ***\n\n${formatCategoryToShare(category)}`,
+            message: `*** ${title} ***\n\n${formatCategoryToShare(
+              currentCategory,
+            )}`,
           });
         case 'CATEGORY_SHOPPING':
           return share({
             title,
             message: `*** ${title} ***\n\n${formatCategoryToShare(
-              category,
+              currentCategory,
               'shopping',
             )}`,
           });
@@ -207,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FooterShareForm;
+export default HeaderShareForm;

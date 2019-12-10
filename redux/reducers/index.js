@@ -1,4 +1,3 @@
-/* eslint-disable no-confusing-arrow */
 import {
   CREATE_CATEGORY,
   CREATE_SUBCATEGORY,
@@ -6,17 +5,16 @@ import {
   DELETE_SUBCATEGORY,
   RESET_CATEGORIES,
   SET_CATEGORIES,
-  SET_CATEGORIES_FILTERED,
   SET_CATEGORY_INDEX,
   SET_EDIT,
   SET_SHARING,
   SET_SUBCATEGORIES,
   SET_SHOPPING,
   UPDATE_CATEGORY,
+  UPDATE_SHOPPING,
   UPDATE_SUBCATEGORY,
 } from '../types';
 
-// eslint-disable-next-line complexity
 export const categoriesReducer = (state = [], action) => {
   const { type, payload } = action;
   switch (type) {
@@ -99,16 +97,6 @@ export const editReducer = (state = null, action) => {
   }
 };
 
-export const categoriesFilteredReducer = (state = [], action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case SET_CATEGORIES_FILTERED:
-      return payload;
-    default:
-      return state;
-  }
-};
-
 export const sharingReducer = (state = false, action) => {
   const { type, payload } = action;
   switch (type) {
@@ -119,11 +107,26 @@ export const sharingReducer = (state = false, action) => {
   }
 };
 
-export const shoppingReducer = (state = false, action) => {
+export const shoppingReducer = (state = null, action) => {
   const { type, payload } = action;
   switch (type) {
     case SET_SHOPPING:
       return payload;
+    case UPDATE_SHOPPING:
+      return {
+        categories: state.categories.map(category =>
+          category.key === payload.categoryKey
+            ? {
+                ...category,
+                subcategories: category.subcategories.map(subcategory =>
+                  subcategory.key === payload.subcategoryKey
+                    ? payload.subcategory
+                    : subcategory,
+                ),
+              }
+            : category,
+        ),
+      };
     default:
       return state;
   }

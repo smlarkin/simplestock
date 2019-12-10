@@ -7,7 +7,7 @@ import StyledText from './StyledText';
 import { deleteSubcategory, setEdit } from '../redux/actions';
 
 const SubcategoryItem = ({
-  categoriesFiltered,
+  categories,
   categoryIndex,
   deleteSubcategory,
   edit,
@@ -17,8 +17,12 @@ const SubcategoryItem = ({
   move,
   moveEnd,
   setEdit,
+  shopping,
 }) => {
-  const { color, key } = categoriesFiltered[categoryIndex];
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+  const { color, key } = currentCategory;
   const categoryKey = key;
   const subcategoryKey = item.key;
   const backgroundColor = isActive
@@ -81,7 +85,7 @@ const SubcategoryItem = ({
           onPressOut={moveEnd}
           style={styles.titleContainer}>
           <StyledText medium style={styles.title}>
-            {title}
+            {title ? title : ''}
           </StyledText>
         </TouchableOpacity>
 
@@ -92,7 +96,7 @@ const SubcategoryItem = ({
           onPressOut={moveEnd}
           style={styles.currentContainer}>
           <StyledText bold style={styles.current}>
-            {current}
+            {current ? current : ''}
           </StyledText>
         </TouchableOpacity>
 
@@ -109,7 +113,7 @@ const SubcategoryItem = ({
           onPressOut={moveEnd}
           style={styles.baseContainer}>
           <StyledText bold style={styles.base}>
-            {base}
+            {base ? base : ''}
           </StyledText>
         </TouchableOpacity>
 
@@ -189,9 +193,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  categoriesFiltered: state.categoriesFiltered,
+  categories: state.categories,
   categoryIndex: state.categoryIndex,
   edit: state.edit,
+  shopping: state.shopping,
 });
 
 const mapDispatchToProps = dispatch => ({

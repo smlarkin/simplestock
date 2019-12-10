@@ -1,18 +1,79 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
+import Modal from 'react-native-modal';
+import HeaderShareForm from './HeaderShareForm';
+import IconButton from './IconButton';
 import StyledText from './StyledText';
-import { selectCategory } from '../util';
+import { layout } from '../constants';
+import { setSharing } from '../redux/actions';
 
-const Header = ({ categoriesFiltered, categoryIndex }) => {
-  const category = selectCategory(categoryIndex, categoriesFiltered);
-  const title = category ? category.title : 'Simple Stock';
+const Header = ({
+  categories,
+  categoryIndex,
+  edit,
+  setSharing,
+  sharing,
+  shopping,
+}) => {
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+  const title = currentCategory ? currentCategory.title : 'Simple Stock';
+
+  function handleOnPressArrowup() {
+    if (!edit) {
+      setSharing(true);
+    }
+  }
 
   return (
     <View style={styles.container}>
+      <Modal
+        animationIn="slideInDown"
+        animationOut="slideOutUp"
+        isVisible={sharing}
+        hasBackdrop={true}
+        onBackButtonPress={() => {
+          setSharing(false);
+        }}
+        onBackdropPress={() => {
+          setSharing(false);
+        }}
+        style={{
+          alignItems: 'center',
+          deviceHeight: layout.height,
+          deviceWidth: layout.width,
+          justifyContent: 'flex-start',
+          margin: 0,
+        }}>
+        <HeaderShareForm
+          {...{
+            edit,
+            categories,
+            categoryIndex,
+            setSharing,
+            shopping,
+          }}
+        />
+      </Modal>
+      <IconButton
+        active={true}
+        color="black"
+        name="question"
+        handleOnPress={null}
+        size={20}
+      />
       <StyledText semi numberOfLines={1} style={styles.title}>
         {title}
       </StyledText>
+      <IconButton
+        active={categories.length}
+        color="black"
+        name="arrowup"
+        handleOnPress={handleOnPressArrowup}
+        size={20}
+      />
     </View>
   );
 };
@@ -20,20 +81,30 @@ const Header = ({ categoriesFiltered, categoryIndex }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    flex: 1,
+    justifyContent: 'space-between',
     width: '100%',
   },
   title: {
-    fontSize: 20,
     color: 'black',
+    flex: 2,
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 
 const mapStateToProps = state => ({
-  categoriesFiltered: state.categoriesFiltered,
+  categories: state.categories,
   categoryIndex: state.categoryIndex,
+  edit: state.edit,
+  sharing: state.sharing,
+  shopping: state.shopping,
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = dispatch => ({
+  setEdit: (item, type) => dispatch(setEdit(item, type)),
+  setSharing: boolean => dispatch(setSharing(boolean)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -5,14 +5,14 @@ import BodyPaginator from './BodyPaginator';
 import { layout } from '../constants';
 
 const BodyNavigator = ({
-  categoriesFiltered,
   categoryIndex,
+  currentCategories,
   setCategoryIndex,
 }) => {
   const previousIndex = categoryIndex - 1;
   const previousIndexIsValid = previousIndex >= 0;
   const nextIndex = categoryIndex + 1;
-  const nextIndexIsValid = nextIndex <= categoriesFiltered.length - 1;
+  const nextIndexIsValid = nextIndex <= currentCategories.length - 1;
   const { width } = layout;
 
   function handleOnPress(direction) {
@@ -35,7 +35,7 @@ const BodyNavigator = ({
           {'<'}
         </StyledText>
       </TouchableOpacity>
-      <BodyPaginator {...{ categoryIndex, categoriesFiltered }} />
+      <BodyPaginator {...{ categoryIndex, currentCategories }} />
       <TouchableOpacity
         onPress={() => handleOnPress('next')}
         style={styles.rightArrow}>

@@ -3,19 +3,24 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import Checkbox from 'react-native-modest-checkbox';
 import { connect } from 'react-redux';
 import StyledText from './StyledText';
-import { setEdit, updateSubcategory } from '../redux/actions';
+import { setEdit, updateShopping, updateSubcategory } from '../redux/actions';
 import { formatIntegersForNumericKeypad } from '../util';
 
 const ShopItemForm = ({
-  categoriesFiltered,
+  /* categoriesFiltered, */
+  categories,
   categoryIndex,
   index,
   item,
   setEdit,
+  shopping,
+  updateShopping,
   updateSubcategory,
 }) => {
-  const category = categoriesFiltered[categoryIndex];
-  const { color } = category;
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+  const { color } = currentCategory;
   const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
   const { title, type } = item;
   const [difference, setDifference] = useState(item.difference);
@@ -23,19 +28,23 @@ const ShopItemForm = ({
 
   function handleOnBlur() {
     if (difference !== null) {
-      if (difference === '0') {
-        updateSubcategory({
-          categoryKey: category.key,
-          subcategoryKey: item.key,
-          subcategory: { ...item, shop: false },
-        });
-      } else {
-        updateSubcategory({
-          categoryKey: category.key,
-          subcategoryKey: item.key,
-          subcategory: { ...item, difference },
-        });
-      }
+      const subcategory =
+        difference === '0'
+          ? { ...item, difference, shop: false }
+          : { ...item, difference };
+
+      updateSubcategory({
+        categoryKey: currentCategory.key,
+        subcategoryKey: item.key,
+        subcategory,
+      });
+
+      updateShopping({
+        categoryKey: currentCategory.key,
+        subcategoryKey: item.key,
+        subcategory,
+      });
+
       setEdit(null);
     } else {
       textInput.current.focus();
@@ -116,12 +125,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
+  categories: state.categories,
   categoryIndex: state.categoryIndex,
-  categoriesFiltered: state.categoriesFiltered,
+  // categoriesFiltered: state.categoriesFiltered,
+  shopping: state.shopping,
 });
 
 const mapDisptachToProps = dispatch => ({
   setEdit: (subcategory, option) => dispatch(setEdit(subcategory, option)),
+  updateShopping: ({ categoryKey, subcategoryKey, subcategory }) =>
+    dispatch(updateShopping({ categoryKey, subcategoryKey, subcategory })),
   updateSubcategory: ({ categoryKey, subcategoryKey, subcategory }) =>
     dispatch(updateSubcategory({ categoryKey, subcategoryKey, subcategory })),
 });

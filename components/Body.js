@@ -6,24 +6,23 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import BodyRenderItem from './BodyRenderItem';
 import BodyRenderItemNoContent from './BodyRenderItemNoContent';
 import BodyNavigator from './BodyNavigator';
-import { filterCategories, filterSubcategories, selectCategory } from '../util';
+import { filterSubcategoriesToShop } from '../util';
 import {
   setCategories,
-  setCategoriesFiltered,
   setCategoryIndex,
   setEdit,
+  setShopping,
   setSubcategories,
 } from '../redux/actions';
 
 const Body = ({
   categories,
-  categoriesFiltered,
   categoryIndex,
   edit,
   setCategories,
-  setCategoriesFiltered,
   setCategoryIndex,
   setEdit,
+  setShopping,
   setSubcategories,
   shopping,
 }) => {
@@ -31,14 +30,16 @@ const Body = ({
   // setCategories([]);
   // setCategoryIndex(null);
   // setEdit(null);
-  // setfilteredCategories([]);
+  // setShopping(null);
 
-  const category = selectCategory(categoryIndex, categoriesFiltered);
-
-  const filteredData = category
-    ? filterSubcategories(categoriesFiltered, categoryIndex, shopping)
-    : categoriesFiltered;
-
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+  const currentData = !currentCategory
+    ? currentCategories
+    : !shopping
+    ? currentCategory.subcategories
+    : filterSubcategoriesToShop(currentCategory);
   const renderItem = BodyRenderItem({
     categoryIndex,
     edit,
@@ -48,17 +49,13 @@ const Body = ({
   function onMoveEnd(data) {
     if (categoryIndex !== null) {
       setSubcategories({
-        categoryKey: category.key,
+        categoryKey: currentCategory.key,
         subcategories: data,
       });
     } else {
       setCategories(data);
     }
   }
-
-  useEffect(() => {
-    setCategoriesFiltered(filterCategories(categories, shopping));
-  }, [categories, shopping]);
 
   return (
     <>
@@ -67,16 +64,15 @@ const Body = ({
           styles.container,
           {
             flex:
-              categoryIndex !== null && categoriesFiltered.length > 1 ? 7 : 8,
+              categoryIndex !== null && currentCategories.length > 1 ? 7 : 8,
           },
         ]}>
         <DraggableFlatList
-          data={filteredData}
+          data={currentData}
           ListEmptyComponent={
             <BodyRenderItemNoContent
               {...{
                 categories,
-                categoriesFiltered,
                 categoryIndex,
                 shopping,
               }}
@@ -87,9 +83,9 @@ const Body = ({
           scrollPercent={5}
         />
       </View>
-      {categoryIndex !== null && categoriesFiltered.length > 1 && (
+      {categoryIndex !== null && currentCategories.length > 1 && (
         <BodyNavigator
-          {...{ categoriesFiltered, categoryIndex, setCategoryIndex }}
+          {...{ currentCategories, categoryIndex, setCategoryIndex }}
         />
       )}
     </>
@@ -104,7 +100,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   categories: state.categories,
-  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
   edit: state.edit,
   shopping: state.shopping,
@@ -112,12 +107,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setCategories: categories => dispatch(setCategories(categories)),
-  setCategoriesFiltered: categoriesFiltered =>
-    dispatch(setCategoriesFiltered(categoriesFiltered)),
   setCategoryIndex: categoryIndex => dispatch(setCategoryIndex(categoryIndex)),
   setSubcategories: ({ categoryKey, subcategories }) =>
     dispatch(setSubcategories({ categoryKey, subcategories })),
   setEdit: category => dispatch(setEdit(category)),
+  setShopping: shoppingObject => dispatch(setShopping(shoppingObject)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Body);

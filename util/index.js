@@ -15,6 +15,17 @@ export function createShop(numberString) {
   return parseInt(numberString) > 0;
 }
 
+// TODO: Battle Test This!
+export function filterCategoriesToShop(categories) {
+  return categories.filter(category =>
+    category.subcategories.some(subcategory => subcategory.shop),
+  );
+}
+
+export function filterSubcategoriesToShop(currentCategory) {
+  return currentCategory.subcategories.filter(subcategory => subcategory.shop);
+}
+
 export function focusInput(name, inputs) {
   inputs[name].focus();
 }
@@ -83,26 +94,6 @@ export function formatIntegersForNumericKeypad(amount, callback) {
   callback(finalAmount);
 }
 
-export function filterCategories(categories, shopping) {
-  return !shopping
-    ? categories
-    : categories.filter(category =>
-        category.subcategories.some(subcategory => subcategory.difference > 0),
-      );
-}
-
-export function filterSubcategories(
-  filteredCategories,
-  categoryIndex,
-  shopping,
-) {
-  return !shopping
-    ? filteredCategories[categoryIndex].subcategories
-    : filteredCategories[categoryIndex].subcategories.filter(
-        subcategory => subcategory.shop,
-      );
-}
-
 export function itemTitleIsDuplicate(title, array) {
   return array.some(item => item.title.toLowerCase() === title.toLowerCase());
 }
@@ -121,10 +112,6 @@ export function mapIndexToColors(index, colorsArray) {
   return colorsArray[finalDigit];
 }
 
-export function selectCategory(categoryIndex, categories) {
-  return categoryIndex !== null ? categories[categoryIndex] : null;
-}
-
 export function setRef(ref, name, inputs) {
   inputs[name] = ref;
 }
@@ -136,7 +123,7 @@ export function updateCurrentAmount(numberStringA, numberStringB) {
   return `${total}`;
 }
 
-export function updateDifferenceAndShopping(categories, setCategories) {
+export function updateDifferenceAndShop(categories, setCategories) {
   const updatedCategories = categories.map(category => {
     const subcategories = category.subcategories.map(subcategory => {
       const difference = createDifference(

@@ -22,17 +22,20 @@ import {
 } from '../redux/actions';
 
 const SubcategoryItemForm = ({
-  categoriesFiltered,
+  categories,
   categoryIndex,
   deleteSubcategory,
   edit,
   index,
   item,
   setEdit,
+  shopping,
   updateSubcategory,
 }) => {
-  const category = categoriesFiltered[categoryIndex];
-  const { color } = category;
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
+  const { color } = currentCategory;
   const backgroundColor = index % 2 === 0 ? color.primary : color.secondary;
   const [title, setTitle] = useState(item.title);
   const [current, setCurrent] = useState(item.current);
@@ -88,7 +91,7 @@ const SubcategoryItemForm = ({
     if (noInputFocus()) {
       if (noInputValues()) {
         deleteSubcategory({
-          categoryKey: category.key,
+          categoryKey: currentCategory.key,
           subcategoryKey: edit.item.key,
         });
         setEdit(null);
@@ -100,7 +103,7 @@ const SubcategoryItemForm = ({
           setEdit(null);
         } else if (
           edit.item.title.toLowerCase() !== formattedTitle.toLowerCase() &&
-          itemTitleIsDuplicate(formattedTitle, category.subcategories)
+          itemTitleIsDuplicate(formattedTitle, currentCategory.subcategories)
         ) {
           focusInput('title', inputs);
         } else {
@@ -114,7 +117,7 @@ const SubcategoryItemForm = ({
             shop,
           };
           updateSubcategory({
-            categoryKey: category.key,
+            categoryKey: currentCategory.key,
             subcategoryKey: edit.item.key,
             subcategory,
           });
@@ -356,9 +359,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  categoriesFiltered: state.categoriesFiltered,
+  categories: state.categories,
   categoryIndex: state.categoryIndex,
   edit: state.edit,
+  shopping: state.shopping,
 });
 
 const mapDispatchToProps = dispatch => ({

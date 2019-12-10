@@ -1,25 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import IconButton from './IconButton';
-import FooterShareForm from './FooterShareForm';
-import { colors, layout } from '../constants';
-import { selectCategory, updateDifferenceAndShopping } from '../util';
+import { colors } from '../constants';
+import { filterCategoriesToShop, updateDifferenceAndShop } from '../util';
 import {
   createCategory,
   createSubcategory,
   setEdit,
   setCategories,
   setCategoryIndex,
-  setSharing,
   setShopping,
 } from '../redux/actions';
 
-const FooterViewsNav = ({
+const Footer = ({
   categories,
-  categoriesFiltered,
   categoryIndex,
   createCategory,
   createSubcategory,
@@ -27,23 +23,39 @@ const FooterViewsNav = ({
   setEdit,
   setCategories,
   setCategoryIndex,
-  setSharing,
   setShopping,
-  sharing,
   shopping,
 }) => {
-  const category = selectCategory(categoryIndex, categoriesFiltered);
+  const currentCategories = shopping ? shopping.categories : categories;
+  const currentCategory =
+    categoryIndex !== null ? currentCategories[categoryIndex] : null;
 
   function handleOnPressHome() {
     if (!edit) {
-      updateDifferenceAndShopping(categories, setCategories);
       setCategoryIndex(null);
     }
   }
 
   function handleOnPressToggleShopping() {
     if (!edit) {
-      setShopping(!shopping);
+      if (shopping) {
+        const index = currentCategory
+          ? categories.findIndex(
+              category => category.key === currentCategory.key,
+            )
+          : null;
+        setShopping(null);
+        setCategoryIndex(index);
+        updateDifferenceAndShop(categories, setCategories);
+      }
+
+      if (!shopping) {
+        const shoppingCategories = currentCategory
+          ? categories
+          : filterCategoriesToShop(categories);
+        updateDifferenceAndShop(categories, setCategories);
+        setShopping({ categories: shoppingCategories });
+      }
     }
   }
 
@@ -55,7 +67,7 @@ const FooterViewsNav = ({
 
   function handleOnPressPlus() {
     if (!edit && !shopping) {
-      if (category) {
+      if (currentCategory) {
         const subcategory = {
           key: uuid(),
           title: '',
@@ -64,7 +76,7 @@ const FooterViewsNav = ({
           difference: 0,
           shop: false,
         };
-        const categoryKey = category.key;
+        const categoryKey = currentCategory.key;
         createSubcategory({ categoryKey, subcategory });
         setEdit(subcategory, 'new');
       } else {
@@ -80,12 +92,6 @@ const FooterViewsNav = ({
     }
   }
 
-  useEffect(() => {
-    if (!categories.length) {
-      setShopping(false);
-    }
-  }, [categories]);
-
   return (
     <View style={styles.container}>
       <IconButton
@@ -96,7 +102,7 @@ const FooterViewsNav = ({
         size={24}
       />
       <IconButton
-        active={categories.length && categoryIndex === null}
+        active={categories.length}
         activeOpacity={1}
         color="black"
         name={shopping ? 'checksquareo' : 'bars'}
@@ -104,43 +110,12 @@ const FooterViewsNav = ({
         size={24}
       />
       <IconButton
-        active={true}
+        active={!shopping}
         color="black"
-        name={!shopping ? 'plus' : 'upload'}
-        handleOnLongPress={categories.length ? handleOnPressUpload : null}
-        handleOnPress={!shopping ? handleOnPressPlus : handleOnPressUpload}
+        name="plus"
+        handleOnPress={handleOnPressPlus}
         size={24}
       />
-      <Modal
-        animationIn="slideInDown"
-        animationOut="slideOutUp"
-        isVisible={sharing}
-        hasBackdrop={true}
-        onBackButtonPress={() => {
-          setSharing(false);
-        }}
-        onBackdropPress={() => {
-          setSharing(false);
-        }}
-        style={{
-          alignItems: 'center',
-          deviceHeight: layout.height,
-          deviceWidth: layout.width,
-          justifyContent: 'flex-start',
-          margin: 0,
-        }}>
-        <FooterShareForm
-          {...{
-            edit,
-            categories,
-            categoriesFiltered,
-            category,
-            categoryIndex,
-            setSharing,
-            shopping,
-          }}
-        />
-      </Modal>
     </View>
   );
 };
@@ -163,9 +138,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   edit: state.edit,
   categories: state.categories,
-  categoriesFiltered: state.categoriesFiltered,
   categoryIndex: state.categoryIndex,
-  sharing: state.sharing,
   shopping: state.shopping,
 });
 
@@ -173,11 +146,10 @@ const mapDispatchToProps = dispatch => ({
   createCategory: category => dispatch(createCategory(category)),
   createSubcategory: ({ categoryKey, subcategory }) =>
     dispatch(createSubcategory({ categoryKey, subcategory })),
-  setEdit: (item, type) => dispatch(setEdit(item, type)),
   setCategories: categories => dispatch(setCategories(categories)),
   setCategoryIndex: index => dispatch(setCategoryIndex(index)),
-  setSharing: boolean => dispatch(setSharing(boolean)),
-  setShopping: boolean => dispatch(setShopping(boolean)),
+  setEdit: (item, type) => dispatch(setEdit(item, type)),
+  setShopping: shoppingObject => dispatch(setShopping(shoppingObject)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterViewsNav);
+export default connect(mapStateToProps, mapDispatchToProps)(Footer);
