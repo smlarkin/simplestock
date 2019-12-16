@@ -128,6 +128,8 @@ const styles = StyleSheet.create({
     paddingRight: '5%',
     width: '100%',
   },
+  // TODO: make all TextInput backgroundColor: #fff || none
+  // TODO: all whites should be #fff
   title: {
     fontSize: 19,
   },

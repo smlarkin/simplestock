@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
 import Modal from 'react-native-modal';

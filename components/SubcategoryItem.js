@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -77,8 +76,10 @@ const SubcategoryItem = ({
         onLongPress={move}
         onPressOut={moveEnd}
         style={[styles.contentContainer, { backgroundColor }]}>
+        {/* TODO: Make tap area larger here */}
         <TouchableOpacity
           activeOpacity={1}
+          /* TODO: swap () => with handleOnPress.bind(null, 'title') */
           onPress={() => handleOnPress('title')}
           onLongPress={move}
           onPressOut={moveEnd}
@@ -87,7 +88,7 @@ const SubcategoryItem = ({
             {title ? title : ''}
           </StyledText>
         </TouchableOpacity>
-
+        {/* TODO: Make tap area larger here */}
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleOnPress('current')}
@@ -104,7 +105,7 @@ const SubcategoryItem = ({
             /
           </StyledText>
         </View>
-
+        {/* TODO: Make tap area larger here */}
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleOnPress('base')}
@@ -115,7 +116,7 @@ const SubcategoryItem = ({
             {base ? base : ''}
           </StyledText>
         </TouchableOpacity>
-
+        {/* TODO: Make tap area larger here */}
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleOnPress('type')}

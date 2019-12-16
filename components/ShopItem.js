@@ -20,6 +20,7 @@ const ShopItem = ({
   updateShopping,
   updateSubcategory,
 }) => {
+  // TODO: selectCurrentItems(shopping, categories, currentIndex)
   const currentCategories = shopping ? shopping.categories : categories;
   const currentCategory =
     categoryIndex !== null ? currentCategories[categoryIndex] : null;
@@ -56,7 +57,7 @@ const ShopItem = ({
           subcategoryKey: item.key,
           subcategory: { ...item, current: `${updatedCurrent}`, shop },
         });
-
+        // TODO: Rename in all places updateShoppingCategorySubcategory
         updateShopping({
           categoryKey: currentCategory.key,
           subcategoryKey: item.key,
@@ -73,7 +74,7 @@ const ShopItem = ({
           {title}
         </StyledText>
       </View>
-
+      {/* TODO: Make tap area larger here */}
       <TouchableOpacity
         activeOpacity={1}
         onPress={handleOnPress}

@@ -5,6 +5,8 @@ import Header from './Header';
 import Body from './Body';
 import Footer from './Footer';
 
+// TODO: Investigate if I should add SafeAreaView around KeyboardAvoidingView
+// TODO: Change sizing for this ???
 const AppScreen = () => (
   <KeyboardAvoidingView behavior="padding" style={styles.container}>
     <StatusBarSpacer />

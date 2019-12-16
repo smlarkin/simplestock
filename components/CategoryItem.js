@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
@@ -26,10 +25,12 @@ const CategoryItem = ({
   const delay = 200;
 
   function handleOnPress() {
+    // TODO: Allow to edit name in shopping ??? ... if so ...
+    // TODO: add a updateShoppingCategory reducer to update shopping.categories
     if (shopping) {
       timer && clearTimeout(timer);
-      setTimer(null);
-      setFirstTap(true);
+      timer && setTimer(null);
+      firstTap && setFirstTap(true);
       setCategoryIndex(index);
     } else {
       const now = Date.now();
@@ -59,7 +60,7 @@ const CategoryItem = ({
       {title}
     </StyledText>
   );
-
+  // TODO: Change Swipeout for React Native Gesture Handler: Swipeable
   return (
     <Swipeout
       autoClose={true}
