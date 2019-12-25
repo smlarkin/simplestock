@@ -25,7 +25,7 @@ const CategoryItem = ({
   const delay = 200;
 
   function handleOnPress() {
-    // TODO: Allow to edit name in shopping ??? ... if so ...
+    // TODO: Allow to edit name in shopping ??? ... if so ......
     // TODO: add a updateShoppingCategory reducer to update shopping.categories
     if (shopping) {
       timer && clearTimeout(timer);

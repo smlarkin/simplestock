@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import * as Font from 'expo-font';
 import * as Icon from '@expo/vector-icons';
-// TODO: get rid of all commented-out code
+// TODO: get rid of all commented-out code ...
 // import { Asset } from 'expo-asset'
 import { AppLoading } from 'expo';
 import { Provider } from 'react-redux';
