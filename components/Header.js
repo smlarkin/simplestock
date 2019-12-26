@@ -19,7 +19,7 @@ const Header = ({
   const currentCategories = shopping ? shopping.categories : categories;
   const currentCategory =
     categoryIndex !== null ? currentCategories[categoryIndex] : null;
-  const title = currentCategory ? currentCategory.title : 'Simple Stock';
+  const title = currentCategory ? currentCategory.title : 'SimpleStock';
 
   function handleOnPressArrowup() {
     if (!editing) {
